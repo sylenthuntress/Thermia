@@ -1,0 +1,65 @@
+import me.modmuss50.mpp.ReleaseType
+
+plugins {
+    // see https://fabricmc.net/develop/ for new versions
+    id 'fabric-loom' version '1.8-SNAPSHOT' apply false
+    // see https://projects.neoforged.net/neoforged/moddevgradle for new versions
+    id 'net.neoforged.moddev' version '2.0.62-beta' apply false
+    id "me.modmuss50.mod-publish-plugin" version "0.8.3"
+}
+
+publishMods {
+    changelog = "#" + project.mod_name + "v" + project.version + "+" + project.minecraft_version +
+            "\n" + project.description +
+            "\n\n" + project.file("CHANGELOG.md").toString()
+    type = ReleaseType.valueOf(project.stability)
+    version = "v" + project.version + "+" + project.minecraft_version
+
+    // CurseForge
+    def cfOptions = curseforgeOptions {
+        accessToken = providers.environmentVariable("CURSEFORGE_TOKEN")
+        projectId = project.curseforge_id
+        projectSlug = project.curseforge_slug
+        minecraftVersions.add(project.minecraft_version)
+    }
+
+    curseforge("curseforgeFabric") {
+        from cfOptions
+        file project(":fabric")
+        modLoaders.add("fabric")
+    }
+    curseforge("curseforgeNeoForge") {
+        from cfOptions
+        file project(":neoforge")
+        modLoaders.add("neoforge")
+    }
+
+    // Modrinth
+    def mrOptions = modrinthOptions {
+        accessToken = providers.environmentVariable("MODRINTH_TOKEN")
+        projectId = project.modrinth_id
+        minecraftVersions.add(project.minecraft_version)
+    }
+
+    modrinth("modrinthFabric") {
+        from mrOptions
+        file project(":fabric")
+        modLoaders.add("fabric")
+    }
+    modrinth("modrinthNeoForge") {
+        from mrOptions
+        file project(":neoforge")
+        modLoaders.add("neoforge")
+    }
+
+    // Github
+
+    github {
+        accessToken = providers.environmentVariable("GITHUB_TOKEN")
+        repository = project.github_repo
+        tagName = "release/v" + project.version + "+" + project.minecraft_version
+        commitish = "main"
+
+        allowEmptyFiles = true
+    }
+}
