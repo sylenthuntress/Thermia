@@ -7,9 +7,6 @@
   "mixins": [
     "temperature.LivingEntityMixin"
   ],
-  "client": [
-    "MinecraftClientMixin"
-  ],
   "server": [],
   "injectors": {
     "defaultRequire": 1

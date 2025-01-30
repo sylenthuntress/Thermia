@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "id": "${mod_id}",
+  "version": "v${version}+${minecraft_version}+Fabric",
+  "name": "${mod_name}",
+  "description": "${description}",
+  "authors": [
+    "${mod_author}\n\n"
+  ],
+  "contact": {
+    "homepage": "https://modrinth.com/mod/${modrinth_slug}",
+    "sources": "https://github.com/${github_repo}"
+  },
+  "license": "${license}",
+  "icon": "${mod_id}.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "sylenthuntress.thermia.Thermia"
+    ]
+  },
+  "mixins": [
+    "${mod_id}.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=${fabric_loader_version}",
+    "fabric-api": ">=${fabric_version}",
+    "minecraft": "${minecraft_version}",
+    "java": ">=${java_version}"
+  },
+  "suggests": {
+    "another-mod": "*"
+  },
+  "custom": {
+    "modmenu": {
+      "links": {
+        "thermia.discord": "${discord_invite}"
+      },
+      "update_checker": true
+    }
+  }
+}
