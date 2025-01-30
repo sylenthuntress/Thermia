@@ -64,13 +64,13 @@ loom {
     runs {
         client {
             client()
-            setConfigName('Fabric Client')
+            setConfigName('Minecraft Client')
             ideConfigGenerated(true)
             runDir('runs/client')
         }
         server {
             server()
-            setConfigName('Fabric Server')
+            setConfigName('Minecraft Server')
             ideConfigGenerated(true)
             runDir('runs/server')
         }
