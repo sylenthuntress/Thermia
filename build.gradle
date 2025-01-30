@@ -1,0 +1,156 @@
+import me.modmuss50.mpp.ReleaseType
+
+plugins {
+    id 'fabric-loom' version '1.8-SNAPSHOT'
+    id 'maven-publish'
+    id "me.modmuss50.mod-publish-plugin" version "0.8.3"
+}
+
+configurations {
+    commonJava{
+        canBeResolved = true
+    }
+    commonResources{
+        canBeResolved = true
+    }
+}
+
+def secretProperties = new Properties()
+def secretPropertiesFile = rootProject.file("secret.properties")
+if (secretPropertiesFile.exists()) {
+    secretProperties.load(secretPropertiesFile.newInputStream())
+}
+
+publishMods {
+    def modrinthToken = secretProperties.getProperty("MODRINTH_TOKEN")
+    def curseforgeToken = secretProperties.getProperty("CURSEFORGE_TOKEN")
+    def githubToken = secretProperties.getProperty("GITHUB_TOKEN")
+    changelog = "#" + project.mod_name + "v" + project.version + "+" + project.minecraft_version +
+            "\n\n" + project.file("CHANGELOG.md").toString()
+    type = ReleaseType.valueOf(project.stability)
+    version = "v" + project.version + "+" + project.minecraft_version
+    modLoaders.add("fabric")
+
+    curseforge {
+        accessToken = curseforgeToken
+        projectId = project.curseforge_id
+        projectSlug = project.curseforge_slug
+        minecraftVersions.add(project.minecraft_version)
+    }
+
+    modrinth {
+        accessToken = modrinthToken
+        projectId = project.modrinth_id
+        minecraftVersions.add(project.minecraft_version)
+    }
+
+    github {
+        accessToken = githubToken
+        repository = project.github_repo
+        tagName = "release/v" + project.version + "+" + project.minecraft_version
+        commitish = "main"
+        allowEmptyFiles = true
+    }
+}
+
+loom {
+    def aw = project.file("src/main/resources/${mod_id}.accesswidener")
+    if (aw.exists()) {
+        accessWidenerPath.set(aw)
+    }
+    mixin {
+        defaultRefmapName.set("${mod_id}.refmap.json")
+    }
+    runs {
+        client {
+            client()
+            setConfigName('Fabric Client')
+            ideConfigGenerated(true)
+            runDir('runs/client')
+        }
+        server {
+            server()
+            setConfigName('Fabric Server')
+            ideConfigGenerated(true)
+            runDir('runs/server')
+        }
+    }
+}
+
+repositories {
+    maven { url = "https://api.modrinth.com/maven" }
+    maven {
+        name = "Terraformers"
+        url = "https://maven.terraformersmc.com/"
+    }
+    maven { url 'https://maven.wispforest.io/releases/' }
+}
+
+dependencies {
+    minecraft "com.mojang:minecraft:${minecraft_version}"
+    mappings "net.fabricmc:yarn:${yarn_mappings}:v2"
+    modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
+    annotationProcessor group: 'io.github.llamalad7', name: 'mixinextras-common', version: '0.3.5'
+}
+
+processResources {
+    var expandProps = [
+            'version'                      : version,
+            'stability'                    : stability,
+            'group'                        : project.group,
+            'minecraft_version'            : minecraft_version,
+            'yarn_mappings'                : yarn_mappings,
+            'fabric_version'               : fabric_version,
+            'fabric_loader_version'        : fabric_loader_version,
+            'mod_name'                     : mod_name,
+            'mod_author'                   : mod_author,
+            'mod_id'                       : mod_id,
+            'license'                      : license,
+            'description'                  : project.description,
+            'java_version'                 : java_version,
+            'curseforge_slug'              : curseforge_slug,
+            'curseforge_id'                : curseforge_id,
+            'modrinth_slug'                : modrinth_slug,
+            'modrinth_id'                  : modrinth_id,
+            'github_repo'                  : github_repo,
+            'discord_invite'               : discord_invite
+    ]
+
+    filesMatching(['pack.mcmeta', 'fabric.mod.json', '*.mixins.json']) {
+        expand expandProps
+    }
+    inputs.properties(expandProps)
+}
+
+tasks.withType(JavaCompile).configureEach {
+    it.options.release = 21
+}
+
+java {
+    withSourcesJar()
+
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+}
+
+jar {
+    from("LICENSE") {
+        rename { "${it}_${project.base.archivesName.get()}" }
+    }
+}
+
+// configure the maven publication
+publishing {
+    publications {
+        create("mavenJava", MavenPublication) {
+            artifactId = project.base.archivesName.get()
+            from components.java
+        }
+    }
+
+    // See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
+    repositories {
+
+    }
+}
