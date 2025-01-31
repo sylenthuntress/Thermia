@@ -14,7 +14,7 @@ public class ThermiaAttributes {
             Identifier.of(Thermia.MOD_ID, "generic.body_temperature"),
             new ClampedEntityAttribute(
                     "attribute.name.generic.body_temperature",
-                    98.6,
+                    97,
                     -100,
                     200
             ).setTracked(true)

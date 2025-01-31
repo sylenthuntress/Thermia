@@ -12,11 +12,16 @@ public class TemperatureManager {
         temperature = livingEntity.getAttributeValue(ThermiaAttributes.BODY_TEMPERATURE);
     }
 
+    private double setTemperature(double newTemperature) {
+        temperature = newTemperature;
+        return temperature;
+    }
+
     public double modifyTemperature(double coldTemperature, double hotTemperature) {
         double newTemperature = temperature;
         newTemperature -= coldTemperature;
         newTemperature += hotTemperature;
-        return newTemperature;
+        return setTemperature(newTemperature);
     }
 
     public double getTemperature() {
