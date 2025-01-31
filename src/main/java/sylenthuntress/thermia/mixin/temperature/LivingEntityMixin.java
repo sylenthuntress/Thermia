@@ -27,6 +27,10 @@ public abstract class LivingEntityMixin extends Entity implements LivingEntityAc
         super(type, world);
     }
 
+    public TemperatureManager thermia$getTemperatureManager() {
+        return thermia$temperatureManager;
+    }
+
     @Inject(method = "<init>", at = @At("TAIL"))
     private void thermia$setTemperatureManager(EntityType<? extends LivingEntity> entityType, World world, CallbackInfo ci) {
         thermia$temperatureManager = new TemperatureManager((LivingEntity) (Object) this);
@@ -34,7 +38,8 @@ public abstract class LivingEntityMixin extends Entity implements LivingEntityAc
 
     @Inject(method = "tick", at = @At("TAIL"))
     private void thermia$calculateTemperature(CallbackInfo ci) {
-        double targetTemperature = thermia$temperatureManager.stepPassiveTemperature();
+        double targetTemperature = TemperatureHelper.getTargetTemperature((LivingEntity) (Object) this);
+        thermia$temperatureManager.stepPassiveTemperature();
         if (this.age % 20 == 0 && (Object) this instanceof PlayerEntity)
             Thermia.LOGGER.info("{} -> {}", thermia$temperatureManager.getTemperature(), targetTemperature);
     }
@@ -42,6 +47,8 @@ public abstract class LivingEntityMixin extends Entity implements LivingEntityAc
     @ModifyReturnValue(method = "createLivingAttributes", at = @At("RETURN"))
     private static DefaultAttributeContainer.Builder thermia$addAttributes(DefaultAttributeContainer.Builder original) {
         return original
-                .add(ThermiaAttributes.BODY_TEMPERATURE);
+                .add(ThermiaAttributes.BODY_TEMPERATURE)
+                .add(ThermiaAttributes.COLD_MODIFIER)
+                .add(ThermiaAttributes.HEAT_MODIFIER);
     }
 }

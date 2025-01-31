@@ -3,6 +3,8 @@ package sylenthuntress.thermia.util;
 import net.minecraft.entity.LivingEntity;
 import sylenthuntress.thermia.registry.ThermiaAttributes;
 
+import java.util.Arrays;
+
 public class TemperatureManager {
     private final LivingEntity entity;
     private double temperature;
@@ -17,18 +19,22 @@ public class TemperatureManager {
         return temperature;
     }
 
-    public double modifyTemperature(double coldTemperature, double hotTemperature) {
+    public double modifyTemperature(double... inputTemperatures) {
         double newTemperature = temperature;
-        newTemperature -= coldTemperature;
-        newTemperature += hotTemperature;
+        for (double inputTemperature : inputTemperatures)
+            newTemperature += inputTemperature;
         return setTemperature(newTemperature);
     }
 
     public double stepPassiveTemperature() {
-        double newTemperature = TemperatureHelper.getTargetTemperature(entity);
-        double hotTemperature = Math.max(0, newTemperature - temperature) * -2;
-        double coldTemperature = Math.min(0, temperature - newTemperature);
-        return modifyTemperature(coldTemperature, hotTemperature);
+        double inputTemperature = TemperatureHelper.getTargetTemperature(entity) - temperature;
+        double newTemperature = modifyTemperature(inputTemperature * 0.001);
+
+        double[] extremeTemperatures = TemperatureHelper.getExtremeTemperatures(entity);
+        if (Arrays.stream(extremeTemperatures).anyMatch((var) -> var > 0))
+            newTemperature = modifyTemperature(extremeTemperatures);
+
+        return newTemperature;
     }
 
     public double getTemperature() {

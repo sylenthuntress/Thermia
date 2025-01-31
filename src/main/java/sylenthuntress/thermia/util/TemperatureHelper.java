@@ -2,11 +2,13 @@ package sylenthuntress.thermia.util;
 
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBiomeTags;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.registry.tag.DamageTypeTags;
 import net.minecraft.registry.tag.FluidTags;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.Heightmap;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
+import sylenthuntress.thermia.access.temperature.LivingEntityAccess;
 import sylenthuntress.thermia.registry.ThermiaAttributes;
 
 public abstract class TemperatureHelper {
@@ -40,8 +42,41 @@ public abstract class TemperatureHelper {
         return ambientTemperature;
     }
 
+    public static double[] getExtremeTemperatures(LivingEntity entity) {
+        double coldTemperature = 0;
+        double hotTemperature = 0;
+
+        if (entity.isOnFire() && !entity.isFireImmune())
+            hotTemperature += entity.getFireTicks() * 0.1;
+        else if (entity.canFreeze())
+            coldTemperature += entity.getFrozenTicks() * 0.1;
+
+        DamageSource recentDamageSource = entity.getRecentDamageSource();
+        if (recentDamageSource != null) {
+            float lastDamageTaken = entity.lastDamageTaken;
+            if (recentDamageSource.isIn(DamageTypeTags.IS_FIRE))
+                hotTemperature += lastDamageTaken;
+            else if (recentDamageSource.isIn(DamageTypeTags.IS_FREEZING))
+                coldTemperature += lastDamageTaken;
+        }
+
+        return new double[]{
+                coldTemperature,
+                hotTemperature
+        };
+    }
+
     public static double getTargetTemperature(LivingEntity entity) {
         double bodyTemperature = entity.getAttributeValue(ThermiaAttributes.BODY_TEMPERATURE);
-        return (bodyTemperature + getAmbientTemperature(entity.getWorld(), entity.getBlockPos())) / 2;
+        double ambientTemperature = getAmbientTemperature(entity.getWorld(), entity.getBlockPos());
+        double targetTemperature = (bodyTemperature + ambientTemperature) / 2;
+
+        double currentTemperature = ((LivingEntityAccess)entity).thermia$getTemperatureManager().getTemperature();
+        if (targetTemperature > bodyTemperature && targetTemperature > currentTemperature)
+             targetTemperature *= entity.getAttributeValue(ThermiaAttributes.HEAT_MODIFIER);
+        else if (targetTemperature < bodyTemperature && targetTemperature < currentTemperature)
+            targetTemperature *= entity.getAttributeValue(ThermiaAttributes.COLD_MODIFIER);
+
+        return targetTemperature;
     }
 }

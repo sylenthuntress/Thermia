@@ -1,5 +1,7 @@
 package sylenthuntress.thermia.access.temperature;
 
-public interface LivingEntityAccess {
+import sylenthuntress.thermia.util.TemperatureManager;
 
+public interface LivingEntityAccess {
+    TemperatureManager thermia$getTemperatureManager();
 }
