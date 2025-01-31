@@ -34,10 +34,7 @@ public abstract class LivingEntityMixin extends Entity implements LivingEntityAc
 
     @Inject(method = "tick", at = @At("TAIL"))
     private void thermia$calculateTemperature(CallbackInfo ci) {
-        double targetTemperature = TemperatureHelper.getTargetTemperature((LivingEntity) (Object) this);
-        if (thermia$temperatureManager.getTemperature() > targetTemperature)
-            thermia$temperatureManager.modifyTemperature(0.005, 0);
-        else thermia$temperatureManager.modifyTemperature(0, 0.005);
+        double targetTemperature = thermia$temperatureManager.stepPassiveTemperature();
         if (this.age % 20 == 0 && (Object) this instanceof PlayerEntity)
             Thermia.LOGGER.info("{} -> {}", thermia$temperatureManager.getTemperature(), targetTemperature);
     }
