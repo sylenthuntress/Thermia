@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "${mod_id}",
-  "version": "v${version}+${minecraft_version}+Fabric",
+  "version": "v${version}+${minecraft_version}",
   "name": "${mod_name}",
   "description": "${description}",
   "authors": [
@@ -22,6 +22,7 @@
   "mixins": [
     "${mod_id}.mixins.json"
   ],
+  "accessWidener": "${mod_id}.accesswidener",
   "depends": {
     "fabricloader": ">=${fabric_loader_version}",
     "fabric-api": ">=${fabric_version}",
