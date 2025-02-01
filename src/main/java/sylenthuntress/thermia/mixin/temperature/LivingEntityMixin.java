@@ -1,5 +1,6 @@
 package sylenthuntress.thermia.mixin.temperature;
 
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;

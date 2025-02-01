@@ -1,9 +1,11 @@
 package sylenthuntress.thermia;
 
 import net.fabricmc.api.ModInitializer;
+import net.minecraft.registry.Registries;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sylenthuntress.thermia.registry.ThermiaAttributes;
+import sylenthuntress.thermia.registry.ThermiaEffects;
 
 public class Thermia implements ModInitializer {
     public static final String MOD_ID = "thermia";
@@ -13,5 +15,6 @@ public class Thermia implements ModInitializer {
     public void onInitialize() {
         Thermia.LOGGER.info(MOD_NAME + " successfully loaded!");
         ThermiaAttributes.registerAll();
+        ThermiaEffects.registerAll();
     }
 }
