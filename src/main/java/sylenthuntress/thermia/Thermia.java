@@ -12,6 +12,10 @@ public class Thermia implements ModInitializer {
     public static final String MOD_NAME = "Thermia";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_NAME);
 
+    public static Identifier modIdentifier(String path) {
+        return Identifier.of(MOD_ID, path);
+    }
+
     public void onInitialize() {
         Thermia.LOGGER.info(MOD_NAME + " successfully loaded!");
         ThermiaAttributes.registerAll();
