@@ -1,6 +1,5 @@
 package sylenthuntress.thermia.mixin.temperature;
 
-import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -16,8 +15,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import sylenthuntress.thermia.Thermia;
 import sylenthuntress.thermia.access.temperature.LivingEntityAccess;
 import sylenthuntress.thermia.registry.ThermiaAttributes;
-import sylenthuntress.thermia.util.TemperatureHelper;
-import sylenthuntress.thermia.util.TemperatureManager;
+import sylenthuntress.thermia.temperature.TemperatureHelper;
+import sylenthuntress.thermia.temperature.TemperatureManager;
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity implements LivingEntityAccess {
@@ -39,10 +38,21 @@ public abstract class LivingEntityMixin extends Entity implements LivingEntityAc
 
     @Inject(method = "tick", at = @At("TAIL"))
     private void thermia$calculateTemperature(CallbackInfo ci) {
-        double targetTemperature = TemperatureHelper.getTargetTemperature((LivingEntity) (Object) this);
-        thermia$temperatureManager.stepPassiveTemperature();
-        if (this.age % 20 == 0 && (Object) this instanceof PlayerEntity)
-            Thermia.LOGGER.info("{} -> {}", thermia$temperatureManager.getTemperature(), targetTemperature);
+        if (!this.getWorld().isClient()) {
+            LivingEntity livingEntity = (LivingEntity) (Object) this;
+            thermia$temperatureManager.stepPassiveTemperature();
+
+            if (!this.isOnFire())
+                TemperatureHelper.removeModifier(livingEntity, Thermia.modIdentifier("on_fire"));
+
+            if (this.age % 100 == 0 && (Object) this instanceof PlayerEntity)
+                Thermia.LOGGER.info("SERVER {} -> {}",
+                        thermia$temperatureManager.getTemperature(),
+                        TemperatureHelper.getTargetTemperature(livingEntity));
+        } else if (this.age % 100 == 0 && (Object) this instanceof PlayerEntity playerEntity)
+            Thermia.LOGGER.info("CLIENT {} -> {}",
+                    thermia$temperatureManager.getTemperature(),
+                    TemperatureHelper.getTargetTemperature(playerEntity));
     }
 
     @ModifyReturnValue(method = "createLivingAttributes", at = @At("RETURN"))

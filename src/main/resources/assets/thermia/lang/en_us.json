@@ -1,3 +1,13 @@
 {
-  "thermia.discord": "Discord"
+  "thermia.discord": "Discord",
+  "commands.temperature.get.entity.success": "%s temperature of %s is %s",
+  "commands.temperature.get.position.success": "%s temperature at %s is %s",
+  "commands.temperature.change.success": "Successfully changed temperature of %s from %s to %s",
+  "commands.temperature.modifier.add.success": "Successfully added modifier %s to %s!",
+  "commands.temperature.modifier.remove.success": "Successfully removed modifier %s from %s!",
+  "commands.temperature.failure.modifier.invalid": "Modifier %s does not exist on entity!",
+  "commands.temperature.failure.modifier.duplicate": "Modifier %s already exists on entity!",
+  "commands.temperature.failure.entity.invalid": "%s is not a valid entity for this command!",
+  "commands.temperature.failure.position.invalid": "%s is not a valid position for this command!",
+  "commands.temperature.failure.position.unloaded": "The chunk at %s is unloaded!"
 }

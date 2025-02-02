@@ -1,4 +1,4 @@
-package sylenthuntress.thermia.event.temperature;
+package sylenthuntress.thermia.registry.commands;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.BoolArgumentType;

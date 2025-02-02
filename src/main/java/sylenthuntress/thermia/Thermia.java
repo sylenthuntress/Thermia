@@ -1,9 +1,12 @@
 package sylenthuntress.thermia;
 
 import net.fabricmc.api.ModInitializer;
-import net.minecraft.registry.Registries;
+import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sylenthuntress.thermia.registry.commands.TemperatureCommand;
+import sylenthuntress.thermia.registry.ThermiaAttachmentTypes;
 import sylenthuntress.thermia.registry.ThermiaAttributes;
 import sylenthuntress.thermia.registry.ThermiaEffects;
 
