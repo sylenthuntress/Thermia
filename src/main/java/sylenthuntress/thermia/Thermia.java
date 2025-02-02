@@ -16,5 +16,7 @@ public class Thermia implements ModInitializer {
         Thermia.LOGGER.info(MOD_NAME + " successfully loaded!");
         ThermiaAttributes.registerAll();
         ThermiaEffects.registerAll();
+        ThermiaAttachmentTypes.init();
+        CommandRegistrationCallback.EVENT.register(new TemperatureCommand());
     }
 }
