@@ -4,7 +4,6 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import sylenthuntress.thermia.registry.ThermiaAttachmentTypes;
 import sylenthuntress.thermia.registry.ThermiaAttributes;
-import sylenthuntress.thermia.registry.ThermiaStatusEffects;
 
 import java.util.ArrayList;
 
@@ -19,17 +18,20 @@ public class TemperatureManager {
     }
 
     public double setTemperature(double newTemperature) {
-        return entity.setAttached(ThermiaAttachmentTypes.TEMPERATURE, Temperature.setValue(newTemperature)).value();
+        if (!entity.getWorld().isClient())
+            return entity.setAttached(ThermiaAttachmentTypes.TEMPERATURE, Temperature.setValue(newTemperature)).value();
+        return entity.getAttached(ThermiaAttachmentTypes.TEMPERATURE).value();
     }
 
     public double modifyTemperature(boolean applyModifiers, double... inputTemperatures) {
         double newTemperature = getTemperature();
         for (double inputTemperature : inputTemperatures) {
+            double targetTemperature = TemperatureHelper.getTargetTemperature(entity);
             double bodyTemperature = entity.getAttributeValue(ThermiaAttributes.BODY_TEMPERATURE);
             if (applyModifiers) {
-                if (getTemperature() > bodyTemperature && inputTemperature > 0)
+                if (targetTemperature < bodyTemperature && inputTemperature > 0)
                     inputTemperature *= entity.getAttributeValue(ThermiaAttributes.HEAT_MODIFIER);
-                else if (getTemperature() < bodyTemperature && inputTemperature < 0)
+                else if (bodyTemperature > targetTemperature && inputTemperature < 0)
                     inputTemperature *= entity.getAttributeValue(ThermiaAttributes.COLD_MODIFIER);
             }
             newTemperature += inputTemperature;
@@ -51,30 +53,24 @@ public class TemperatureManager {
     }
 
     public void applyStatus() {
-        if (getTemperature() < 95)
-            entity.addStatusEffect(new StatusEffectInstance(
-                    ThermiaStatusEffects.HYPOTHERMIA,
-                    200,
-                    0,
-                    true,
-                    false,
-                    true
-            ));
-        else if (getTemperature() >= 106.7)
-            entity.addStatusEffect(new StatusEffectInstance(
-                    ThermiaStatusEffects.HYPERPYREXIA,
-                    200,
-                    0,
-                    true,
-                    false,
-                    true
-            ));
+
     }
 
     public double getTemperature() {
         return entity.getAttachedOrCreate(
                 ThermiaAttachmentTypes.TEMPERATURE,
                 () -> new Temperature(entity.getAttributeValue(ThermiaAttributes.BODY_TEMPERATURE))).value();
+    }
+
+    public double getModifiedTemperature() {
+        double temperature = getTemperature();
+        for (TemperatureModifier modifier : getTemperatureModifiers()) {
+            switch (modifier.operation()) {
+                case ADD_VALUE -> temperature += modifier.value();
+                case ADD_MULTIPLIED_VALUE -> temperature += temperature * modifier.value();
+            }
+        }
+        return temperature;
     }
 
     public ArrayList<TemperatureModifier> getTemperatureModifiers() {

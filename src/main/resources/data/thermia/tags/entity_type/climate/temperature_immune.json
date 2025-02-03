@@ -1,0 +1,11 @@
+{
+  "values": [
+    "minecraft:allay",
+    "minecraft:iron_golem",
+    "minecraft:creaking",
+    "minecraft:endermite",
+    "minecraft:slime",
+    "minecraft:vex",
+    "#c:bosses"
+  ]
+}
