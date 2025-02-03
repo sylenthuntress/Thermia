@@ -1,13 +1,11 @@
 package sylenthuntress.thermia.registry.commands;
 
-import com.mojang.brigadier.CommandDispatcher;
-import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.DoubleArgumentType;
 import com.mojang.brigadier.arguments.FloatArgumentType;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
-import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
-import net.minecraft.command.CommandRegistryAccess;
+import com.mojang.brigadier.tree.CommandNode;
+import com.mojang.brigadier.tree.LiteralCommandNode;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.argument.BlockPosArgumentType;
 import net.minecraft.command.argument.EntityArgumentType;
@@ -29,7 +27,7 @@ import sylenthuntress.thermia.temperature.TemperatureModifier;
 import java.util.ArrayList;
 import java.util.stream.Stream;
 
-public class TemperatureCommand implements CommandRegistrationCallback {
+public class TemperatureCommand {
     private static final DynamicCommandExceptionType ENTITY_FAILED_EXCEPTION = new DynamicCommandExceptionType(
             name -> Text.stringifiedTranslatable("commands.temperature.failure.entity.invalid", name)
     );
@@ -188,282 +186,39 @@ public class TemperatureCommand implements CommandRegistrationCallback {
             throw ENTITY_FAILED_EXCEPTION.create(target.getName());
     }
 
-    public void register(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess commandRegistryAccess, CommandManager.RegistrationEnvironment registrationEnvironment) {
-        dispatcher.register(
-                CommandManager.literal("temperature")
-                        .requires(source -> source.hasPermissionLevel(2))
-                        .then(
-                                CommandManager.argument("target", EntityArgumentType.entity())
-                                        .then(
-                                                CommandManager.literal("get")
-                                                        .executes(
-                                                                context -> executeValueGetCurrent(
-                                                                        context.getSource(),
-                                                                        EntityArgumentType.getEntity(context, "target"),
-                                                                        1.0F
-                                                                )
-                                                        )
-                                                        .then(
-                                                                CommandManager.literal("current")
-                                                                        .executes(
-                                                                                context -> executeValueGetCurrent(
-                                                                                        context.getSource(),
-                                                                                        EntityArgumentType.getEntity(context, "target"),
-                                                                                        1
-                                                                                )
-                                                                        )
-                                                                        .then(
-                                                                                CommandManager.argument("scale", FloatArgumentType.floatArg())
-                                                                                        .executes(
-                                                                                                context -> executeValueGetCurrent(
-                                                                                                        context.getSource(),
-                                                                                                        EntityArgumentType.getEntity(context, "target"),
-                                                                                                        FloatArgumentType.getFloat(context, "scale")
-                                                                                                )
-                                                                                        )
-                                                                        )
-                                                        )
-                                                        .then(
-                                                                CommandManager.literal("unmodified")
-                                                                        .executes(
-                                                                                context -> executeValueGetUnmodified(
-                                                                                        context.getSource(),
-                                                                                        EntityArgumentType.getEntity(context, "target"),
-                                                                                        1
-                                                                                )
-                                                                        )
-                                                                        .then(
-                                                                                CommandManager.argument("scale", FloatArgumentType.floatArg())
-                                                                                        .executes(
-                                                                                                context -> executeValueGetUnmodified(
-                                                                                                        context.getSource(),
-                                                                                                        EntityArgumentType.getEntity(context, "target"),
-                                                                                                        FloatArgumentType.getFloat(context, "scale")
-                                                                                                )
-                                                                                        )
-                                                                        )
-                                                        )
-                                                        .then(
-                                                                CommandManager.literal("body")
-                                                                        .executes(
-                                                                                context -> executeValueGetBody(
-                                                                                        context.getSource(),
-                                                                                        EntityArgumentType.getEntity(context, "target"),
-                                                                                        1
-                                                                                )
-                                                                        )
-                                                                        .then(
-                                                                                CommandManager.argument("scale", FloatArgumentType.floatArg())
-                                                                                        .executes(
-                                                                                                context -> executeValueGetBody(
-                                                                                                        context.getSource(),
-                                                                                                        EntityArgumentType.getEntity(context, "target"),
-                                                                                                        FloatArgumentType.getFloat(context, "scale")
-                                                                                                )
-                                                                                        )
-                                                                        )
-                                                        )
-                                                        .then(
-                                                                CommandManager.literal("target")
-                                                                        .executes(
-                                                                                context -> executeValueGetTarget(
-                                                                                        context.getSource(),
-                                                                                        EntityArgumentType.getEntity(context, "target"),
-                                                                                        1
-                                                                                )
-                                                                        )
-                                                                        .then(
-                                                                                CommandManager.argument("scale", FloatArgumentType.floatArg())
-                                                                                        .executes(
-                                                                                                context -> executeValueGetTarget(
-                                                                                                        context.getSource(),
-                                                                                                        EntityArgumentType.getEntity(context, "target"),
-                                                                                                        FloatArgumentType.getFloat(context, "scale")
-                                                                                                )
-                                                                                        )
-                                                                        )
-                                                        )
-                                        )
-                                        .then(
-                                                CommandManager.literal("set")
-                                                        .then(
-                                                                CommandManager.argument("value", FloatArgumentType.floatArg())
-                                                                        .executes(
-                                                                                context -> executeValueSet(
-                                                                                        context.getSource(),
-                                                                                        EntityArgumentType.getEntity(context, "target"),
-                                                                                        FloatArgumentType.getFloat(context, "value")
-                                                                                )
-                                                                        )
+    // Thanks to eggohito for the suggestion on optimizing this!
+    public static void register(CommandNode<ServerCommandSource> baseNode) {
+        var powerNode = CommandManager.literal("temperature")
+                .requires(source -> source.hasPermissionLevel(2))
+                .build();
 
-                                                        )
-                                        )
-                                        .then(
-                                                CommandManager.literal("add")
-                                                        .then(
-                                                                CommandManager.argument("value", FloatArgumentType.floatArg())
-                                                                        .executes(
-                                                                                context -> executeValueAdd(
-                                                                                        context.getSource(),
-                                                                                        EntityArgumentType.getEntity(context, "target"),
-                                                                                        FloatArgumentType.getFloat(context, "value")
-                                                                                )
-                                                                        )
+        //  Add the sub-nodes as children of the target selection node
+        var targetNode = CommandManager.argument("target", EntityArgumentType.entity())
+                .build();
+        targetNode.addChild(GetEntityTemperatureNode.get());
+        targetNode.addChild(SetTemperatureNode.get());
+        targetNode.addChild(AddTemperatureNode.get());
+        targetNode.addChild(ModifyTemperatureNode.get());
 
-                                                        )
-                                        )
-                                        .then(
-                                                CommandManager.literal("modifier")
-                                                        .then(
-                                                                CommandManager.literal("add")
-                                                                        .then(
-                                                                                CommandManager.argument("id", IdentifierArgumentType.identifier())
-                                                                                        .then(
-                                                                                                CommandManager.argument("value", DoubleArgumentType.doubleArg())
-                                                                                                        .then(
-                                                                                                                CommandManager.literal("add_value")
-                                                                                                                        .executes(
-                                                                                                                                context -> executeModifierAdd(
-                                                                                                                                        context.getSource(),
-                                                                                                                                        EntityArgumentType.getEntity(context, "target"),
-                                                                                                                                        IdentifierArgumentType.getIdentifier(context, "id"),
-                                                                                                                                        DoubleArgumentType.getDouble(context, "value"),
-                                                                                                                                        TemperatureModifier.Operation.ADD_VALUE
-                                                                                                                                )
-                                                                                                                        )
-                                                                                                        )
-                                                                                                        .then(
-                                                                                                                CommandManager.literal("add_multiplied_value")
-                                                                                                                        .executes(
-                                                                                                                                context -> executeModifierAdd(
-                                                                                                                                        context.getSource(),
-                                                                                                                                        EntityArgumentType.getEntity(context, "target"),
-                                                                                                                                        IdentifierArgumentType.getIdentifier(context, "id"),
-                                                                                                                                        DoubleArgumentType.getDouble(context, "value"),
-                                                                                                                                        TemperatureModifier.Operation.ADD_MULTIPLIED_VALUE
-                                                                                                                                )
-                                                                                                                        )
-                                                                                                        )
-                                                                                        )
-                                                                        )
-                                                        )
-                                                        .then(
-                                                                CommandManager.literal("remove")
-                                                                        .then(
-                                                                                CommandManager.argument("id", IdentifierArgumentType.identifier())
-                                                                                        .suggests(
-                                                                                                (context, builder) -> CommandSource.suggestIdentifiers(
-                                                                                                        streamModifiers(EntityArgumentType.getEntity(context, "target")),
-                                                                                                        builder
-                                                                                                )
-                                                                                        )
-                                                                                        .executes(
-                                                                                                context -> executeModifierRemove(
-                                                                                                        context.getSource(),
-                                                                                                        EntityArgumentType.getEntity(context, "target"),
-                                                                                                        IdentifierArgumentType.getIdentifier(context, "id")
-                                                                                                )
-                                                                                        )
-                                                                        )
-                                                        )
-                                                        .then(
-                                                                CommandManager.literal("value")
-                                                                        .then(
-                                                                                CommandManager.literal("get")
-                                                                                        .then(
-                                                                                                CommandManager.argument("id", IdentifierArgumentType.identifier())
-                                                                                                        .suggests(
-                                                                                                                (context, builder) -> CommandSource.suggestIdentifiers(
-                                                                                                                        streamModifiers(EntityArgumentType.getEntity(context, "target")),
-                                                                                                                        builder
-                                                                                                                )
-                                                                                                        )
-                                                                                                        .executes(
-                                                                                                                context -> executeModifierGet(
-                                                                                                                        context.getSource(),
-                                                                                                                        EntityArgumentType.getEntity(context, "target"),
-                                                                                                                        IdentifierArgumentType.getIdentifier(context, "id"),
-                                                                                                                        1
-                                                                                                                )
-                                                                                                        )
-                                                                                                        .then(
-                                                                                                                CommandManager.argument("scale", FloatArgumentType.floatArg())
-                                                                                                                        .executes(
-                                                                                                                                context -> executeModifierGet(
-                                                                                                                                        context.getSource(),
-                                                                                                                                        EntityArgumentType.getEntity(context, "target"),
-                                                                                                                                        IdentifierArgumentType.getIdentifier(context, "id"),
-                                                                                                                                        FloatArgumentType.getFloat(context, "scale")
-                                                                                                                                )
-                                                                                                                        )
+        //  Add the sub-nodes as children of the position selection node
+        var positionNode = CommandManager.argument("position", BlockPosArgumentType.blockPos())
+                .build();
+        positionNode.addChild(GetPositionTemperatureNode.get());
 
-                                                                                                        )
-                                                                                        )
-                                                                        )
-                                                        )
-                                        )
-                        )
-                        .then(
-                                CommandManager.argument("position", BlockPosArgumentType.blockPos())
-                                        .then(
-                                                CommandManager.literal("get")
-                                                        .executes(
-                                                                context -> executeValueGetAmbient(
-                                                                        context.getSource(),
-                                                                        BlockPosArgumentType.getBlockPos(context, "position"),
-                                                                        1.0F
-                                                                )
-                                                        )
-                                                        .then(
-                                                                CommandManager.literal("ambient")
-                                                                        .executes(
-                                                                                context -> executeValueGetAmbient(
-                                                                                        context.getSource(),
-                                                                                        BlockPosArgumentType.getBlockPos(context, "position"),
-                                                                                        1
-                                                                                )
-                                                                        )
-                                                                        .then(
-                                                                                CommandManager.argument("scale", FloatArgumentType.floatArg())
-                                                                                        .executes(
-                                                                                                context -> executeValueGetAmbient(
-                                                                                                        context.getSource(),
-                                                                                                        BlockPosArgumentType.getBlockPos(context, "position"),
-                                                                                                        FloatArgumentType.getFloat(context, "scale")
-                                                                                                )
-                                                                                        )
-                                                                        )
-                                                        )
-                                                        .then(
-                                                                CommandManager.literal("regional")
-                                                                        .executes(
-                                                                                context -> executeValueGetRegional(
-                                                                                        context.getSource(),
-                                                                                        BlockPosArgumentType.getBlockPos(context, "position"),
-                                                                                        1
-                                                                                )
-                                                                        )
-                                                                        .then(
-                                                                                CommandManager.argument("scale", FloatArgumentType.floatArg())
-                                                                                        .executes(
-                                                                                                context -> executeValueGetAmbient(
-                                                                                                        context.getSource(),
-                                                                                                        BlockPosArgumentType.getBlockPos(context, "position"),
-                                                                                                        FloatArgumentType.getFloat(context, "scale")
-                                                                                                )
-                                                                                        )
-                                                                        )
-                                                        )
-                                        )
-                        )
-        );
+        //  Add the selection sub-nodes as children of the main node
+        powerNode.addChild(targetNode);
+        powerNode.addChild(positionNode);
+
+        //  Add the main node as a child of the base node
+        baseNode.addChild(powerNode);
     }
 
     private static Stream<Identifier> streamModifiers(Entity target) throws CommandSyntaxException {
         if (target instanceof LivingEntity livingTarget) {
-            ArrayList<TemperatureModifier> temperatureModifiers = ((LivingEntityAccess)livingTarget).thermia$getTemperatureManager().getTemperatureModifiers();
+            ArrayList<TemperatureModifier> temperatureModifiers = ((LivingEntityAccess) livingTarget).thermia$getTemperatureManager().getTemperatureModifiers();
             return temperatureModifiers.stream().map(TemperatureModifier::id);
-        } throw ENTITY_FAILED_EXCEPTION.create(target.getName());
+        }
+        throw ENTITY_FAILED_EXCEPTION.create(target.getName());
     }
 
     private static int executeModifierRemove(ServerCommandSource source, Entity target, Identifier id) throws CommandSyntaxException {
@@ -478,8 +233,10 @@ public class TemperatureCommand implements CommandRegistrationCallback {
                         false
                 );
                 return 1;
-            } throw INVALID_MODIFIER_EXCEPTION.create(id);
-        } throw ENTITY_FAILED_EXCEPTION.create(target.getName());
+            }
+            throw INVALID_MODIFIER_EXCEPTION.create(id);
+        }
+        throw ENTITY_FAILED_EXCEPTION.create(target.getName());
     }
 
     private static int executeModifierGet(ServerCommandSource source, Entity target, Identifier id, double scale) throws CommandSyntaxException {
@@ -496,8 +253,10 @@ public class TemperatureCommand implements CommandRegistrationCallback {
                         false
                 );
                 return (int) (modifier.value() * 1000);
-            } throw INVALID_MODIFIER_EXCEPTION.create(id);
-        } throw ENTITY_FAILED_EXCEPTION.create(target.getName());
+            }
+            throw INVALID_MODIFIER_EXCEPTION.create(id);
+        }
+        throw ENTITY_FAILED_EXCEPTION.create(target.getName());
     }
 
     private static int executeModifierAdd(ServerCommandSource source, Entity target, Identifier id, double value, TemperatureModifier.Operation operation) throws CommandSyntaxException {
@@ -512,7 +271,84 @@ public class TemperatureCommand implements CommandRegistrationCallback {
                         false
                 );
                 return 1;
-            } throw DUPLICATE_MODIFIER_EXCEPTION.create(id);
-        } throw ENTITY_FAILED_EXCEPTION.create(target.getName());
+            }
+            throw DUPLICATE_MODIFIER_EXCEPTION.create(id);
+        }
+        throw ENTITY_FAILED_EXCEPTION.create(target.getName());
+    }
+
+    public static class GetEntityTemperatureNode {
+        public static LiteralCommandNode<ServerCommandSource> get() {
+            return CommandManager.literal("get")
+                    .executes(context -> executeValueGetCurrent(context.getSource(), EntityArgumentType.getEntity(context, "target"), 1.0F))
+                    .then(CommandManager.literal("current")
+                            .executes(context -> executeValueGetCurrent(context.getSource(), EntityArgumentType.getEntity(context, "target"), 1)).then(CommandManager.argument("scale", FloatArgumentType.floatArg()).executes(context -> executeValueGetCurrent(context.getSource(), EntityArgumentType.getEntity(context, "target"), FloatArgumentType.getFloat(context, "scale")))))
+                    .then(CommandManager.literal("unmodified")
+                            .executes(context -> executeValueGetUnmodified(context.getSource(), EntityArgumentType.getEntity(context, "target"), 1))
+                            .then(CommandManager.argument("scale", FloatArgumentType.floatArg())
+                                    .executes(context -> executeValueGetUnmodified(context.getSource(), EntityArgumentType.getEntity(context, "target"), FloatArgumentType.getFloat(context, "scale")))))
+                    .then(CommandManager.literal("body")
+                            .executes(context -> executeValueGetBody(context.getSource(), EntityArgumentType.getEntity(context, "target"), 1))
+                            .then(CommandManager.argument("scale", FloatArgumentType.floatArg())
+                                    .executes(context -> executeValueGetBody(context.getSource(), EntityArgumentType.getEntity(context, "target"), FloatArgumentType.getFloat(context, "scale")))))
+                    .then(CommandManager.literal("target")
+                            .executes(context -> executeValueGetTarget(context.getSource(), EntityArgumentType.getEntity(context, "target"), 1))
+                            .then(CommandManager.argument("scale", FloatArgumentType.floatArg())
+                                    .executes(context -> executeValueGetTarget(context.getSource(), EntityArgumentType.getEntity(context, "target"), FloatArgumentType.getFloat(context, "scale"))))).build();
+        }
+    }
+
+    public static class SetTemperatureNode {
+        public static LiteralCommandNode<ServerCommandSource> get() {
+            return CommandManager.literal("set")
+                    .then(CommandManager.argument("value", FloatArgumentType.floatArg())
+                            .executes(context -> executeValueSet(context.getSource(), EntityArgumentType.getEntity(context, "target"), FloatArgumentType.getFloat(context, "value")))).build();
+        }
+    }
+
+    public static class AddTemperatureNode {
+        public static LiteralCommandNode<ServerCommandSource> get() {
+            return CommandManager.literal("add")
+                    .then(CommandManager.argument("value", FloatArgumentType.floatArg())
+                            .executes(context -> executeValueAdd(context.getSource(), EntityArgumentType.getEntity(context, "target"), FloatArgumentType.getFloat(context, "value")))).build();
+        }
+    }
+
+    public static class ModifyTemperatureNode {
+        public static LiteralCommandNode<ServerCommandSource> get() {
+            return CommandManager.literal("modifier")
+                    .then(CommandManager.literal("add")
+                            .then(CommandManager.argument("id", IdentifierArgumentType.identifier())
+                                    .then(CommandManager.argument("value", DoubleArgumentType.doubleArg())
+                                            .then(CommandManager.literal("add_value").executes(context -> executeModifierAdd(context.getSource(), EntityArgumentType.getEntity(context, "target"), IdentifierArgumentType.getIdentifier(context, "id"), DoubleArgumentType.getDouble(context, "value"), TemperatureModifier.Operation.ADD_VALUE)))
+                                            .then(CommandManager.literal("add_multiplied_value")
+                                                    .executes(context -> executeModifierAdd(context.getSource(), EntityArgumentType.getEntity(context, "target"), IdentifierArgumentType.getIdentifier(context, "id"), DoubleArgumentType.getDouble(context, "value"), TemperatureModifier.Operation.ADD_MULTIPLIED_VALUE))))))
+                    .then(CommandManager.literal("remove")
+                            .then(CommandManager.argument("id", IdentifierArgumentType.identifier())
+                                    .suggests((context, builder) -> CommandSource.suggestIdentifiers(streamModifiers(EntityArgumentType.getEntity(context, "target")), builder))
+                                    .executes(context -> executeModifierRemove(context.getSource(), EntityArgumentType.getEntity(context, "target"), IdentifierArgumentType.getIdentifier(context, "id")))))
+                    .then(CommandManager.literal("value")
+                            .then(CommandManager.literal("get")
+                                    .then(CommandManager.argument("id", IdentifierArgumentType.identifier())
+                                            .suggests((context, builder) -> CommandSource.suggestIdentifiers(streamModifiers(EntityArgumentType.getEntity(context, "target")), builder))
+                                            .executes(context -> executeModifierGet(context.getSource(), EntityArgumentType.getEntity(context, "target"), IdentifierArgumentType.getIdentifier(context, "id"), 1))
+                                            .then(CommandManager.argument("scale", FloatArgumentType.floatArg())
+                                                    .executes(context -> executeModifierGet(context.getSource(), EntityArgumentType.getEntity(context, "target"), IdentifierArgumentType.getIdentifier(context, "id"), FloatArgumentType.getFloat(context, "scale"))))))).build();
+        }
+    }
+
+    public static class GetPositionTemperatureNode {
+        public static LiteralCommandNode<ServerCommandSource> get() {
+            return CommandManager.literal("get")
+                    .executes(context -> executeValueGetAmbient(context.getSource(), BlockPosArgumentType.getBlockPos(context, "position"), 1.0F))
+                    .then(CommandManager.literal("ambient")
+                            .executes(context -> executeValueGetAmbient(context.getSource(), BlockPosArgumentType.getBlockPos(context, "position"), 1))
+                            .then(CommandManager.argument("scale", FloatArgumentType.floatArg())
+                                    .executes(context -> executeValueGetAmbient(context.getSource(), BlockPosArgumentType.getBlockPos(context, "position"), FloatArgumentType.getFloat(context, "scale")))))
+                    .then(CommandManager.literal("regional")
+                            .executes(context -> executeValueGetRegional(context.getSource(), BlockPosArgumentType.getBlockPos(context, "position"), 1))
+                            .then(CommandManager.argument("scale", FloatArgumentType.floatArg())
+                                    .executes(context -> executeValueGetAmbient(context.getSource(), BlockPosArgumentType.getBlockPos(context, "position"), FloatArgumentType.getFloat(context, "scale"))))).build();
+        }
     }
 }

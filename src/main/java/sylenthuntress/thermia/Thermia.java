@@ -26,6 +26,7 @@ public class Thermia implements ModInitializer {
         ThermiaStatusEffects.registerAll();
         ThermiaComponents.registerAll();
         ThermiaAttachmentTypes.init();
-        CommandRegistrationCallback.EVENT.register(new TemperatureCommand());
+        CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) ->
+                TemperatureCommand.register(dispatcher.getRoot()));
     }
 }
