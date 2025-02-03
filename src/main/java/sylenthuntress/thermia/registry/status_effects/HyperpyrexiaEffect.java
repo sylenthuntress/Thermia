@@ -1,4 +1,4 @@
-package sylenthuntress.thermia.registry.effects;
+package sylenthuntress.thermia.registry.status_effects;
 
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffect;

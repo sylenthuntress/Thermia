@@ -8,10 +8,10 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.entry.RegistryEntry;
 import sylenthuntress.thermia.Thermia;
-import sylenthuntress.thermia.registry.effects.HyperpyrexiaEffect;
-import sylenthuntress.thermia.registry.effects.HypothermiaEffect;
+import sylenthuntress.thermia.registry.status_effects.HyperpyrexiaEffect;
+import sylenthuntress.thermia.registry.status_effects.HypothermiaEffect;
 
-public class ThermiaEffects {
+public class ThermiaStatusEffects {
     public static final RegistryEntry<StatusEffect> HYPOTHERMIA = register(
             "hypothermia",
             new HypothermiaEffect(StatusEffectCategory.HARMFUL, 12624973)

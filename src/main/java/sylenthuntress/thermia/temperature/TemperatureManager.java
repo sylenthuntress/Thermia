@@ -4,7 +4,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import sylenthuntress.thermia.registry.ThermiaAttachmentTypes;
 import sylenthuntress.thermia.registry.ThermiaAttributes;
-import sylenthuntress.thermia.registry.ThermiaEffects;
+import sylenthuntress.thermia.registry.ThermiaStatusEffects;
 
 import java.util.ArrayList;
 
@@ -53,7 +53,7 @@ public class TemperatureManager {
     public void applyStatus() {
         if (getTemperature() < 95)
             entity.addStatusEffect(new StatusEffectInstance(
-                    ThermiaEffects.HYPOTHERMIA,
+                    ThermiaStatusEffects.HYPOTHERMIA,
                     200,
                     0,
                     true,
@@ -62,7 +62,7 @@ public class TemperatureManager {
             ));
         else if (getTemperature() >= 106.7)
             entity.addStatusEffect(new StatusEffectInstance(
-                    ThermiaEffects.HYPERPYREXIA,
+                    ThermiaStatusEffects.HYPERPYREXIA,
                     200,
                     0,
                     true,

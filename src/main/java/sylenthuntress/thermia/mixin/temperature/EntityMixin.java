@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import sylenthuntress.thermia.Thermia;
-import sylenthuntress.thermia.registry.ThermiaEffects;
+import sylenthuntress.thermia.registry.ThermiaStatusEffects;
 import sylenthuntress.thermia.temperature.TemperatureHelper;
 import sylenthuntress.thermia.temperature.TemperatureModifier;
 
@@ -23,7 +23,7 @@ public abstract class EntityMixin {
     @ModifyReturnValue(method = "isFrozen", at = @At("RETURN"))
     private boolean thermia$setFrozen(boolean original) {
         if ((Entity) (Object) this instanceof LivingEntity livingEntity)
-            original = original || livingEntity.hasStatusEffect(ThermiaEffects.HYPOTHERMIA);
+            original = original || livingEntity.hasStatusEffect(ThermiaStatusEffects.HYPOTHERMIA);
         return original;
     }
 
