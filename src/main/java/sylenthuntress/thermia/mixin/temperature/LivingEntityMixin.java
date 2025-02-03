@@ -96,16 +96,16 @@ public abstract class LivingEntityMixin extends Entity implements LivingEntityAc
             thermia$temperatureManager.stepPassiveTemperature();
 
             if (!this.isOnFire())
-                TemperatureHelper.removeModifier(livingEntity, Thermia.modIdentifier("on_fire"));
+                TemperatureHelper.getTemperatureManager(livingEntity).getTemperatureModifiers().removeModifier(Thermia.modIdentifier("on_fire"));
 
             if (this.age % 100 == 0 && (Object) this instanceof PlayerEntity)
                 Thermia.LOGGER.info("SERVER {} -> {}",
                         thermia$temperatureManager.getTemperature(),
-                        TemperatureHelper.getTargetTemperature(livingEntity));
+                        thermia$temperatureManager.getTargetTemperature());
         } else if (this.age % 100 == 0 && (Object) this instanceof PlayerEntity playerEntity)
             Thermia.LOGGER.info("CLIENT {} -> {}",
                     thermia$temperatureManager.getTemperature(),
-                    TemperatureHelper.getTargetTemperature(playerEntity));
+                    thermia$temperatureManager.getTargetTemperature());
     }
 
     @ModifyReturnValue(method = "createLivingAttributes", at = @At("RETURN"))

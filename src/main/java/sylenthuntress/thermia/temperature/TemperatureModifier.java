@@ -7,6 +7,7 @@ public record TemperatureModifier(Identifier id, double value, TemperatureModifi
     public boolean idMatches(Identifier id) {
         return id.equals(this.id);
     }
+
     public enum Operation implements StringIdentifiable {
         ADD_VALUE("add_value", 0),
         ADD_MULTIPLIED_VALUE("add_multiplied_value", 0);

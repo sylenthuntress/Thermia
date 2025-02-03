@@ -3,16 +3,10 @@ package sylenthuntress.thermia.temperature;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBiomeTags;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.registry.tag.FluidTags;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.LightType;
 import net.minecraft.world.World;
-import sylenthuntress.thermia.Thermia;
 import sylenthuntress.thermia.access.temperature.LivingEntityAccess;
-import sylenthuntress.thermia.registry.ThermiaAttributes;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public abstract class TemperatureHelper {
     public static double getBiomeTemperature(World world, BlockPos blockPos) {
@@ -46,74 +40,7 @@ public abstract class TemperatureHelper {
         return ambientTemperature;
     }
 
-    public static double getTargetTemperature(LivingEntity entity) {
-        double bodyTemperature = entity.getAttributeValue(ThermiaAttributes.BODY_TEMPERATURE);
-        double ambientTemperature = getAmbientTemperature(entity.getWorld(), entity.getBlockPos());
-
-        return (bodyTemperature + ambientTemperature) / 2;
-    }
-
-    public static boolean removeModifier(LivingEntity entity, Identifier id) {
-        TemperatureManager temperatureManager = ((LivingEntityAccess)entity).thermia$getTemperatureManager();
-        List<TemperatureModifier> temperatureModifiers = temperatureManager.getTemperatureModifiers();
-
-        int index = 0;
-        for (TemperatureModifier modifier : temperatureModifiers) {
-            if (modifier.idMatches(id)) {
-                temperatureModifiers.remove(index);
-                return true;
-            }
-            index++;
-        }
-        return false;
-    }
-
-    public static boolean removeModifiers(LivingEntity entity, Identifier... modifiers) {
-        boolean bl = false;
-        for (Identifier modifier : modifiers) {
-            removeModifier(entity, modifier);
-            bl = true;
-        }
-        return bl;
-    }
-
-    public static boolean removeThermiaModifiers(LivingEntity entity, String... modifiers) {
-        boolean bl = false;
-        for (String modifierName : modifiers) {
-            removeModifier(entity, Thermia.modIdentifier(modifierName));
-            bl = true;
-        }
-        return bl;
-    }
-
-    public static boolean addModifier(LivingEntity entity, TemperatureModifier modifier) {
-        if (!hasModifier(entity, modifier.id())) {
-            TemperatureManager temperatureManager = ((LivingEntityAccess)entity).thermia$getTemperatureManager();
-            temperatureManager.getTemperatureModifiers().add(modifier);
-            return true;
-        }
-        return false;
-    }
-
-    public static boolean addModifiers(LivingEntity entity, TemperatureModifier... modifiers) {
-        boolean bl = false;
-        for (TemperatureModifier modifier : modifiers) {
-            addModifier(entity, modifier);
-            bl = true;
-        }
-        return bl;
-    }
-
-    public static boolean hasModifier(LivingEntity entity, Identifier id) {
-        List<TemperatureModifier> temperatureModifiers = ((LivingEntityAccess)entity).thermia$getTemperatureManager().getTemperatureModifiers();
-        return temperatureModifiers.stream().anyMatch((modifier -> modifier.idMatches(id)));
-    }
-
-    public static TemperatureModifier getModifier(LivingEntity entity, Identifier id) {
-        List<TemperatureModifier> temperatureModifiers = ((LivingEntityAccess)entity).thermia$getTemperatureManager().getTemperatureModifiers();
-        for (TemperatureModifier modifier : temperatureModifiers) {
-            if (modifier.idMatches(id))
-                return modifier;
-        } return null;
+    public static TemperatureManager getTemperatureManager(LivingEntity entity) {
+        return ((LivingEntityAccess) entity).thermia$getTemperatureManager();
     }
 }

@@ -93,7 +93,7 @@ public class TemperatureCommand {
 
         private static int executeUnmodified(ServerCommandSource source, Entity target, float multiplier) throws CommandSyntaxException {
             if (target instanceof LivingEntity livingTarget) {
-                TemperatureManager temperatureManager = ((LivingEntityAccess) livingTarget).thermia$getTemperatureManager();
+                TemperatureManager temperatureManager = TemperatureHelper.getTemperatureManager(livingTarget);
                 source.sendFeedback(
                         () -> Text.translatable(
                                 "commands.temperature.get.entity.success",
@@ -110,7 +110,7 @@ public class TemperatureCommand {
 
         private static int executeCurrent(ServerCommandSource source, Entity target, float multiplier) throws CommandSyntaxException {
             if (target instanceof LivingEntity livingTarget) {
-                TemperatureManager temperatureManager = ((LivingEntityAccess) livingTarget).thermia$getTemperatureManager();
+                TemperatureManager temperatureManager = TemperatureHelper.getTemperatureManager(livingTarget);
                 source.sendFeedback(
                         () -> Text.translatable(
                                 "commands.temperature.get.entity.success",
@@ -144,7 +144,7 @@ public class TemperatureCommand {
 
         private static int executeTarget(ServerCommandSource source, Entity target, float multiplier) throws CommandSyntaxException {
             if (target instanceof LivingEntity livingEntity) {
-                double targetTemperature = TemperatureHelper.getTargetTemperature(livingEntity);
+                double targetTemperature = TemperatureHelper.getTemperatureManager(livingEntity).getTargetTemperature();
                 source.sendFeedback(
                         () -> Text.translatable(
                                 "commands.temperature.get.entity.success",
@@ -169,7 +169,7 @@ public class TemperatureCommand {
 
         private static int execute(ServerCommandSource source, Entity target, double value) throws CommandSyntaxException {
             if (target instanceof LivingEntity livingTarget) {
-                TemperatureManager temperatureManager = ((LivingEntityAccess) livingTarget).thermia$getTemperatureManager();
+                TemperatureManager temperatureManager = TemperatureHelper.getTemperatureManager(livingTarget);
                 source.sendFeedback(
                         () -> Text.translatable(
                                 "commands.temperature.change.success",
@@ -194,7 +194,7 @@ public class TemperatureCommand {
 
         private static int execute(ServerCommandSource source, Entity target, double value) throws CommandSyntaxException {
             if (target instanceof LivingEntity livingTarget) {
-                TemperatureManager temperatureManager = ((LivingEntityAccess) livingTarget).thermia$getTemperatureManager();
+                TemperatureManager temperatureManager = TemperatureHelper.getTemperatureManager(livingTarget);
                 double temperature = temperatureManager.getTemperature();
                 double newTemperature = temperatureManager.modifyTemperature(value);
                 source.sendFeedback(
@@ -237,7 +237,7 @@ public class TemperatureCommand {
 
         private static int executeRemove(ServerCommandSource source, Entity target, Identifier id) throws CommandSyntaxException {
             if (target instanceof LivingEntity livingTarget) {
-                if (TemperatureHelper.removeModifier(livingTarget, id)) {
+                if (TemperatureHelper.getTemperatureManager(livingTarget).getTemperatureModifiers().removeModifier(id)) {
                     source.sendFeedback(
                             () -> Text.stringifiedTranslatable(
                                     "commands.temperature.modifier.remove.success",
@@ -255,7 +255,7 @@ public class TemperatureCommand {
 
         private static Stream<Identifier> streamModifiers(Entity target) throws CommandSyntaxException {
             if (target instanceof LivingEntity livingTarget) {
-                ArrayList<TemperatureModifier> temperatureModifiers = ((LivingEntityAccess) livingTarget).thermia$getTemperatureManager().getTemperatureModifiers();
+                ArrayList<TemperatureModifier> temperatureModifiers = TemperatureHelper.getTemperatureManager(livingTarget).getTemperatureModifiers().getList();
                 return temperatureModifiers.stream().map(TemperatureModifier::id);
             }
             throw ENTITY_FAILED_EXCEPTION.create(target.getName());
@@ -264,7 +264,7 @@ public class TemperatureCommand {
 
         private static int executeGet(ServerCommandSource source, Entity target, Identifier id, double scale) throws CommandSyntaxException {
             if (target instanceof LivingEntity livingTarget) {
-                TemperatureModifier modifier = TemperatureHelper.getModifier(livingTarget, id);
+                TemperatureModifier modifier = TemperatureHelper.getTemperatureManager(livingTarget).getTemperatureModifiers().getModifier(id);
                 if (modifier != null) {
                     source.sendFeedback(
                             () -> Text.stringifiedTranslatable(
@@ -275,7 +275,7 @@ public class TemperatureCommand {
                             ),
                             false
                     );
-                    return (int) (modifier.value() * 1000);
+                    return (int) ((modifier.value() * scale) * 1000);
                 }
                 throw INVALID_MODIFIER_EXCEPTION.create(id);
             }
@@ -284,7 +284,7 @@ public class TemperatureCommand {
 
         private static int executeAdd(ServerCommandSource source, Entity target, Identifier id, double value, TemperatureModifier.Operation operation) throws CommandSyntaxException {
             if (target instanceof LivingEntity livingTarget) {
-                if (TemperatureHelper.addModifier(livingTarget, new TemperatureModifier(id, value, operation))) {
+                if (TemperatureHelper.getTemperatureManager(livingTarget).getTemperatureModifiers().addModifier(new TemperatureModifier(id, value, operation))) {
                     source.sendFeedback(
                             () -> Text.stringifiedTranslatable(
                                     "commands.temperature.modifier.add.success",

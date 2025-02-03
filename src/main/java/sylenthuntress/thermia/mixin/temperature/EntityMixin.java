@@ -31,13 +31,13 @@ public abstract class EntityMixin {
     private void thermia$setFireTemperature(boolean onFire, CallbackInfo ci) {
         if ((Entity) (Object) this instanceof LivingEntity livingEntity) {
             if (onFire)
-                TemperatureHelper.addModifier(livingEntity, new TemperatureModifier(
+                TemperatureHelper.getTemperatureManager(livingEntity).getTemperatureModifiers().addModifier(new TemperatureModifier(
                     Thermia.modIdentifier("on_fire"),
                     100,
                     TemperatureModifier.Operation.ADD_VALUE
             ));
             else
-                TemperatureHelper.removeModifier(livingEntity, Thermia.modIdentifier("on_fire"));
+                TemperatureHelper.getTemperatureManager(livingEntity).getTemperatureModifiers().removeModifier(Thermia.modIdentifier("on_fire"));
         }
     }
 }

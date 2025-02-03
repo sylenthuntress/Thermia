@@ -1,20 +1,16 @@
 package sylenthuntress.thermia.temperature;
 
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.effect.StatusEffectInstance;
 import sylenthuntress.thermia.registry.ThermiaAttachmentTypes;
 import sylenthuntress.thermia.registry.ThermiaAttributes;
-
-import java.util.ArrayList;
 
 @SuppressWarnings("UnstableApiUsage")
 public class TemperatureManager {
     private final LivingEntity entity;
-    private ArrayList<TemperatureModifier> temperatureModifiers;
+    private final TemperatureModifierContainer modifiers = new TemperatureModifierContainer();
 
     public TemperatureManager(LivingEntity livingEntity) {
         entity = livingEntity;
-        temperatureModifiers = new ArrayList<>();
     }
 
     public double setTemperature(double newTemperature) {
@@ -23,28 +19,29 @@ public class TemperatureManager {
         return entity.getAttached(ThermiaAttachmentTypes.TEMPERATURE).value();
     }
 
-    public double modifyTemperature(boolean applyModifiers, double... inputTemperatures) {
+    public double modifyTemperature(double... inputTemperatures) {
         double newTemperature = getTemperature();
-        for (double inputTemperature : inputTemperatures) {
-            double targetTemperature = TemperatureHelper.getTargetTemperature(entity);
-            double bodyTemperature = entity.getAttributeValue(ThermiaAttributes.BODY_TEMPERATURE);
-            if (applyModifiers) {
-                if (targetTemperature < bodyTemperature && inputTemperature > 0)
-                    inputTemperature *= entity.getAttributeValue(ThermiaAttributes.HEAT_MODIFIER);
-                else if (bodyTemperature > targetTemperature && inputTemperature < 0)
-                    inputTemperature *= entity.getAttributeValue(ThermiaAttributes.COLD_MODIFIER);
-            }
+        for (double inputTemperature : inputTemperatures)
             newTemperature += inputTemperature;
-        }
         return setTemperature(newTemperature);
     }
 
-    public double modifyTemperature(double... inputTemperatures) {
-        return modifyTemperature(true, inputTemperatures);
+    public double getTargetTemperature() {
+        double bodyTemperature = entity.getAttributeValue(ThermiaAttributes.BODY_TEMPERATURE);
+        double ambientTemperature = TemperatureHelper.getAmbientTemperature(entity.getWorld(), entity.getBlockPos());
+
+        double targetTemperature;
+        if (ambientTemperature > bodyTemperature)
+            targetTemperature = (ambientTemperature + getTemperature())
+                    * entity.getAttributeValue(ThermiaAttributes.HEAT_MODIFIER);
+        else
+            targetTemperature = (ambientTemperature + getTemperature())
+                    * entity.getAttributeValue(ThermiaAttributes.COLD_MODIFIER);
+        return targetTemperature / 2;
     }
 
     public double stepPassiveTemperature() {
-        double inputTemperature = TemperatureHelper.getTargetTemperature(entity) - getTemperature();
+        double inputTemperature = getTargetTemperature();
         double newTemperature = modifyTemperature(inputTemperature * 0.0025);
 
         applyStatus();
@@ -64,7 +61,7 @@ public class TemperatureManager {
 
     public double getModifiedTemperature() {
         double temperature = getTemperature();
-        for (TemperatureModifier modifier : getTemperatureModifiers()) {
+        for (TemperatureModifier modifier : getTemperatureModifiers().getList()) {
             switch (modifier.operation()) {
                 case ADD_VALUE -> temperature += modifier.value();
                 case ADD_MULTIPLIED_VALUE -> temperature += temperature * modifier.value();
@@ -73,7 +70,7 @@ public class TemperatureManager {
         return temperature;
     }
 
-    public ArrayList<TemperatureModifier> getTemperatureModifiers() {
-        return temperatureModifiers;
+    public TemperatureModifierContainer getTemperatureModifiers() {
+        return modifiers;
     }
 }
