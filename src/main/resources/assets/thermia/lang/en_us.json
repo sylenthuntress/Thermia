@@ -1,5 +1,8 @@
 {
   "thermia.discord": "Discord",
+  "effect.thermia.hypothermia": "Hypothermia",
+  "effect.thermia.hyperthermia": "Hyperthermia",
+  "effect.duration.thermia": "Regulate your temperature!",
   "commands.temperature.get.entity.success": "%s temperature of %s is %s",
   "commands.temperature.get.position.success": "%s temperature at %s is %s",
   "commands.temperature.change.success": "Successfully changed temperature of %s from %s to %s",

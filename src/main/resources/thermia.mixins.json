@@ -6,11 +6,20 @@
   "compatibilityLevel": "JAVA_18",
   "mixins": [
     "temperature.EntityMixin",
-    "temperature.LivingEntityMixin"
+    "temperature.LivingEntityMixin",
+    "temperature.PlayerEntityMixin"
   ],
   "server": [],
   "injectors": {
     "defaultRequire": 1
-  }
+  },
+  "client": [
+    "client.temperature.ClientPlayerEntityMixin",
+    "client.temperature.GameRendererMixin",
+    "client.temperature.InGameHudHeartTypeMixin",
+    "client.temperature.InGameHudMixin",
+    "client.temperature.LivingEntityRendererMixin",
+    "client.temperature.StatusEffectsDisplayMixin"
+  ]
 }
 

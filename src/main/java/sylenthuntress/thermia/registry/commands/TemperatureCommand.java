@@ -195,13 +195,12 @@ public class TemperatureCommand {
         private static int execute(ServerCommandSource source, Entity target, double value) throws CommandSyntaxException {
             if (target instanceof LivingEntity livingTarget) {
                 TemperatureManager temperatureManager = TemperatureHelper.getTemperatureManager(livingTarget);
-                double temperature = temperatureManager.getTemperature();
                 double newTemperature = temperatureManager.modifyTemperature(value);
                 source.sendFeedback(
                         () -> Text.translatable(
                                 "commands.temperature.change.success",
                                 target.getName(),
-                                temperature,
+                                newTemperature - value,
                                 newTemperature
                         ),
                         false

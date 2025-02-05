@@ -5,8 +5,8 @@ import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectCategory;
 import net.minecraft.server.world.ServerWorld;
 
-public class HyperpyrexiaEffect extends StatusEffect {
-    public HyperpyrexiaEffect(StatusEffectCategory category, int color) {
+public class HyperthermiaEffect extends StatusEffect {
+    public HyperthermiaEffect(StatusEffectCategory category, int color) {
         super(category, color);
     }
 
@@ -16,11 +16,9 @@ public class HyperpyrexiaEffect extends StatusEffect {
         return true;
     }
 
-
-
     @Override
     public boolean canApplyUpdateEffect(int duration, int amplifier) {
-        int damageInterval = 25 >> amplifier;
+        int damageInterval = 120 >> amplifier;
         return damageInterval == 0 || duration % damageInterval == 0;
     }
 }

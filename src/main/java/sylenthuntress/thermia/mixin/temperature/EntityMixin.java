@@ -20,13 +20,6 @@ public abstract class EntityMixin {
 
     @Shadow public abstract World getWorld();
 
-    @ModifyReturnValue(method = "isFrozen", at = @At("RETURN"))
-    private boolean thermia$setFrozen(boolean original) {
-        if ((Entity) (Object) this instanceof LivingEntity livingEntity)
-            original = original || livingEntity.hasStatusEffect(ThermiaStatusEffects.HYPOTHERMIA);
-        return original;
-    }
-
     @Inject(method = "setOnFire", at = @At("HEAD"))
     private void thermia$setFireTemperature(boolean onFire, CallbackInfo ci) {
         if ((Entity) (Object) this instanceof LivingEntity livingEntity) {

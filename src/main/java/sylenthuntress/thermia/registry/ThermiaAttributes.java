@@ -38,6 +38,26 @@ public class ThermiaAttributes {
                     255
             )
     );
+    public static final RegistryEntry.Reference<EntityAttribute> HEAT_OFFSET_THRESHOLD = Registry.registerReference(
+            Registries.ATTRIBUTE,
+            Thermia.modIdentifier("heat_offset_threshold"),
+            new ClampedEntityAttribute(
+                    "attribute.name.generic.heat_offset_threshold",
+                    3,
+                    -100,
+                    200
+            )
+    );
+    public static final RegistryEntry.Reference<EntityAttribute> COLD_OFFSET_THRESHOLD = Registry.registerReference(
+            Registries.ATTRIBUTE,
+            Thermia.modIdentifier("cold_offset_threshold"),
+            new ClampedEntityAttribute(
+                    "attribute.name.generic.cold_offset_threshold",
+                    -2,
+                    -100,
+                    200
+            )
+    );
     public static void registerAll() {
 
     }
