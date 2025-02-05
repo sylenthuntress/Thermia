@@ -17,6 +17,7 @@ public class TemperatureManager {
         entity = livingEntity;
     }
 
+    @SuppressWarnings("DataFlowIssue")
     public double setTemperature(double newTemperature) {
         if (entity.isAlive()) {
             if (!entity.getWorld().isClient())
@@ -42,18 +43,16 @@ public class TemperatureManager {
         return (bodyTemperature + ambientTemperature) / 2;
     }
 
-    public double stepPassiveTemperature() {
+    public void stepPassiveTemperature() {
         if (entity.isAlive()) {
             double inputTemperature = getTargetTemperature() - getTemperature();
-            double newTemperature = modifyTemperature(inputTemperature * 0.0025);
-            newTemperature += modifyTemperature(stepPassiveInteractions());
+            modifyTemperature(inputTemperature * 0.0025);
+            modifyTemperature(stepPassiveInteractions());
 
             if (!entity.isInCreativeMode())
                 applyStatus();
 
-            return newTemperature;
         }
-        return 0;
     }
 
     public double[] stepPassiveInteractions() {
@@ -93,6 +92,7 @@ public class TemperatureManager {
         return interactionTemperatures;
     }
 
+    @SuppressWarnings("DataFlowIssue")
     public void applyStatus() {
         int amplifier = getHypothermiaAmplifier();
         if (amplifier >= 0) {

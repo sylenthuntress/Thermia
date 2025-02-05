@@ -317,7 +317,7 @@ public class TemperatureCommand {
                     .then(CommandManager.literal("regional")
                             .executes(context -> executeRegional(context.getSource(), BlockPosArgumentType.getBlockPos(context, "position"), 1))
                             .then(CommandManager.argument("scale", FloatArgumentType.floatArg())
-                                    .executes(context -> executeAmbient(context.getSource(), BlockPosArgumentType.getBlockPos(context, "position"), FloatArgumentType.getFloat(context, "scale"))))).build();
+                                    .executes(context -> executeRegional(context.getSource(), BlockPosArgumentType.getBlockPos(context, "position"), FloatArgumentType.getFloat(context, "scale"))))).build();
         }
 
         private static int executeRegional(ServerCommandSource source, BlockPos blockPos, float multiplier) throws CommandSyntaxException {

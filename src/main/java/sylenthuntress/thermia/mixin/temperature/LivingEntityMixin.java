@@ -9,8 +9,6 @@ import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributeInstance;
 import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.effect.StatusEffect;
-import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.projectile.thrown.SnowballEntity;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.registry.tag.DamageTypeTags;
@@ -29,8 +27,6 @@ import sylenthuntress.thermia.registry.ThermiaAttributes;
 import sylenthuntress.thermia.registry.ThermiaTags;
 import sylenthuntress.thermia.temperature.TemperatureHelper;
 import sylenthuntress.thermia.temperature.TemperatureManager;
-
-import java.util.Map;
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity implements LivingEntityAccess {
@@ -52,13 +48,7 @@ public abstract class LivingEntityMixin extends Entity implements LivingEntityAc
     }
 
     @Shadow
-    public abstract double getAttributeBaseValue(RegistryEntry<EntityAttribute> attribute);
-
-    @Shadow
     public abstract AttributeContainer getAttributes();
-
-    @Shadow
-    public abstract Map<RegistryEntry<StatusEffect>, StatusEffectInstance> getActiveStatusEffects();
 
     @Shadow
     public abstract boolean isInvulnerableTo(ServerWorld world, DamageSource source);
