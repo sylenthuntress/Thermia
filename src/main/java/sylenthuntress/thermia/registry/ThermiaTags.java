@@ -2,6 +2,7 @@ package sylenthuntress.thermia.registry;
 
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.effect.StatusEffect;
+import net.minecraft.item.Item;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.EntityTypeTags;
@@ -28,5 +29,21 @@ public class ThermiaTags {
     public static final TagKey<EntityType<?>> TEMPERATURE_IMMUNE = TagKey.of(
             RegistryKeys.ENTITY_TYPE,
             Thermia.modIdentifier("climate/temperature_immune")
+    );
+    public static final TagKey<Item> COLD_FOODS = TagKey.of(
+            RegistryKeys.ITEM,
+            Thermia.modIdentifier("consumable_temperature/cold_foods")
+    );
+    public static final TagKey<Item> HOT_FOODS = TagKey.of(
+            RegistryKeys.ITEM,
+            Thermia.modIdentifier("consumable_temperature/hot_foods")
+    );
+    public static final TagKey<Item> REFRESHING_FOODS = TagKey.of(
+            RegistryKeys.ITEM,
+            Thermia.modIdentifier("consumable_temperature/refreshing_foods")
+    );
+    public static final TagKey<Item> WARM_FOODS = TagKey.of(
+            RegistryKeys.ITEM,
+            Thermia.modIdentifier("consumable_temperature/warm_foods")
     );
 }
