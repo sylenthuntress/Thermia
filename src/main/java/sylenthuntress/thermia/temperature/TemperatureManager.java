@@ -15,6 +15,7 @@ public class TemperatureManager {
 
     public TemperatureManager(LivingEntity livingEntity) {
         entity = livingEntity;
+        setTemperature(getTargetTemperature());
     }
 
     public double setTemperature(double newTemperature) {
