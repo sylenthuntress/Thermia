@@ -10,15 +10,15 @@ import net.minecraft.world.World;
 import sylenthuntress.thermia.access.temperature.LivingEntityAccess;
 import sylenthuntress.thermia.temperature.TemperatureManager;
 
-public record TemperatureComponent(double temperature, double minTemperature,
-                                   double maxTemperature) implements Consumable {
-    public static final Codec<TemperatureComponent> CODEC = RecordCodecBuilder.create(
+public record ConsumableTemperatureComponent(double temperature, double minTemperature,
+                                             double maxTemperature) implements Consumable {
+    public static final Codec<ConsumableTemperatureComponent> CODEC = RecordCodecBuilder.create(
             instance -> instance.group(
-                            Codec.DOUBLE.fieldOf("temperature").forGetter(TemperatureComponent::temperature),
-                            Codec.DOUBLE.optionalFieldOf("min_temperature", 0.0).forGetter(TemperatureComponent::minTemperature),
-                            Codec.DOUBLE.optionalFieldOf("max_temperature", 0.0).forGetter(TemperatureComponent::maxTemperature)
+                            Codec.DOUBLE.fieldOf("temperature").forGetter(ConsumableTemperatureComponent::temperature),
+                            Codec.DOUBLE.optionalFieldOf("min_temperature", 0.0).forGetter(ConsumableTemperatureComponent::minTemperature),
+                            Codec.DOUBLE.optionalFieldOf("max_temperature", 0.0).forGetter(ConsumableTemperatureComponent::maxTemperature)
                     )
-                    .apply(instance, TemperatureComponent::new)
+                    .apply(instance, ConsumableTemperatureComponent::new)
     );
 
     @Override
