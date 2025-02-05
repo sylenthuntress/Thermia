@@ -89,7 +89,6 @@ public abstract class LivingEntityMixin extends Entity implements LivingEntityAc
                 coldOffsetThreshold -= 6;
             }
             if (this.getType().isIn(ThermiaTags.UNDEAD_MOBS)) {
-                bodyTemperature *= 0.1;
                 heatOffsetThreshold += 20;
                 coldOffsetThreshold -= 20;
             }
