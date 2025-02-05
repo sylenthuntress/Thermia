@@ -10,10 +10,15 @@ import net.minecraft.entity.attribute.AttributeContainer;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributeInstance;
+import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.projectile.thrown.SnowballEntity;
 import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.registry.tag.DamageTypeTags;
+import net.minecraft.registry.tag.EntityTypeTags;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -40,6 +45,8 @@ public abstract class LivingEntityMixin extends Entity implements LivingEntityAc
     @Shadow public abstract AttributeContainer getAttributes();
 
     @Shadow public abstract Map<RegistryEntry<StatusEffect>, StatusEffectInstance> getActiveStatusEffects();
+
+    @Shadow public abstract boolean isInvulnerableTo(ServerWorld world, DamageSource source);
 
     @Unique
     private TemperatureManager thermia$temperatureManager;
@@ -120,5 +127,31 @@ public abstract class LivingEntityMixin extends Entity implements LivingEntityAc
                 .add(ThermiaAttributes.HEAT_MODIFIER)
                 .add(ThermiaAttributes.COLD_OFFSET_THRESHOLD)
                 .add(ThermiaAttributes.HEAT_OFFSET_THRESHOLD);
+    }
+
+    @Inject(method = "applyDamage", at = @At(value = "TAIL"))
+    private void thermia$damageInteractions(ServerWorld world, DamageSource source, float amount, CallbackInfo ci) {
+        if (!this.isInvulnerableTo(world, source)) {
+            TemperatureManager temperatureManager = TemperatureHelper.getTemperatureManager((LivingEntity) (Object) this);
+            double[] interactionTemperatures = {0, 0};
+            if (source.getAttacker() != null) {
+                if (source.isIn(DamageTypeTags.IS_FREEZING))
+                    interactionTemperatures[0] -= 1.5;
+                if (source.isIn(DamageTypeTags.IS_FIRE))
+                    interactionTemperatures[1] += 1.5;
+                if (source.getAttacker().getType().isIn(ThermiaTags.UNDEAD_MOBS))
+                    interactionTemperatures[0] -= 0.1;
+                if (source.getAttacker().getType().isIn(EntityTypeTags.FREEZE_HURTS_EXTRA_TYPES))
+                    interactionTemperatures[1] += 0.5;
+            } else {
+                if (source.isIn(DamageTypeTags.BURN_FROM_STEPPING))
+                    interactionTemperatures[1] += 0.5;
+            }
+            if (source.getSource() instanceof SnowballEntity)
+                interactionTemperatures[0] -= 3;
+            if (source.isIn(DamageTypeTags.IS_LIGHTNING))
+                interactionTemperatures[1] += 10;
+            temperatureManager.modifyTemperature(interactionTemperatures);
+        }
     }
 }
