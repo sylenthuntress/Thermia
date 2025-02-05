@@ -12,7 +12,8 @@ public class HyperthermiaEffect extends StatusEffect {
 
     @Override
     public boolean applyUpdateEffect(ServerWorld world, LivingEntity entity, int amplifier) {
-        entity.damage(world, entity.getDamageSources().onFire(), 0.1F);
+        if (!entity.isOnFire())
+            entity.damage(world, entity.getDamageSources().onFire(), 0.5F);
         return true;
     }
 

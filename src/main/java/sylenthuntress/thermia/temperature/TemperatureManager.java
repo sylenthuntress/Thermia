@@ -41,12 +41,15 @@ public class TemperatureManager {
     }
 
     public double stepPassiveTemperature() {
-        double inputTemperature = getTargetTemperature() - getTemperature();
-        double newTemperature = modifyTemperature(inputTemperature * 0.0025);
+        if (entity.isAlive()) {
+            double inputTemperature = getTargetTemperature() - getTemperature();
+            double newTemperature = modifyTemperature(inputTemperature * 0.0025);
 
-        applyStatus();
+            applyStatus();
 
-        return newTemperature;
+            return newTemperature;
+        }
+        return 0;
     }
 
     public void applyStatus() {

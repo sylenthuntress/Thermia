@@ -21,7 +21,8 @@ public class HypothermiaEffect extends StatusEffect {
 
     @Override
     public boolean applyUpdateEffect(ServerWorld world, LivingEntity entity, int amplifier) {
-        entity.damage(world, entity.getDamageSources().freeze(), 1.0F);
+        if (!entity.isFrozen())
+            entity.damage(world, entity.getDamageSources().freeze(), 0.5F);
         return true;
     }
 

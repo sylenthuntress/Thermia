@@ -51,14 +51,6 @@ public class StatusEffectsDisplayMixin {
         return !effect.getEffectType().matches(effectKey ->
                 ThermiaStatusEffects.HYPOTHERMIA.matchesKey(effectKey) ||
                         ThermiaStatusEffects.HYPERTHERMIA.matchesKey(effectKey)
-        ) ? original : Math.min(9, original);
-    }
-
-    @ModifyExpressionValue(method = "getStatusEffectDescription", at = @At(value = "INVOKE", target = "Lnet/minecraft/text/Text;translatable(Ljava/lang/String;)Lnet/minecraft/text/MutableText;"))
-    private MutableText thermia$enableHighAmplifier(MutableText original, StatusEffectInstance effect) {
-        return !(effect.getEffectType().matches(effectKey ->
-                ThermiaStatusEffects.HYPOTHERMIA.matchesKey(effectKey) ||
-                        ThermiaStatusEffects.HYPERTHERMIA.matchesKey(effectKey)
-        ) && effect.getAmplifier() > 10) ? original : Text.literal(String.valueOf(effect.getAmplifier()));
+        ) && effect.getAmplifier() == 10 ? original : Math.max(9, original);
     }
 }
