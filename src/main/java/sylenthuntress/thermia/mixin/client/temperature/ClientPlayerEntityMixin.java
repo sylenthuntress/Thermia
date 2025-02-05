@@ -25,18 +25,18 @@ public abstract class ClientPlayerEntityMixin {
 
     @Inject(method = "tickMovement", at = @At("HEAD"))
     private void thermia$wobbleVision(CallbackInfo ci) {
-        if (TemperatureHelper.getTemperatureManager((PlayerEntity) (Object) this).shouldBlurVision())
+        if (TemperatureHelper.getTemperatureManager((PlayerEntity) (Object) this).shouldDoWobble())
             this.nauseaIntensity = Math.max(nauseaIntensity, 0.1F);
     }
 
     @ModifyExpressionValue(method = "removeStatusEffectInternal", at = @At(value = "INVOKE", target = "Lnet/minecraft/registry/entry/RegistryEntry;matches(Lnet/minecraft/registry/entry/RegistryEntry;)Z"))
     private boolean thermia$removeHyperthermiaWobble(boolean original) {
         return original || (nauseaIntensity <= 0.1F
-                && TemperatureHelper.getTemperatureManager((PlayerEntity) (Object) this).shouldBlurVision());
+                && TemperatureHelper.getTemperatureManager((PlayerEntity) (Object) this).shouldDoWobble());
     }
 
     @ModifyReturnValue(method = "canSprint", at = @At("RETURN"))
     private boolean thermia$disableSprinting(boolean original) {
-        return original && !TemperatureHelper.getTemperatureManager((PlayerEntity) (Object) this).isHyperthermic();
+        return original && !TemperatureHelper.getTemperatureManager((PlayerEntity) (Object) this).shouldDoWobble();
     }
 }

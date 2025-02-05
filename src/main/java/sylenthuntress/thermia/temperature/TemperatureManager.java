@@ -45,7 +45,8 @@ public class TemperatureManager {
             double inputTemperature = getTargetTemperature() - getTemperature();
             double newTemperature = modifyTemperature(inputTemperature * 0.0025);
 
-            applyStatus();
+            if (entity.isInCreativeMode())
+                applyStatus();
 
             return newTemperature;
         }
@@ -117,6 +118,11 @@ public class TemperatureManager {
 
     public boolean shouldBlurVision() {
         return isHyperthermic();
+    }
+
+    public boolean shouldDoWobble() {
+        return getTargetTemperature() > (entity.getAttributeValue(ThermiaAttributes.BODY_TEMPERATURE) +
+                entity.getAttributeBaseValue(ThermiaAttributes.HEAT_OFFSET_THRESHOLD));
     }
 
     public int getHypothermiaAmplifier() {
