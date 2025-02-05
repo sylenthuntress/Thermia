@@ -66,9 +66,9 @@ public class TemperatureManager {
         if (entity.inPowderSnow) {
             interactionTemperatures[0] -= 0.05;
             getTemperatureModifiers().addModifier(new TemperatureModifier(
-                    Thermia.modIdentifier("powder_snow"),
-                    -10F,
-                    TemperatureModifier.Operation.ADD_VALUE
+                            Thermia.modIdentifier("powder_snow"),
+                            -10F,
+                            TemperatureModifier.Operation.ADD_VALUE
                     )
             );
         }
@@ -124,8 +124,8 @@ public class TemperatureManager {
     public double getTemperature() {
         if (entity.isAlive())
             return entity.getAttachedOrCreate(
-                ThermiaAttachmentTypes.TEMPERATURE,
-                () -> new Temperature(entity.getAttributeValue(ThermiaAttributes.BODY_TEMPERATURE))).value();
+                    ThermiaAttachmentTypes.TEMPERATURE,
+                    () -> new Temperature(entity.getAttributeValue(ThermiaAttributes.BODY_TEMPERATURE))).value();
         return 0;
     }
 

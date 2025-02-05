@@ -18,7 +18,6 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import sylenthuntress.thermia.access.temperature.LivingEntityAccess;
 import sylenthuntress.thermia.registry.ThermiaAttributes;
 import sylenthuntress.thermia.temperature.TemperatureHelper;
 import sylenthuntress.thermia.temperature.TemperatureManager;

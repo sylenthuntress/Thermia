@@ -1,7 +1,5 @@
 package sylenthuntress.thermia.registry;
 
-import net.minecraft.entity.attribute.EntityAttributeModifier;
-import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectCategory;
 import net.minecraft.registry.Registries;
@@ -24,6 +22,7 @@ public class ThermiaStatusEffects {
     private static RegistryEntry<StatusEffect> register(String id, StatusEffect statusEffect) {
         return Registry.registerReference(Registries.STATUS_EFFECT, Thermia.modIdentifier(id), statusEffect);
     }
+
     public static void registerAll() {
 
     }

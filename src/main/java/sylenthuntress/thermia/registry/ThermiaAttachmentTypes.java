@@ -10,7 +10,7 @@ import sylenthuntress.thermia.temperature.Temperature;
 public class ThermiaAttachmentTypes {
     public static final AttachmentType<Temperature> TEMPERATURE = AttachmentRegistry.create(
             Thermia.modIdentifier("temperature_manager"),
-            builder->builder
+            builder -> builder
                     .initializer(() -> Temperature.DEFAULT)
                     .persistent(Temperature.CODEC)
                     .syncWith(

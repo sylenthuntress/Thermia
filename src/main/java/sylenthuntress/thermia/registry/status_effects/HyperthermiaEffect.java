@@ -8,6 +8,7 @@ import net.minecraft.server.world.ServerWorld;
 
 public class HyperthermiaEffect extends StatusEffect {
     private boolean canDamage;
+
     public HyperthermiaEffect(StatusEffectCategory category, int color) {
         super(category, color);
     }
@@ -17,9 +18,8 @@ public class HyperthermiaEffect extends StatusEffect {
         if (canDamage && !entity.isOnFire()) {
             entity.damage(world, entity.getDamageSources().onFire(), 0.5F);
             canDamage = false;
-        } else
-        if (entity instanceof PlayerEntity player)
-            player.addExhaustion(0.01F * (float)(amplifier + 1));
+        } else if (entity instanceof PlayerEntity player)
+            player.addExhaustion(0.01F * (float) (amplifier + 1));
         else return false;
         return true;
     }

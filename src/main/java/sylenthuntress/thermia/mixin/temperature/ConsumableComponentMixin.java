@@ -3,8 +3,6 @@ package sylenthuntress.thermia.mixin.temperature;
 import net.minecraft.component.type.ConsumableComponent;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -36,7 +34,7 @@ public class ConsumableComponentMixin {
                 if (temperatureManager.isHypothermic())
                     consumedTemperatures[1] *= 4;
                 else if (temperatureManager.isHyperthermic())
-                        consumedTemperatures[0] *= 4;
+                    consumedTemperatures[0] *= 4;
                 temperatureManager.modifyTemperature(consumedTemperatures);
             }
         }

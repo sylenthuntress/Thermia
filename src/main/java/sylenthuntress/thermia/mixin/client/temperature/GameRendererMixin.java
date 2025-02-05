@@ -3,7 +3,6 @@ package sylenthuntress.thermia.mixin.client.temperature;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.GameRenderer;
@@ -19,28 +18,31 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import sylenthuntress.thermia.registry.ThermiaStatusEffects;
 import sylenthuntress.thermia.temperature.TemperatureHelper;
 
 @Mixin(GameRenderer.class)
 public abstract class GameRendererMixin {
-    @Shadow @Final private MinecraftClient client;
+    @Shadow
+    @Final
+    private static Identifier field_53899;
+    @Shadow
+    @Final
+    private MinecraftClient client;
+    @Shadow
+    private @Nullable Identifier postProcessorId;
 
-    @Shadow protected abstract void setPostProcessor(Identifier id);
+    @Shadow
+    protected abstract void setPostProcessor(Identifier id);
 
-    @Shadow public abstract void clearPostProcessor();
-
-    @Shadow private @Nullable Identifier postProcessorId;
-
-    @Shadow @Final private static Identifier field_53899;
+    @Shadow
+    public abstract void clearPostProcessor();
 
     @Inject(method = "render", at = @At("HEAD"))
     private void thermia$loadHyperthermiaShader(RenderTickCounter tickCounter, boolean tick, CallbackInfo ci) {
         if (client.getCameraEntity() instanceof LivingEntity livingEntity &&
                 TemperatureHelper.getTemperatureManager(livingEntity).shouldBlurVision()) {
             this.setPostProcessor(field_53899);
-        }
-        else if (postProcessorId == field_53899)
+        } else if (postProcessorId == field_53899)
             this.clearPostProcessor();
     }
 

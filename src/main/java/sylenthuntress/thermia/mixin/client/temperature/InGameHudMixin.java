@@ -13,7 +13,9 @@ import sylenthuntress.thermia.temperature.TemperatureHelper;
 @SuppressWarnings("DataFlowIssue")
 @Mixin(InGameHud.class)
 public class InGameHudMixin {
-    @Shadow @Final private MinecraftClient client;
+    @Shadow
+    @Final
+    private MinecraftClient client;
 
     @ModifyExpressionValue(method = "renderMiscOverlays", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerEntity;getFrozenTicks()I"))
     private int thermia$enableFrozenOverlay(int original) {

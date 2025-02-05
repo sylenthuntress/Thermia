@@ -1,8 +1,6 @@
 package sylenthuntress.thermia.mixin.temperature;
 
-import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -13,7 +11,6 @@ import net.minecraft.entity.attribute.EntityAttributeInstance;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.thrown.SnowballEntity;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.registry.tag.DamageTypeTags;
@@ -23,15 +20,12 @@ import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.gen.Accessor;
-import org.spongepowered.asm.mixin.gen.Invoker;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import sylenthuntress.thermia.Thermia;
 import sylenthuntress.thermia.access.temperature.LivingEntityAccess;
 import sylenthuntress.thermia.registry.ThermiaAttributes;
-import sylenthuntress.thermia.registry.ThermiaStatusEffects;
 import sylenthuntress.thermia.registry.ThermiaTags;
 import sylenthuntress.thermia.temperature.TemperatureHelper;
 import sylenthuntress.thermia.temperature.TemperatureManager;
@@ -40,20 +34,34 @@ import java.util.Map;
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity implements LivingEntityAccess {
-    @Shadow public abstract double getAttributeBaseValue(RegistryEntry<EntityAttribute> attribute);
-
-    @Shadow public abstract AttributeContainer getAttributes();
-
-    @Shadow public abstract Map<RegistryEntry<StatusEffect>, StatusEffectInstance> getActiveStatusEffects();
-
-    @Shadow public abstract boolean isInvulnerableTo(ServerWorld world, DamageSource source);
-
     @Unique
     private TemperatureManager thermia$temperatureManager;
 
     public LivingEntityMixin(EntityType<?> type, World world) {
         super(type, world);
     }
+
+    @ModifyReturnValue(method = "createLivingAttributes", at = @At("RETURN"))
+    private static DefaultAttributeContainer.Builder thermia$addAttributes(DefaultAttributeContainer.Builder original) {
+        return original
+                .add(ThermiaAttributes.BODY_TEMPERATURE)
+                .add(ThermiaAttributes.COLD_MODIFIER)
+                .add(ThermiaAttributes.HEAT_MODIFIER)
+                .add(ThermiaAttributes.COLD_OFFSET_THRESHOLD)
+                .add(ThermiaAttributes.HEAT_OFFSET_THRESHOLD);
+    }
+
+    @Shadow
+    public abstract double getAttributeBaseValue(RegistryEntry<EntityAttribute> attribute);
+
+    @Shadow
+    public abstract AttributeContainer getAttributes();
+
+    @Shadow
+    public abstract Map<RegistryEntry<StatusEffect>, StatusEffectInstance> getActiveStatusEffects();
+
+    @Shadow
+    public abstract boolean isInvulnerableTo(ServerWorld world, DamageSource source);
 
     public TemperatureManager thermia$getTemperatureManager() {
         return thermia$temperatureManager;
@@ -108,16 +116,6 @@ public abstract class LivingEntityMixin extends Entity implements LivingEntityAc
             if (!this.isOnFire())
                 TemperatureHelper.getTemperatureManager(livingEntity).getTemperatureModifiers().removeModifier(Thermia.modIdentifier("on_fire"));
         }
-    }
-
-    @ModifyReturnValue(method = "createLivingAttributes", at = @At("RETURN"))
-    private static DefaultAttributeContainer.Builder thermia$addAttributes(DefaultAttributeContainer.Builder original) {
-        return original
-                .add(ThermiaAttributes.BODY_TEMPERATURE)
-                .add(ThermiaAttributes.COLD_MODIFIER)
-                .add(ThermiaAttributes.HEAT_MODIFIER)
-                .add(ThermiaAttributes.COLD_OFFSET_THRESHOLD)
-                .add(ThermiaAttributes.HEAT_OFFSET_THRESHOLD);
     }
 
     @Inject(method = "applyDamage", at = @At(value = "TAIL"))

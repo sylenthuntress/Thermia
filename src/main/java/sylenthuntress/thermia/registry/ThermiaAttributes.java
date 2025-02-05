@@ -58,6 +58,7 @@ public class ThermiaAttributes {
                     200
             )
     );
+
     public static void registerAll() {
 
     }
