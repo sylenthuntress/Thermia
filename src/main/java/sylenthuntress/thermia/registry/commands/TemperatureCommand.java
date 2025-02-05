@@ -67,8 +67,15 @@ public class TemperatureCommand {
         powerNode.addChild(targetNode);
         powerNode.addChild(positionNode);
 
-        //  Add the main node as a child of the base node
+        //  Add alias
+        var aliasNode = CommandManager.literal("temp")
+                .requires(source -> source.hasPermissionLevel(2))
+                .build();
+        powerNode.getChildren().forEach(aliasNode::addChild);
+
+        //  Add the main nodes as a child of the base node
         baseNode.addChild(powerNode);
+        baseNode.addChild(aliasNode);
     }
 
     public static class GetEntityTemperatureNode {
