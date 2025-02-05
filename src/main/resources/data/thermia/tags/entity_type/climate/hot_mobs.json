@@ -1,13 +1,13 @@
 {
   "values": [
     "minecraft:armadillo",
-    "minecraft:camel",
-    "minecraft:strider",
-    "minecraft:piglin",
-    "minecraft:zombified_piglin",
     "minecraft:blaze",
+    "minecraft:camel",
     "minecraft:magma_cube",
+    "minecraft:piglin",
     "minecraft:piglin_brute",
-    "minecraft:zoglin"
+    "minecraft:strider",
+    "minecraft:zoglin",
+    "minecraft:zombified_piglin"
   ]
 }
