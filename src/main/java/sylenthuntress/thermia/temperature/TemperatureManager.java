@@ -48,7 +48,7 @@ public class TemperatureManager {
             double newTemperature = modifyTemperature(inputTemperature * 0.0025);
             newTemperature += modifyTemperature(stepPassiveInteractions());
 
-            if (entity.isInCreativeMode())
+            if (!entity.isInCreativeMode())
                 applyStatus();
 
             return newTemperature;
@@ -153,7 +153,7 @@ public class TemperatureManager {
     }
 
     public boolean shouldShake() {
-        return getTargetTemperature() < (entity.getAttributeValue(ThermiaAttributes.BODY_TEMPERATURE) -
+        return isHypothermic() || getTargetTemperature() < (entity.getAttributeValue(ThermiaAttributes.BODY_TEMPERATURE) +
                 entity.getAttributeBaseValue(ThermiaAttributes.COLD_OFFSET_THRESHOLD));
     }
 
@@ -162,7 +162,7 @@ public class TemperatureManager {
     }
 
     public boolean shouldDoWobble() {
-        return getTargetTemperature() > (entity.getAttributeValue(ThermiaAttributes.BODY_TEMPERATURE) +
+        return isHyperthermic() || getTargetTemperature() > (entity.getAttributeValue(ThermiaAttributes.BODY_TEMPERATURE) +
                 entity.getAttributeBaseValue(ThermiaAttributes.HEAT_OFFSET_THRESHOLD));
     }
 

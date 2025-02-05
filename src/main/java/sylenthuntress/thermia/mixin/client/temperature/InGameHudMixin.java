@@ -10,6 +10,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import sylenthuntress.thermia.registry.ThermiaStatusEffects;
 import sylenthuntress.thermia.temperature.TemperatureHelper;
 
+@SuppressWarnings("DataFlowIssue")
 @Mixin(InGameHud.class)
 public class InGameHudMixin {
     @Shadow @Final private MinecraftClient client;
@@ -20,14 +21,9 @@ public class InGameHudMixin {
     }
 
     @ModifyExpressionValue(method = "renderMiscOverlays", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerEntity;getFreezingScale()F"))
-    private float thermia$maxFrozenOverlay(float original) {
+    private float thermia$incrementFrozenOverlay(float original) {
         return TemperatureHelper.getTemperatureManager(this.client.player).isHypothermic()
-                ? 0.5F * (1 + this.client.player.getStatusEffect(ThermiaStatusEffects.HYPOTHERMIA).getAmplifier() * 0.1F)
+                ? Math.max(1F, 0.5F * (1 + this.client.player.getStatusEffect(ThermiaStatusEffects.HYPOTHERMIA).getAmplifier() * 0.1F))
                 : original;
-    }
-
-    @ModifyExpressionValue(method = "renderMiscOverlays", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerEntity;hasStatusEffect(Lnet/minecraft/registry/entry/RegistryEntry;)Z"))
-    private boolean thermia$disablePortalOverlay(boolean original) {
-        return original || TemperatureHelper.getTemperatureManager(this.client.player).shouldBlurVision();
     }
 }

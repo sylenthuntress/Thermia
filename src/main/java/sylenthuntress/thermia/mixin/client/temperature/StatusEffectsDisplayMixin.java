@@ -25,7 +25,7 @@ public class StatusEffectsDisplayMixin {
                 args.set(3, ((int) args.get(3)) + 6);
             if (effect.getEffectType().matches(ThermiaStatusEffects.HYPOTHERMIA::matchesKey))
                 args.set(4, MathHelper.hsvToRgb(1.4F, Math.max(0, 0.6F - (effect.getAmplifier() * 0.17F)), 1F));
-            else args.set(4, MathHelper.hsvToRgb(1.9F, 1F, Math.max(0.2F, 1F - (effect.getAmplifier() * 0.3F))));
+            else args.set(4, MathHelper.hsvToRgb(1.9F, 1F, Math.max(0.3F, 1F - (effect.getAmplifier() * 0.3F))));
         }
     }
 
