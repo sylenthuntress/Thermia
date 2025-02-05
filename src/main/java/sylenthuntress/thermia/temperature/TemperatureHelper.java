@@ -34,7 +34,7 @@ public abstract class TemperatureHelper {
         double ambientTemperature = 100;
         double biomeTemperature = getBiomeTemperature(world, blockPos);
         ambientTemperature += biomeTemperature;
-        ambientTemperature -= (blockPos.getY() - world.getSeaLevel()) * 0.17F;
+        ambientTemperature -= (blockPos.getY() - world.getSeaLevel()) * 0.13F;
         ambientTemperature += world.getLightLevel(LightType.BLOCK, blockPos) / 4F;
         if (world.getBlockState(blockPos).getFluidState().isIn(FluidTags.WATER)) {
             if (biomeTemperature >= 0)
