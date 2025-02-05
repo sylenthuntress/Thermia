@@ -2,6 +2,8 @@ package sylenthuntress.thermia.temperature;
 
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.registry.tag.FluidTags;
+import sylenthuntress.thermia.Thermia;
 import sylenthuntress.thermia.registry.ThermiaAttachmentTypes;
 import sylenthuntress.thermia.registry.ThermiaAttributes;
 import sylenthuntress.thermia.registry.ThermiaStatusEffects;
@@ -44,6 +46,7 @@ public class TemperatureManager {
         if (entity.isAlive()) {
             double inputTemperature = getTargetTemperature() - getTemperature();
             double newTemperature = modifyTemperature(inputTemperature * 0.0025);
+            newTemperature += modifyTemperature(stepPassiveInteractions());
 
             if (entity.isInCreativeMode())
                 applyStatus();
@@ -51,6 +54,43 @@ public class TemperatureManager {
             return newTemperature;
         }
         return 0;
+    }
+
+    public double[] stepPassiveInteractions() {
+        double[] interactionTemperatures = {0, 0};
+        getTemperatureModifiers().removeModifiers(
+                Thermia.modIdentifier("powder_snow"),
+                Thermia.modIdentifier("on_fire"),
+                Thermia.modIdentifier("lava")
+        );
+        if (entity.inPowderSnow) {
+            interactionTemperatures[0] -= 0.05;
+            getTemperatureModifiers().addModifier(new TemperatureModifier(
+                    Thermia.modIdentifier("powder_snow"),
+                    -10F,
+                    TemperatureModifier.Operation.ADD_VALUE
+                    )
+            );
+        }
+        if (entity.isOnFire() && !entity.isFireImmune()) {
+            interactionTemperatures[1] += 0.05;
+            getTemperatureModifiers().addModifier(new TemperatureModifier(
+                            Thermia.modIdentifier("on_fire"),
+                            10F,
+                            TemperatureModifier.Operation.ADD_VALUE
+                    )
+            );
+        }
+        if (entity.getBlockStateAtPos().getFluidState().isIn(FluidTags.LAVA)) {
+            interactionTemperatures[1] += 0.1;
+            getTemperatureModifiers().addModifier(new TemperatureModifier(
+                            Thermia.modIdentifier("lava"),
+                            30F,
+                            TemperatureModifier.Operation.ADD_VALUE
+                    )
+            );
+        }
+        return interactionTemperatures;
     }
 
     public void applyStatus() {
