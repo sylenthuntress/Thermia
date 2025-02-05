@@ -152,8 +152,9 @@ public class TemperatureManager {
         return entity.hasStatusEffect(ThermiaStatusEffects.HYPERTHERMIA);
     }
 
-    public boolean isShaking() {
-        return isHypothermic();
+    public boolean shouldShake() {
+        return getTargetTemperature() < (entity.getAttributeValue(ThermiaAttributes.BODY_TEMPERATURE) -
+                entity.getAttributeBaseValue(ThermiaAttributes.COLD_OFFSET_THRESHOLD));
     }
 
     public boolean shouldBlurVision() {
