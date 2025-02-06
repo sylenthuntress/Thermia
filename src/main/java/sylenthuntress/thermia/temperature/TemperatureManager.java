@@ -41,10 +41,10 @@ public class TemperatureManager {
 
     public double getTargetTemperature() {
         if (!entity.getType().isIn(ThermiaTags.CLIMATE_AFFECTED))
-            return entity.getAttributeValue(ThermiaAttributes.BODY_TEMPERATURE);
-        double bodyTemperature = entity.getAttributeValue(ThermiaAttributes.BODY_TEMPERATURE);
+            return entity.getAttributeValue(ThermiaAttributes.BASE_TEMPERATURE);
+        double baseTemperature = entity.getAttributeValue(ThermiaAttributes.BASE_TEMPERATURE);
         double ambientTemperature = TemperatureHelper.getAmbientTemperature(entity.getWorld(), entity.getBlockPos());
-        return (bodyTemperature + ambientTemperature) / 2;
+        return (baseTemperature + ambientTemperature) / 2;
     }
 
     public void stepPassiveTemperature() {
@@ -129,7 +129,7 @@ public class TemperatureManager {
         if (hasTemperature())
             return entity.getAttachedOrCreate(
                     ThermiaAttachmentTypes.TEMPERATURE,
-                    () -> new Temperature(entity.getAttributeValue(ThermiaAttributes.BODY_TEMPERATURE))).value();
+                    () -> new Temperature(entity.getAttributeValue(ThermiaAttributes.BASE_TEMPERATURE))).value();
         return 0;
     }
 
@@ -162,7 +162,7 @@ public class TemperatureManager {
     }
 
     public boolean shouldShake() {
-        return isHypothermic() || getTargetTemperature() < (entity.getAttributeValue(ThermiaAttributes.BODY_TEMPERATURE) -
+        return isHypothermic() || getTargetTemperature() < (entity.getAttributeValue(ThermiaAttributes.BASE_TEMPERATURE) -
                 entity.getAttributeBaseValue(ThermiaAttributes.COLD_OFFSET_THRESHOLD));
     }
 
@@ -171,12 +171,12 @@ public class TemperatureManager {
     }
 
     public boolean shouldDoWobble() {
-        return isHyperthermic() || getTargetTemperature() > (entity.getAttributeValue(ThermiaAttributes.BODY_TEMPERATURE) +
+        return isHyperthermic() || getTargetTemperature() > (entity.getAttributeValue(ThermiaAttributes.BASE_TEMPERATURE) +
                 entity.getAttributeBaseValue(ThermiaAttributes.HEAT_OFFSET_THRESHOLD));
     }
 
     public int getHypothermiaAmplifier() {
-        double threshold = entity.getAttributeValue(ThermiaAttributes.BODY_TEMPERATURE)
+        double threshold = entity.getAttributeValue(ThermiaAttributes.BASE_TEMPERATURE)
                 - entity.getAttributeBaseValue(ThermiaAttributes.COLD_OFFSET_THRESHOLD);
         int amplifier = -1;
         while (threshold > getModifiedTemperature() && amplifier < 256) {
@@ -187,7 +187,7 @@ public class TemperatureManager {
     }
 
     public int getHyperthermiaAmplifier() {
-        double threshold = entity.getAttributeValue(ThermiaAttributes.BODY_TEMPERATURE)
+        double threshold = entity.getAttributeValue(ThermiaAttributes.BASE_TEMPERATURE)
                 + entity.getAttributeBaseValue(ThermiaAttributes.HEAT_OFFSET_THRESHOLD);
         int amplifier = -1;
         while (threshold < getModifiedTemperature() && amplifier < 256) {

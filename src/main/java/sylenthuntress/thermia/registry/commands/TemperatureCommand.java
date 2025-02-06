@@ -88,10 +88,10 @@ public class TemperatureCommand {
                             .executes(context -> executeUnmodified(context.getSource(), EntityArgumentType.getEntity(context, "target"), 1))
                             .then(CommandManager.argument("scale", FloatArgumentType.floatArg())
                                     .executes(context -> executeUnmodified(context.getSource(), EntityArgumentType.getEntity(context, "target"), FloatArgumentType.getFloat(context, "scale")))))
-                    .then(CommandManager.literal("body")
-                            .executes(context -> executeBody(context.getSource(), EntityArgumentType.getEntity(context, "target"), 1))
+                    .then(CommandManager.literal("base")
+                            .executes(context -> executeBase(context.getSource(), EntityArgumentType.getEntity(context, "target"), 1))
                             .then(CommandManager.argument("scale", FloatArgumentType.floatArg())
-                                    .executes(context -> executeBody(context.getSource(), EntityArgumentType.getEntity(context, "target"), FloatArgumentType.getFloat(context, "scale")))))
+                                    .executes(context -> executeBase(context.getSource(), EntityArgumentType.getEntity(context, "target"), FloatArgumentType.getFloat(context, "scale")))))
                     .then(CommandManager.literal("target")
                             .executes(context -> executeTarget(context.getSource(), EntityArgumentType.getEntity(context, "target"), 1))
                             .then(CommandManager.argument("scale", FloatArgumentType.floatArg())
@@ -136,21 +136,21 @@ public class TemperatureCommand {
                 throw ENTITY_FAILED_EXCEPTION.create(target.getName());
         }
 
-        private static int executeBody(ServerCommandSource source, Entity target, float multiplier) throws CommandSyntaxException {
+        private static int executeBase(ServerCommandSource source, Entity target, float multiplier) throws CommandSyntaxException {
             if (target instanceof LivingEntity livingTarget) {
                 if (TemperatureHelper.getTemperatureManager(livingTarget).hasTemperature())
                     throw ENTITY_FAILED_EXCEPTION.create(target.getName());
-                double bodyTemperature = livingTarget.getAttributeValue(ThermiaAttributes.BODY_TEMPERATURE);
+                double baseTemperature = livingTarget.getAttributeValue(ThermiaAttributes.BASE_TEMPERATURE);
                 source.sendFeedback(
                         () -> Text.translatable(
                                 "commands.temperature.get.entity.success",
-                                "Body",
+                                "Base",
                                 target.getName(),
-                                bodyTemperature
+                                baseTemperature
                         ),
                         false
                 );
-                return (int) ((bodyTemperature * multiplier) * 1000);
+                return (int) ((baseTemperature * multiplier) * 1000);
             } else
                 throw ENTITY_FAILED_EXCEPTION.create(target.getName());
         }

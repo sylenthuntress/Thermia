@@ -8,11 +8,11 @@ import net.minecraft.registry.entry.RegistryEntry;
 import sylenthuntress.thermia.Thermia;
 
 public class ThermiaAttributes {
-    public static final RegistryEntry.Reference<EntityAttribute> BODY_TEMPERATURE = Registry.registerReference(
+    public static final RegistryEntry.Reference<EntityAttribute> BASE_TEMPERATURE = Registry.registerReference(
             Registries.ATTRIBUTE,
-            Thermia.modIdentifier("body_temperature"),
+            Thermia.modIdentifier("base_temperature"),
             new ClampedEntityAttribute(
-                    "attribute.name.generic.body_temperature",
+                    "attribute.name.generic.base_temperature",
                     97,
                     -100,
                     200

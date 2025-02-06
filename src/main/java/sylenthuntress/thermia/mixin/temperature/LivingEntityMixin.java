@@ -41,7 +41,7 @@ public abstract class LivingEntityMixin extends Entity implements LivingEntityAc
     @ModifyReturnValue(method = "createLivingAttributes", at = @At("RETURN"))
     private static DefaultAttributeContainer.Builder thermia$addAttributes(DefaultAttributeContainer.Builder original) {
         return original
-                .add(ThermiaAttributes.BODY_TEMPERATURE)
+                .add(ThermiaAttributes.BASE_TEMPERATURE)
                 .add(ThermiaAttributes.COLD_MODIFIER)
                 .add(ThermiaAttributes.HEAT_MODIFIER)
                 .add(ThermiaAttributes.COLD_OFFSET_THRESHOLD)
