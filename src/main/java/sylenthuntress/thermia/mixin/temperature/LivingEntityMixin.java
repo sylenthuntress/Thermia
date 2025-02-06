@@ -1,6 +1,7 @@
 package sylenthuntress.thermia.mixin.temperature;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
+import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBiomeTags;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -58,31 +59,24 @@ public abstract class LivingEntityMixin extends Entity implements LivingEntityAc
     }
 
     @Unique
-    private LivingEntityMixin thermia$setAttributeBase(RegistryEntry<EntityAttribute> attribute, double newBase) {
+    private void thermia$setAttributeBase(RegistryEntry<EntityAttribute> attribute, double newBase) {
         EntityAttributeInstance entityAttributeInstance = this.getAttributes().getCustomInstance(attribute);
         if (entityAttributeInstance != null)
             entityAttributeInstance.setBaseValue(newBase);
-        return this;
     }
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void thermia$setTemperatureManager(EntityType<? extends LivingEntity> entityType, World world, CallbackInfo ci) {
         thermia$temperatureManager = new TemperatureManager((LivingEntity) (Object) this);
         if (!this.getType().isIn(ThermiaTags.TEMPERATURE_IMMUNE)) {
-            double bodyTemperature = 97;
             double coldOffsetThreshold = -2;
             double heatOffsetThreshold = 3;
 
-            if (this.getType().isIn(ThermiaTags.COLD_MOBS)) {
-                bodyTemperature += 10;
-                coldOffsetThreshold -= 8;
-            }
-            if (this.getType().isIn(ThermiaTags.HOT_MOBS)) {
-                bodyTemperature -= 10;
-                heatOffsetThreshold += 7;
-            }
+            if (this.getType().isIn(ThermiaTags.COLD_MOBS))
+                coldOffsetThreshold -= 15;
+            if (this.getType().isIn(ThermiaTags.HOT_MOBS))
+                heatOffsetThreshold += 15;
             if (this.getType().isIn(ThermiaTags.NETHER_MOBS)) {
-                bodyTemperature += 30;
                 heatOffsetThreshold += 10;
                 coldOffsetThreshold -= 6;
             }
@@ -90,10 +84,17 @@ public abstract class LivingEntityMixin extends Entity implements LivingEntityAc
                 heatOffsetThreshold += 20;
                 coldOffsetThreshold -= 20;
             }
+            if (!this.isPlayer()) {
+                if (world.getBiome(this.getBlockPos()).isIn(ConventionalBiomeTags.IS_COLD))
+                    coldOffsetThreshold -= 5;
+                if (world.getBiome(this.getBlockPos()).isIn(ConventionalBiomeTags.IS_DRY)) {
+                    heatOffsetThreshold += 5;
+                    coldOffsetThreshold -= 5;
+                }
+            }
 
-            thermia$setAttributeBase(ThermiaAttributes.BODY_TEMPERATURE, bodyTemperature)
-                    .thermia$setAttributeBase(ThermiaAttributes.COLD_OFFSET_THRESHOLD, coldOffsetThreshold)
-                    .thermia$setAttributeBase(ThermiaAttributes.HEAT_OFFSET_THRESHOLD, heatOffsetThreshold);
+            thermia$setAttributeBase(ThermiaAttributes.COLD_OFFSET_THRESHOLD, coldOffsetThreshold);
+            thermia$setAttributeBase(ThermiaAttributes.HEAT_OFFSET_THRESHOLD, heatOffsetThreshold);
         }
     }
 

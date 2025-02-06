@@ -27,6 +27,10 @@ public class ThermiaTags {
             RegistryKeys.ENTITY_TYPE,
             Thermia.modIdentifier("climate/temperature_immune")
     );
+    public static final TagKey<EntityType<?>> CLIMATE_AFFECTED = TagKey.of(
+            RegistryKeys.ENTITY_TYPE,
+            Thermia.modIdentifier("climate/affected")
+    );
     public static final TagKey<Item> COLD_FOODS = TagKey.of(
             RegistryKeys.ITEM,
             Thermia.modIdentifier("consumable_temperature/cold_foods")

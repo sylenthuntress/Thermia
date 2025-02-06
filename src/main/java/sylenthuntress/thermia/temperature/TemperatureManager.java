@@ -7,6 +7,7 @@ import sylenthuntress.thermia.Thermia;
 import sylenthuntress.thermia.registry.ThermiaAttachmentTypes;
 import sylenthuntress.thermia.registry.ThermiaAttributes;
 import sylenthuntress.thermia.registry.ThermiaStatusEffects;
+import sylenthuntress.thermia.registry.ThermiaTags;
 
 @SuppressWarnings("UnstableApiUsage")
 public class TemperatureManager {
@@ -38,9 +39,11 @@ public class TemperatureManager {
     }
 
     public double getTargetTemperature() {
-        double bodyTemperature = entity.getAttributeValue(ThermiaAttributes.BODY_TEMPERATURE);
-        double ambientTemperature = TemperatureHelper.getAmbientTemperature(entity.getWorld(), entity.getBlockPos());
-        return (bodyTemperature + ambientTemperature) / 2;
+        if (entity.getType().isIn(ThermiaTags.CLIMATE_AFFECTED)) {
+            double bodyTemperature = entity.getAttributeValue(ThermiaAttributes.BODY_TEMPERATURE);
+            double ambientTemperature = TemperatureHelper.getAmbientTemperature(entity.getWorld(), entity.getBlockPos());
+            return (bodyTemperature + ambientTemperature) / 2;
+        } else return entity.getAttributeValue(ThermiaAttributes.BODY_TEMPERATURE);
     }
 
     public void stepPassiveTemperature() {
