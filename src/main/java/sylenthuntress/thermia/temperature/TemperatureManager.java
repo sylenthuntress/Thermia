@@ -33,21 +33,22 @@ public class TemperatureManager {
 
     public double modifyTemperature(double... inputTemperatures) {
         double newTemperature = getTemperature();
-        for (double inputTemperature : inputTemperatures)
-            newTemperature += inputTemperature;
+        if (!entity.getType().isIn(ThermiaTags.TEMPERATURE_IMMUNE))
+            for (double inputTemperature : inputTemperatures)
+               newTemperature += inputTemperature;
         return setTemperature(newTemperature);
     }
 
     public double getTargetTemperature() {
-        if (entity.getType().isIn(ThermiaTags.CLIMATE_AFFECTED)) {
-            double bodyTemperature = entity.getAttributeValue(ThermiaAttributes.BODY_TEMPERATURE);
-            double ambientTemperature = TemperatureHelper.getAmbientTemperature(entity.getWorld(), entity.getBlockPos());
-            return (bodyTemperature + ambientTemperature) / 2;
-        } else return entity.getAttributeValue(ThermiaAttributes.BODY_TEMPERATURE);
+        if (!entity.getType().isIn(ThermiaTags.CLIMATE_AFFECTED))
+            return entity.getAttributeValue(ThermiaAttributes.BODY_TEMPERATURE);
+        double bodyTemperature = entity.getAttributeValue(ThermiaAttributes.BODY_TEMPERATURE);
+        double ambientTemperature = TemperatureHelper.getAmbientTemperature(entity.getWorld(), entity.getBlockPos());
+        return (bodyTemperature + ambientTemperature) / 2;
     }
 
     public void stepPassiveTemperature() {
-        if (entity.isAlive()) {
+        if (entity.isAlive() && !entity.getType().isIn(ThermiaTags.TEMPERATURE_IMMUNE)) {
             double inputTemperature = getTargetTemperature() - getTemperature();
             modifyTemperature(inputTemperature * 0.0025);
             modifyTemperature(stepPassiveInteractions());
@@ -125,7 +126,7 @@ public class TemperatureManager {
     }
 
     public double getTemperature() {
-        if (entity.isAlive())
+        if (entity.isAlive() && !entity.getType().isIn(ThermiaTags.TEMPERATURE_IMMUNE))
             return entity.getAttachedOrCreate(
                     ThermiaAttachmentTypes.TEMPERATURE,
                     () -> new Temperature(entity.getAttributeValue(ThermiaAttributes.BODY_TEMPERATURE))).value();
