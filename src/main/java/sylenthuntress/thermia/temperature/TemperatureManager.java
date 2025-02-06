@@ -33,7 +33,7 @@ public class TemperatureManager {
 
     public double modifyTemperature(double... inputTemperatures) {
         double newTemperature = getTemperature();
-        if (!entity.getType().isIn(ThermiaTags.TEMPERATURE_IMMUNE))
+        if (hasTemperature())
             for (double inputTemperature : inputTemperatures)
                newTemperature += inputTemperature;
         return setTemperature(newTemperature);
@@ -48,7 +48,7 @@ public class TemperatureManager {
     }
 
     public void stepPassiveTemperature() {
-        if (entity.isAlive() && !entity.getType().isIn(ThermiaTags.TEMPERATURE_IMMUNE)) {
+        if (hasTemperature()) {
             double inputTemperature = getTargetTemperature() - getTemperature();
             modifyTemperature(inputTemperature * 0.0025);
             modifyTemperature(stepPassiveInteractions());
@@ -126,7 +126,7 @@ public class TemperatureManager {
     }
 
     public double getTemperature() {
-        if (entity.isAlive() && !entity.getType().isIn(ThermiaTags.TEMPERATURE_IMMUNE))
+        if (hasTemperature())
             return entity.getAttachedOrCreate(
                     ThermiaAttachmentTypes.TEMPERATURE,
                     () -> new Temperature(entity.getAttributeValue(ThermiaAttributes.BODY_TEMPERATURE))).value();
@@ -144,6 +144,11 @@ public class TemperatureManager {
         return temperature;
     }
 
+    public boolean hasTemperature() {
+        return entity.isAlive()
+                && !entity.getType().isIn(ThermiaTags.TEMPERATURE_IMMUNE);
+    }
+
     public TemperatureModifierContainer getTemperatureModifiers() {
         return modifiers;
     }
@@ -157,7 +162,7 @@ public class TemperatureManager {
     }
 
     public boolean shouldShake() {
-        return isHypothermic() || getTargetTemperature() < (entity.getAttributeValue(ThermiaAttributes.BODY_TEMPERATURE) +
+        return isHypothermic() || getTargetTemperature() < (entity.getAttributeValue(ThermiaAttributes.BODY_TEMPERATURE) -
                 entity.getAttributeBaseValue(ThermiaAttributes.COLD_OFFSET_THRESHOLD));
     }
 
@@ -172,7 +177,7 @@ public class TemperatureManager {
 
     public int getHypothermiaAmplifier() {
         double threshold = entity.getAttributeValue(ThermiaAttributes.BODY_TEMPERATURE)
-                + entity.getAttributeBaseValue(ThermiaAttributes.COLD_OFFSET_THRESHOLD);
+                - entity.getAttributeBaseValue(ThermiaAttributes.COLD_OFFSET_THRESHOLD);
         int amplifier = -1;
         while (threshold > getModifiedTemperature() && amplifier < 256) {
             threshold += entity.getAttributeBaseValue(ThermiaAttributes.COLD_OFFSET_THRESHOLD);

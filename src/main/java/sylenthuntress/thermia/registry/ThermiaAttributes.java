@@ -53,7 +53,7 @@ public class ThermiaAttributes {
             Thermia.modIdentifier("cold_offset_threshold"),
             new ClampedEntityAttribute(
                     "attribute.name.generic.cold_offset_threshold",
-                    -2,
+                    2,
                     -100,
                     200
             )

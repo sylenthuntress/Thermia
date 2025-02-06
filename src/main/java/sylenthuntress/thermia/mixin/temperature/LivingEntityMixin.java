@@ -71,23 +71,23 @@ public abstract class LivingEntityMixin extends Entity implements LivingEntityAc
         double coldOffsetThreshold = -2;
         double heatOffsetThreshold = 3;
         if (this.getType().isIn(ThermiaTags.COLD_MOBS))
-            coldOffsetThreshold -= 15;
+            coldOffsetThreshold += 15;
         if (this.getType().isIn(ThermiaTags.HOT_MOBS))
             heatOffsetThreshold += 15;
         if (this.getType().isIn(ThermiaTags.NETHER_MOBS)) {
             heatOffsetThreshold += 10;
-            coldOffsetThreshold -= 6;
+            coldOffsetThreshold += 6;
         }
         if (this.getType().isIn(ThermiaTags.UNDEAD_MOBS)) {
             heatOffsetThreshold += 20;
-            coldOffsetThreshold -= 20;
+            coldOffsetThreshold += 20;
         }
         if (!this.isPlayer()) {
             if (world.getBiome(this.getBlockPos()).isIn(ConventionalBiomeTags.IS_COLD))
-                coldOffsetThreshold -= 5;
+                coldOffsetThreshold += 5;
             if (world.getBiome(this.getBlockPos()).isIn(ConventionalBiomeTags.IS_DRY)) {
                 heatOffsetThreshold += 5;
-                coldOffsetThreshold -= 5;
+                coldOffsetThreshold += 5;
             }
         }
         thermia$setAttributeBase(ThermiaAttributes.COLD_OFFSET_THRESHOLD, coldOffsetThreshold);

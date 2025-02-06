@@ -99,7 +99,9 @@ public class TemperatureCommand {
         }
 
         private static int executeUnmodified(ServerCommandSource source, Entity target, float multiplier) throws CommandSyntaxException {
-            if (target.isAlive() && !target.getType().isIn(ThermiaTags.TEMPERATURE_IMMUNE) && target instanceof LivingEntity livingTarget) {
+            if (target instanceof LivingEntity livingTarget) {
+                if (TemperatureHelper.getTemperatureManager(livingTarget).hasTemperature())
+                    throw ENTITY_FAILED_EXCEPTION.create(target.getName());
                 TemperatureManager temperatureManager = TemperatureHelper.getTemperatureManager(livingTarget);
                 source.sendFeedback(
                         () -> Text.translatable(
@@ -116,7 +118,9 @@ public class TemperatureCommand {
         }
 
         private static int executeCurrent(ServerCommandSource source, Entity target, float multiplier) throws CommandSyntaxException {
-            if (target.isAlive() && !target.getType().isIn(ThermiaTags.TEMPERATURE_IMMUNE) && target instanceof LivingEntity livingTarget) {
+            if (target instanceof LivingEntity livingTarget) {
+                if (TemperatureHelper.getTemperatureManager(livingTarget).hasTemperature())
+                    throw ENTITY_FAILED_EXCEPTION.create(target.getName());
                 TemperatureManager temperatureManager = TemperatureHelper.getTemperatureManager(livingTarget);
                 source.sendFeedback(
                         () -> Text.translatable(
@@ -133,7 +137,9 @@ public class TemperatureCommand {
         }
 
         private static int executeBody(ServerCommandSource source, Entity target, float multiplier) throws CommandSyntaxException {
-            if (target.isAlive() && !target.getType().isIn(ThermiaTags.TEMPERATURE_IMMUNE) && target instanceof LivingEntity livingTarget) {
+            if (target instanceof LivingEntity livingTarget) {
+                if (TemperatureHelper.getTemperatureManager(livingTarget).hasTemperature())
+                    throw ENTITY_FAILED_EXCEPTION.create(target.getName());
                 double bodyTemperature = livingTarget.getAttributeValue(ThermiaAttributes.BODY_TEMPERATURE);
                 source.sendFeedback(
                         () -> Text.translatable(
@@ -175,7 +181,9 @@ public class TemperatureCommand {
         }
 
         private static int execute(ServerCommandSource source, Entity target, double value) throws CommandSyntaxException {
-            if (target.isAlive() && !target.getType().isIn(ThermiaTags.TEMPERATURE_IMMUNE) && target instanceof LivingEntity livingTarget) {
+            if (target instanceof LivingEntity livingTarget) {
+                if (TemperatureHelper.getTemperatureManager(livingTarget).hasTemperature())
+                    throw ENTITY_FAILED_EXCEPTION.create(target.getName());
                 TemperatureManager temperatureManager = TemperatureHelper.getTemperatureManager(livingTarget);
                 source.sendFeedback(
                         () -> Text.translatable(
@@ -200,7 +208,9 @@ public class TemperatureCommand {
         }
 
         private static int execute(ServerCommandSource source, Entity target, double value) throws CommandSyntaxException {
-            if (target.isAlive() && !target.getType().isIn(ThermiaTags.TEMPERATURE_IMMUNE) && target instanceof LivingEntity livingTarget) {
+            if (target instanceof LivingEntity livingTarget) {
+                if (TemperatureHelper.getTemperatureManager(livingTarget).hasTemperature())
+                    throw ENTITY_FAILED_EXCEPTION.create(target.getName());
                 TemperatureManager temperatureManager = TemperatureHelper.getTemperatureManager(livingTarget);
                 double newTemperature = temperatureManager.modifyTemperature(value);
                 source.sendFeedback(
@@ -213,8 +223,8 @@ public class TemperatureCommand {
                         false
                 );
                 return (int) (newTemperature * 1000);
-            } else
-                throw ENTITY_FAILED_EXCEPTION.create(target.getName());
+            }
+            throw ENTITY_FAILED_EXCEPTION.create(target.getName());
         }
     }
 
@@ -242,7 +252,9 @@ public class TemperatureCommand {
         }
 
         private static int executeRemove(ServerCommandSource source, Entity target, Identifier id) throws CommandSyntaxException {
-            if (target.isAlive() && !target.getType().isIn(ThermiaTags.TEMPERATURE_IMMUNE) && target instanceof LivingEntity livingTarget) {
+            if (target instanceof LivingEntity livingTarget) {
+                if (TemperatureHelper.getTemperatureManager(livingTarget).hasTemperature())
+                    throw ENTITY_FAILED_EXCEPTION.create(target.getName());
                 if (TemperatureHelper.getTemperatureManager(livingTarget).getTemperatureModifiers().removeModifier(id)) {
                     source.sendFeedback(
                             () -> Text.stringifiedTranslatable(
@@ -260,7 +272,9 @@ public class TemperatureCommand {
         }
 
         private static Stream<Identifier> streamModifiers(Entity target) throws CommandSyntaxException {
-            if (target.isAlive() && !target.getType().isIn(ThermiaTags.TEMPERATURE_IMMUNE) && target instanceof LivingEntity livingTarget) {
+            if (target instanceof LivingEntity livingTarget) {
+                if (TemperatureHelper.getTemperatureManager(livingTarget).hasTemperature())
+                    throw ENTITY_FAILED_EXCEPTION.create(target.getName());
                 ArrayList<TemperatureModifier> temperatureModifiers = TemperatureHelper.getTemperatureManager(livingTarget).getTemperatureModifiers().getList();
                 return temperatureModifiers.stream().map(TemperatureModifier::id);
             }
@@ -269,7 +283,9 @@ public class TemperatureCommand {
 
 
         private static int executeGet(ServerCommandSource source, Entity target, Identifier id, double scale) throws CommandSyntaxException {
-            if (target.isAlive() && !target.getType().isIn(ThermiaTags.TEMPERATURE_IMMUNE) && target instanceof LivingEntity livingTarget) {
+            if (target instanceof LivingEntity livingTarget) {
+                if (TemperatureHelper.getTemperatureManager(livingTarget).hasTemperature())
+                    throw ENTITY_FAILED_EXCEPTION.create(target.getName());
                 TemperatureModifier modifier = TemperatureHelper.getTemperatureManager(livingTarget).getTemperatureModifiers().getModifier(id);
                 if (modifier != null) {
                     source.sendFeedback(
@@ -289,7 +305,9 @@ public class TemperatureCommand {
         }
 
         private static int executeAdd(ServerCommandSource source, Entity target, Identifier id, double value, TemperatureModifier.Operation operation) throws CommandSyntaxException {
-            if (target.isAlive() && !target.getType().isIn(ThermiaTags.TEMPERATURE_IMMUNE) && target instanceof LivingEntity livingTarget) {
+            if (target instanceof LivingEntity livingTarget) {
+                if (TemperatureHelper.getTemperatureManager(livingTarget).hasTemperature())
+                    throw ENTITY_FAILED_EXCEPTION.create(target.getName());
                 if (TemperatureHelper.getTemperatureManager(livingTarget).getTemperatureModifiers().addModifier(new TemperatureModifier(id, value, operation))) {
                     source.sendFeedback(
                             () -> Text.stringifiedTranslatable(
