@@ -47,4 +47,31 @@ public abstract class TemperatureHelper {
     public static TemperatureManager getTemperatureManager(LivingEntity entity) {
         return ((LivingEntityAccess) entity).thermia$getTemperatureManager();
     }
+
+    @SuppressWarnings("unused")
+    public static class Conversions {
+        public static double celsiusToFahrenheit(double temperature) {
+            return (temperature * 9 / 5) + 32;
+        }
+
+        public static double celsiusToKelvin(double temperature) {
+            return temperature + 273.15;
+        }
+
+        public static double fahrenheitToCelsius(double temperature) {
+            return (temperature - 32) * 5 / 9;
+        }
+
+        public static double fahrenheitToKelvin(double temperature) {
+            return (temperature - 32) * 5 / 9 + 273.15;
+        }
+
+        public static double kelvinToFahrenheit(double temperature) {
+            return (temperature - 273.15) * 9 / 5 + 32;
+        }
+
+        public static double kelvinToCelsius(double temperature) {
+            return temperature - 273.15;
+        }
+    }
 }
