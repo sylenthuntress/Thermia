@@ -68,7 +68,7 @@ public abstract class LivingEntityMixin extends Entity implements LivingEntityAc
     @Inject(method = "<init>", at = @At("TAIL"))
     private void thermia$setTemperatureManager(EntityType<? extends LivingEntity> entityType, World world, CallbackInfo ci) {
         thermia$temperatureManager = new TemperatureManager((LivingEntity) (Object) this);
-        double coldOffsetThreshold = -2;
+        double coldOffsetThreshold = 2;
         double heatOffsetThreshold = 3;
         if (this.getType().isIn(ThermiaTags.COLD_MOBS))
             coldOffsetThreshold += 15;
