@@ -96,13 +96,8 @@ public abstract class LivingEntityMixin extends Entity implements LivingEntityAc
 
     @Inject(method = "tick", at = @At("TAIL"))
     private void thermia$calculateTemperature(CallbackInfo ci) {
-        if (!this.getWorld().isClient()) {
-            LivingEntity livingEntity = (LivingEntity) (Object) this;
+        if (!this.getWorld().isClient() && this.age % 5 == 0)
             thermia$temperatureManager.stepPassiveTemperature();
-
-            if (!this.isOnFire())
-                TemperatureHelper.getTemperatureManager(livingEntity).getTemperatureModifiers().removeModifier(Thermia.modIdentifier("on_fire"));
-        }
     }
 
     @Inject(method = "applyDamage", at = @At(value = "TAIL"))

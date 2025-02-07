@@ -50,12 +50,11 @@ public class TemperatureManager {
     public void stepPassiveTemperature() {
         if (hasTemperature()) {
             double inputTemperature = getTargetTemperature() - getTemperature();
-            modifyTemperature(inputTemperature * 0.0025);
+            modifyTemperature(inputTemperature * 0.0125);
             modifyTemperature(stepPassiveInteractions());
 
             if (!entity.isInCreativeMode())
                 applyStatus();
-
         }
     }
 
