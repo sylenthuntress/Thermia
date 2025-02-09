@@ -23,6 +23,10 @@ public record ConsumableTemperatureComponent(double temperature, double minTempe
                     .apply(instance, ConsumableTemperatureComponent::new)
     );
 
+    public ConsumableTemperatureComponent(double... temperatures) {
+        this(temperatures[0], temperatures[1], temperatures[2]);
+    }
+
     @Override
     public void onConsume(World world, LivingEntity user, ItemStack stack, ConsumableComponent consumable) {
         double temperature = temperature() + random.nextDouble(
