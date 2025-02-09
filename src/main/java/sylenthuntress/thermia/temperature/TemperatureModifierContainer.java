@@ -5,6 +5,7 @@ import sylenthuntress.thermia.Thermia;
 
 import java.util.ArrayList;
 
+@SuppressWarnings({"UnusedReturnValue", "unused"})
 public class TemperatureModifierContainer {
     protected ArrayList<TemperatureModifier> modifiers = new ArrayList<>();
 
