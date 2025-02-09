@@ -11,6 +11,6 @@ import sylenthuntress.thermia.temperature.TemperatureHelper;
 public class LivingEntityRendererMixin {
     @ModifyExpressionValue(method = "updateRenderState(Lnet/minecraft/entity/LivingEntity;Lnet/minecraft/client/render/entity/state/LivingEntityRenderState;F)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/LivingEntity;isFrozen()Z"))
     private boolean thermia$hypothermiaShaking(boolean original, LivingEntity entity) {
-        return original || TemperatureHelper.getTemperatureManager(entity).doColdEfefects();
+        return original || TemperatureHelper.getTemperatureManager(entity).doColdEffects();
     }
 }

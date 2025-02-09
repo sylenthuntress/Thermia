@@ -178,7 +178,7 @@ public class TemperatureManager {
         return entity.hasStatusEffect(ThermiaStatusEffects.HYPERTHERMIA);
     }
 
-    public boolean doColdEfefects() {
+    public boolean doColdEffects() {
         return isHypothermic() ||
                 getTargetTemperature() < (entity.getAttributeValue(ThermiaAttributes.BASE_TEMPERATURE) -
                         entity.getAttributeBaseValue(ThermiaAttributes.COLD_OFFSET_THRESHOLD))

@@ -22,7 +22,7 @@ public record TargetTemperature(double value) {
         return new TargetTemperature(newTemperature);
     }
 
-    @SuppressWarnings("DataFlowIssue")
+    @SuppressWarnings({"UnusedReturnValue"})
     public static double calculateTargetTemperature(LivingEntity entity) {
         double targetTemperature;
         if (!entity.getType().isIn(ThermiaTags.EntityType.CLIMATE_AFFECTED)) {

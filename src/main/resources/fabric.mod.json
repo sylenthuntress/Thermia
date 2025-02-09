@@ -32,6 +32,9 @@
   "suggests": {
     "another-mod": "*"
   },
+  "conflicts": {
+    "toughasnails": "*"
+  },
   "custom": {
     "modmenu": {
       "links": {
