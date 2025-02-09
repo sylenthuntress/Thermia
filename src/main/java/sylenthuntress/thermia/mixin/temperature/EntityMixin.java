@@ -12,17 +12,26 @@ import sylenthuntress.thermia.temperature.TemperatureModifier;
 
 @Mixin(Entity.class)
 public abstract class EntityMixin {
-    @Inject(method = "setOnFire", at = @At("HEAD"))
+    @Inject(
+            method = "setOnFire",
+            at = @At("HEAD")
+    )
     private void thermia$setFireTemperature(boolean onFire, CallbackInfo ci) {
         if ((Entity) (Object) this instanceof LivingEntity livingEntity) {
             if (onFire)
-                TemperatureHelper.getTemperatureManager(livingEntity).getTemperatureModifiers().addModifier(new TemperatureModifier(
-                        Thermia.modIdentifier("on_fire"),
-                        100,
-                        TemperatureModifier.Operation.ADD_VALUE
+                TemperatureHelper.getTemperatureManager(livingEntity)
+                        .getTemperatureModifiers()
+                        .addModifier(new TemperatureModifier(
+                                Thermia.modIdentifier("on_fire"),
+                                100,
+                                TemperatureModifier.Operation.ADD_VALUE
                 ));
             else
-                TemperatureHelper.getTemperatureManager(livingEntity).getTemperatureModifiers().removeModifier(Thermia.modIdentifier("on_fire"));
+                TemperatureHelper.getTemperatureManager(livingEntity)
+                        .getTemperatureModifiers()
+                        .removeModifier(
+                                Thermia.modIdentifier("on_fire")
+                        );
         }
     }
 }

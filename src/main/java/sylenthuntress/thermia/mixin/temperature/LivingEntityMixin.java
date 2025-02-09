@@ -10,7 +10,7 @@ import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributeInstance;
 import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.projectile.thrown.SnowballEntity;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.registry.entry.RegistryEntry;
@@ -26,6 +26,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import sylenthuntress.thermia.access.temperature.LivingEntityAccess;
 import sylenthuntress.thermia.registry.ThermiaAttributes;
+import sylenthuntress.thermia.registry.ThermiaStatusEffects;
 import sylenthuntress.thermia.registry.ThermiaTags;
 import sylenthuntress.thermia.temperature.TemperatureHelper;
 import sylenthuntress.thermia.temperature.TemperatureManager;
@@ -39,12 +40,24 @@ public abstract class LivingEntityMixin extends Entity implements LivingEntityAc
         super(type, world);
     }
 
-    @ModifyReturnValue(method = "createLivingAttributes", at = @At("RETURN"))
+    @ModifyReturnValue(
+            method = "createLivingAttributes",
+            at = @At("RETURN")
+    )
     private static DefaultAttributeContainer.Builder thermia$addAttributes(DefaultAttributeContainer.Builder original) {
         return original
                 .add(ThermiaAttributes.BASE_TEMPERATURE)
                 .add(ThermiaAttributes.COLD_OFFSET_THRESHOLD)
                 .add(ThermiaAttributes.HEAT_OFFSET_THRESHOLD);
+    }
+
+    @ModifyReturnValue(
+            method = "canFreeze",
+            at = @At("RETURN")
+    )
+    private boolean thermia$applyFrostResistance(boolean original) {
+        return original
+                && !this.hasStatusEffect(ThermiaStatusEffects.FROST_RESISTANCE);
     }
 
     @Shadow
@@ -53,7 +66,8 @@ public abstract class LivingEntityMixin extends Entity implements LivingEntityAc
     @Shadow
     public abstract boolean isInvulnerableTo(ServerWorld world, DamageSource source);
 
-    @Shadow public abstract boolean addStatusEffect(StatusEffectInstance effect);
+    @Shadow
+    public abstract boolean hasStatusEffect(RegistryEntry<StatusEffect> effect);
 
     public TemperatureManager thermia$getTemperatureManager() {
         return thermia$temperatureManager;
@@ -66,7 +80,10 @@ public abstract class LivingEntityMixin extends Entity implements LivingEntityAc
             entityAttributeInstance.setBaseValue(newBase);
     }
 
-    @Inject(method = "<init>", at = @At("TAIL"))
+    @Inject(
+            method = "<init>",
+            at = @At("TAIL")
+    )
     private void thermia$setTemperatureManager(EntityType<? extends LivingEntity> entityType, World world, CallbackInfo ci) {
         thermia$temperatureManager = new TemperatureManager((LivingEntity) (Object) this);
         double coldOffsetThreshold = 2;
@@ -95,7 +112,10 @@ public abstract class LivingEntityMixin extends Entity implements LivingEntityAc
         thermia$setAttributeBase(ThermiaAttributes.HEAT_OFFSET_THRESHOLD, heatOffsetThreshold);
     }
 
-    @Inject(method = "tick", at = @At("TAIL"))
+    @Inject(
+            method = "tick",
+            at = @At("TAIL")
+    )
     private void thermia$calculateTemperature(CallbackInfo ci) {
         if (this.getWorld().isClient()) {
             if (thermia$temperatureManager.doHeatEffects() && this.age % 6 == 0) {
@@ -120,7 +140,10 @@ public abstract class LivingEntityMixin extends Entity implements LivingEntityAc
         }
     }
 
-    @Inject(method = "applyDamage", at = @At(value = "TAIL"))
+    @Inject(
+            method = "applyDamage",
+            at = @At(value = "TAIL")
+    )
     private void thermia$damageInteractions(ServerWorld world, DamageSource source, float amount, CallbackInfo ci) {
         if (!this.isInvulnerableTo(world, source)) {
             TemperatureManager temperatureManager = TemperatureHelper.getTemperatureManager((LivingEntity) (Object) this);
