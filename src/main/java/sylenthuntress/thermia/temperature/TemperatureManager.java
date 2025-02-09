@@ -2,6 +2,7 @@ package sylenthuntress.thermia.temperature;
 
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.registry.tag.FluidTags;
 import sylenthuntress.thermia.Thermia;
 import sylenthuntress.thermia.registry.ThermiaAttachmentTypes;
@@ -52,11 +53,9 @@ public class TemperatureManager {
         }
 
         TargetTemperature.calculateTargetTemperature(entity);
-        if (!entity.isInCreativeMode()) {
-            double inputTemperature = getTargetTemperature() - getTemperature();
-            modifyTemperature(inputTemperature * 0.0125);
-            modifyTemperature(stepPassiveInteractions());
-        }
+        double inputTemperature = getTargetTemperature() - getTemperature();
+        modifyTemperature(inputTemperature * 0.0125);
+        modifyTemperature(stepPassiveInteractions());
 
         applyStatus();
     }
@@ -181,7 +180,7 @@ public class TemperatureManager {
     public boolean doColdEffects() {
         return isHypothermic() ||
                 getTargetTemperature() < (entity.getAttributeValue(ThermiaAttributes.BASE_TEMPERATURE) -
-                        entity.getAttributeBaseValue(ThermiaAttributes.COLD_OFFSET_THRESHOLD))
+                        entity.getAttributeValue(ThermiaAttributes.COLD_OFFSET_THRESHOLD))
                 && !entity.isInCreativeMode()
                 && !entity.isSpectator();
     }
@@ -193,18 +192,22 @@ public class TemperatureManager {
     public boolean doHeatEffects() {
         return isHyperthermic() ||
                 getTargetTemperature() > (entity.getAttributeValue(ThermiaAttributes.BASE_TEMPERATURE) +
-                        entity.getAttributeBaseValue(ThermiaAttributes.HEAT_OFFSET_THRESHOLD))
+                        entity.getAttributeValue(ThermiaAttributes.HEAT_OFFSET_THRESHOLD))
                 && !entity.isInCreativeMode()
                 && !entity.isSpectator();
     }
 
     public int getHypothermiaAmplifier() {
+        if (entity.hasStatusEffect(ThermiaStatusEffects.FROST_RESISTANCE)) {
+            return -1;
+        }
+
         double threshold = entity.getAttributeValue(ThermiaAttributes.BASE_TEMPERATURE)
-                - entity.getAttributeBaseValue(ThermiaAttributes.COLD_OFFSET_THRESHOLD);
+                - entity.getAttributeValue(ThermiaAttributes.COLD_OFFSET_THRESHOLD);
         int amplifier = -1;
 
         while (threshold > getModifiedTemperature() && amplifier < 256) {
-            threshold -= entity.getAttributeBaseValue(ThermiaAttributes.COLD_OFFSET_THRESHOLD);
+            threshold -= entity.getAttributeValue(ThermiaAttributes.COLD_OFFSET_THRESHOLD);
             amplifier++;
         }
 
@@ -212,12 +215,16 @@ public class TemperatureManager {
     }
 
     public int getHyperthermiaAmplifier() {
+        if (entity.hasStatusEffect(StatusEffects.FIRE_RESISTANCE)) {
+            return -1;
+        }
+
         double threshold = entity.getAttributeValue(ThermiaAttributes.BASE_TEMPERATURE)
-                + entity.getAttributeBaseValue(ThermiaAttributes.HEAT_OFFSET_THRESHOLD);
+                + entity.getAttributeValue(ThermiaAttributes.HEAT_OFFSET_THRESHOLD);
         int amplifier = -1;
 
         while (threshold < getModifiedTemperature() && amplifier < 256) {
-            threshold += entity.getAttributeBaseValue(ThermiaAttributes.HEAT_OFFSET_THRESHOLD);
+            threshold += entity.getAttributeValue(ThermiaAttributes.HEAT_OFFSET_THRESHOLD);
             amplifier++;
         }
 

@@ -29,14 +29,21 @@ public record ConsumableTemperatureComponent(double temperature, double minTempe
 
     @Override
     public void onConsume(World world, LivingEntity user, ItemStack stack, ConsumableComponent consumable) {
-        double temperature = temperature() + random.nextDouble(
-                (int) Math.round(minTemperature * 1000),
-                (int) Math.round(maxTemperature * 1000)) * 0.001;
+        double temperature = temperature();
 
-        if (temperature != 0) {
-            TemperatureManager temperatureManager = ((LivingEntityAccess) user).thermia$getTemperatureManager();
-            temperatureManager.modifyTemperature(temperature);
+        if (maxTemperature > minTemperature) {
+            temperature += random.nextDouble(
+                    (int) Math.round(minTemperature * 1000),
+                    (int) Math.round(maxTemperature * 1000)
+            ) * 0.001;
         }
+
+        if (temperature == 0) {
+            return;
+        }
+
+        TemperatureManager temperatureManager = ((LivingEntityAccess) user).thermia$getTemperatureManager();
+        temperatureManager.modifyTemperature(temperature);
     }
 
     private static final Random random = new Random();

@@ -18,26 +18,6 @@ public class ThermiaAttributes {
                     200
             )
     );
-    public static final RegistryEntry.Reference<EntityAttribute> COLD_MODIFIER = Registry.registerReference(
-            Registries.ATTRIBUTE,
-            Thermia.modIdentifier("cold_modifier"),
-            new ClampedEntityAttribute(
-                    "attribute.name.generic.cold_modifier",
-                    1,
-                    0,
-                    255
-            )
-    );
-    public static final RegistryEntry.Reference<EntityAttribute> HEAT_MODIFIER = Registry.registerReference(
-            Registries.ATTRIBUTE,
-            Thermia.modIdentifier("heat_modifier"),
-            new ClampedEntityAttribute(
-                    "attribute.name.generic.heat_modifier",
-                    1,
-                    0,
-                    255
-            )
-    );
     public static final RegistryEntry.Reference<EntityAttribute> HEAT_OFFSET_THRESHOLD = Registry.registerReference(
             Registries.ATTRIBUTE,
             Thermia.modIdentifier("heat_offset_threshold"),

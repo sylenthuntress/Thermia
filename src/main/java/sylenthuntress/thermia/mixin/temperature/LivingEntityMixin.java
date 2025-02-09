@@ -46,8 +46,6 @@ public abstract class LivingEntityMixin extends Entity implements LivingEntityAc
     private static DefaultAttributeContainer.Builder thermia$addAttributes(DefaultAttributeContainer.Builder original) {
         return original
                 .add(ThermiaAttributes.BASE_TEMPERATURE)
-                .add(ThermiaAttributes.COLD_MODIFIER)
-                .add(ThermiaAttributes.HEAT_MODIFIER)
                 .add(ThermiaAttributes.COLD_OFFSET_THRESHOLD)
                 .add(ThermiaAttributes.HEAT_OFFSET_THRESHOLD);
     }

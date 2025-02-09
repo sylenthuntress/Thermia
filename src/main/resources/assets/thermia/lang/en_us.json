@@ -1,5 +1,8 @@
 {
   "thermia.discord": "Discord",
+  "attribute.name.generic.cold_offset_threshold": "Insulation",
+  "attribute.name.generic.heat_offset_threshold": "Breeze",
+  "effect.thermia.ice_resistance": "Frost Resistance",
   "effect.thermia.hypothermia": "Hypothermia",
   "effect.thermia.hyperthermia": "Hyperthermia",
   "effect.duration.thermia": "Regulate your temperature!",
