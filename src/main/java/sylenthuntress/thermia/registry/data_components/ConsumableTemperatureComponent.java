@@ -10,6 +10,8 @@ import net.minecraft.world.World;
 import sylenthuntress.thermia.access.temperature.LivingEntityAccess;
 import sylenthuntress.thermia.temperature.TemperatureManager;
 
+import java.util.Random;
+
 public record ConsumableTemperatureComponent(double temperature, double minTemperature,
                                              double maxTemperature) implements Consumable {
     public static final Codec<ConsumableTemperatureComponent> CODEC = RecordCodecBuilder.create(
@@ -23,12 +25,15 @@ public record ConsumableTemperatureComponent(double temperature, double minTempe
 
     @Override
     public void onConsume(World world, LivingEntity user, ItemStack stack, ConsumableComponent consumable) {
-        double temperature = temperature() + world.getRandom().nextBetween(
+        double temperature = temperature() + random.nextDouble(
                 (int) Math.round(minTemperature * 1000),
                 (int) Math.round(maxTemperature * 1000)) * 0.001;
+
         if (temperature != 0) {
             TemperatureManager temperatureManager = ((LivingEntityAccess) user).thermia$getTemperatureManager();
             temperatureManager.modifyTemperature(temperature);
         }
     }
+
+    private static final Random random = new Random();
 }

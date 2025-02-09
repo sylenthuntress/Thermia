@@ -17,8 +17,10 @@ public class HypothermiaEffect extends StatusEffect {
 
     @Override
     public boolean applyUpdateEffect(ServerWorld world, LivingEntity entity, int amplifier) {
-        if (!entity.isFrozen())
+        if (!entity.isFrozen()) {
             entity.damage(world, entity.getDamageSources().freeze(), 0.5F);
+        }
+
         return true;
     }
 
@@ -31,7 +33,9 @@ public class HypothermiaEffect extends StatusEffect {
     @Override
     public void onApplied(LivingEntity entity, int amplifier) {
         super.onApplied(entity, amplifier);
+
         EntityAttributeInstance attribute = entity.getAttributes().getCustomInstance(EntityAttributes.MOVEMENT_SPEED);
+
         if (attribute != null && !attribute.hasModifier(Thermia.modIdentifier("effect.hypothermia.slowness")))
             attribute.addPersistentModifier(
                     new EntityAttributeModifier(
@@ -42,6 +46,7 @@ public class HypothermiaEffect extends StatusEffect {
             );
     }
 
+    @SuppressWarnings("DataFlowIssue")
     @Override
     public void onRemoved(AttributeContainer container) {
         container.getCustomInstance(EntityAttributes.MOVEMENT_SPEED)

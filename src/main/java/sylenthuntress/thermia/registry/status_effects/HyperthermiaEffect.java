@@ -4,6 +4,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectCategory;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.world.ServerWorld;
 
 public class HyperthermiaEffect extends StatusEffect {
@@ -18,9 +19,11 @@ public class HyperthermiaEffect extends StatusEffect {
         if (canDamage && !entity.isOnFire()) {
             entity.damage(world, entity.getDamageSources().onFire(), 0.5F);
             canDamage = false;
-        } else if (entity instanceof PlayerEntity player)
+        }
+        else if (entity instanceof PlayerEntity player) {
             player.addExhaustion(0.01F * (float) (amplifier + 1));
-        else return false;
+        }
+
         return true;
     }
 

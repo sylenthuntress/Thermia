@@ -21,13 +21,13 @@ public class ConsumableComponentMixin {
     private void thermia$defaultConsumableTemperature(World world, LivingEntity user, ItemStack stack, CallbackInfoReturnable<ItemStack> cir) {
         if (!stack.contains(ThermiaComponents.CONSUMABLE_TEMPERATURE_COMPONENT)) {
             double[] consumedTemperatures = {0, 0};
-            if (stack.isIn(ThermiaTags.COLD_FOODS))
+            if (stack.isIn(ThermiaTags.Item.COLD_FOODS))
                 consumedTemperatures[0] -= 2;
-            if (stack.isIn(ThermiaTags.REFRESHING_FOODS))
+            if (stack.isIn(ThermiaTags.Item.REFRESHING_FOODS))
                 consumedTemperatures[0] -= 0.5;
-            if (stack.isIn(ThermiaTags.WARM_FOODS))
+            if (stack.isIn(ThermiaTags.Item.WARM_FOODS))
                 consumedTemperatures[1] += 0.5;
-            if (stack.isIn(ThermiaTags.HOT_FOODS))
+            if (stack.isIn(ThermiaTags.Item.HOT_FOODS))
                 consumedTemperatures[1] += 2;
             if (Arrays.stream(consumedTemperatures).anyMatch(value -> value != 0)) {
                 TemperatureManager temperatureManager = ((LivingEntityAccess) user).thermia$getTemperatureManager();

@@ -70,7 +70,7 @@ public abstract class GameRendererMixin {
 
     @ModifyExpressionValue(method = "renderWorld", at = @At(value = "FIELD", target = "Lnet/minecraft/client/network/ClientPlayerEntity;nauseaIntensity:F"))
     private float thermia$wobbleVision(float original) {
-        return TemperatureHelper.getTemperatureManager(this.client.player).shouldDoWobble()
+        return TemperatureHelper.getTemperatureManager(this.client.player).doHeatEffects()
                 ? Math.max(0.1F, original)
                 : original;
     }

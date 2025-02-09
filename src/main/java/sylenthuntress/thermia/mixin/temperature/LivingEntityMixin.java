@@ -10,11 +10,16 @@ import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributeInstance;
 import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.projectile.thrown.SnowballEntity;
+import net.minecraft.particle.DustParticleEffect;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.registry.tag.DamageTypeTags;
 import net.minecraft.registry.tag.EntityTypeTags;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.Colors;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -22,7 +27,6 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import sylenthuntress.thermia.Thermia;
 import sylenthuntress.thermia.access.temperature.LivingEntityAccess;
 import sylenthuntress.thermia.registry.ThermiaAttributes;
 import sylenthuntress.thermia.registry.ThermiaTags;
@@ -54,6 +58,8 @@ public abstract class LivingEntityMixin extends Entity implements LivingEntityAc
     @Shadow
     public abstract boolean isInvulnerableTo(ServerWorld world, DamageSource source);
 
+    @Shadow public abstract boolean addStatusEffect(StatusEffectInstance effect);
+
     public TemperatureManager thermia$getTemperatureManager() {
         return thermia$temperatureManager;
     }
@@ -70,15 +76,15 @@ public abstract class LivingEntityMixin extends Entity implements LivingEntityAc
         thermia$temperatureManager = new TemperatureManager((LivingEntity) (Object) this);
         double coldOffsetThreshold = 2;
         double heatOffsetThreshold = 3;
-        if (this.getType().isIn(ThermiaTags.COLD_MOBS))
+        if (this.getType().isIn(ThermiaTags.EntityType.COLD_MOBS))
             coldOffsetThreshold += 15;
-        if (this.getType().isIn(ThermiaTags.HOT_MOBS))
+        if (this.getType().isIn(ThermiaTags.EntityType.HOT_MOBS))
             heatOffsetThreshold += 15;
-        if (this.getType().isIn(ThermiaTags.NETHER_MOBS)) {
+        if (this.getType().isIn(ThermiaTags.EntityType.NETHER_MOBS)) {
             heatOffsetThreshold += 10;
             coldOffsetThreshold += 6;
         }
-        if (this.getType().isIn(ThermiaTags.UNDEAD_MOBS)) {
+        if (this.getType().isIn(ThermiaTags.EntityType.UNDEAD_MOBS)) {
             heatOffsetThreshold += 20;
             coldOffsetThreshold += 20;
         }
@@ -96,8 +102,27 @@ public abstract class LivingEntityMixin extends Entity implements LivingEntityAc
 
     @Inject(method = "tick", at = @At("TAIL"))
     private void thermia$calculateTemperature(CallbackInfo ci) {
-        if (!this.getWorld().isClient() && this.age % 5 == 0)
+        if (this.getWorld().isClient()) {
+            if (thermia$temperatureManager.doHeatEffects() && this.age % 6 == 0) {
+                this.getWorld().addParticle(
+                        ParticleTypes.FALLING_WATER,
+                        true,
+                        true,
+                        this.getParticleX(0.5),
+                        this.getRandomBodyY(),
+                        this.getParticleZ(0.5),
+                        0.0,
+                        0.0,
+                        0.0
+                );
+            }
+
+            return;
+        }
+
+        if (this.age % 5 == 0) {
             thermia$temperatureManager.stepPassiveTemperature();
+        }
     }
 
     @Inject(method = "applyDamage", at = @At(value = "TAIL"))
@@ -110,7 +135,7 @@ public abstract class LivingEntityMixin extends Entity implements LivingEntityAc
                     interactionTemperatures[0] -= 1.5;
                 if (source.isIn(DamageTypeTags.IS_FIRE))
                     interactionTemperatures[1] += 1.5;
-                if (source.getAttacker().getType().isIn(ThermiaTags.UNDEAD_MOBS))
+                if (source.getAttacker().getType().isIn(ThermiaTags.EntityType.UNDEAD_MOBS))
                     interactionTemperatures[0] -= 0.1;
                 if (source.getAttacker().getType().isIn(EntityTypeTags.FREEZE_HURTS_EXTRA_TYPES))
                     interactionTemperatures[1] += 0.5;

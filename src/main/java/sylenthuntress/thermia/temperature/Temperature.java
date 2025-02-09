@@ -7,7 +7,7 @@ import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.codec.PacketCodecs;
 
 public record Temperature(double value) {
-    public final static Temperature DEFAULT = new Temperature(0);
+    public final static Temperature DEFAULT = new Temperature(97);
     public static Codec<Temperature> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             Codec.DOUBLE.fieldOf("temperature").forGetter(Temperature::value)
     ).apply(instance, Temperature::new));
