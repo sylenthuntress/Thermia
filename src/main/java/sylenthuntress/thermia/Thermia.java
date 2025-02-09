@@ -5,10 +5,7 @@ import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sylenthuntress.thermia.registry.ThermiaAttachmentTypes;
-import sylenthuntress.thermia.registry.ThermiaAttributes;
-import sylenthuntress.thermia.registry.ThermiaComponents;
-import sylenthuntress.thermia.registry.ThermiaStatusEffects;
+import sylenthuntress.thermia.registry.*;
 import sylenthuntress.thermia.registry.commands.TemperatureCommand;
 
 public class Thermia implements ModInitializer {
@@ -26,7 +23,9 @@ public class Thermia implements ModInitializer {
         ThermiaStatusEffects.registerAll();
         ThermiaComponents.registerAll();
         ThermiaAttachmentTypes.init();
+        ThermiaPotions.registerAll();
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) ->
-                TemperatureCommand.register(dispatcher.getRoot()));
+                TemperatureCommand.register(dispatcher.getRoot())
+        );
     }
 }

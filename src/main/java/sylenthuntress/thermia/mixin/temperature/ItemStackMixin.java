@@ -15,7 +15,6 @@ import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.consume.ApplyEffectsConsumeEffect;
 import net.minecraft.registry.tag.TagKey;
-import net.minecraft.text.Text;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -39,10 +38,6 @@ public abstract class ItemStackMixin implements ComponentHolder {
     @Shadow @Nullable public abstract <T> T apply(ComponentType<T> type, T defaultValue, UnaryOperator<T> applier);
 
     @Shadow @Nullable public abstract <T> T set(ComponentType<? super T> type, @Nullable T value);
-
-    @Shadow public abstract Text getItemName();
-
-    @Shadow public abstract Item getItem();
 
     @Inject(
             method = "<init>(Lnet/minecraft/item/ItemConvertible;ILnet/minecraft/component/MergedComponentMap;)V",
