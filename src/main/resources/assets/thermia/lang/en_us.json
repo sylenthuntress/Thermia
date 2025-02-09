@@ -1,6 +1,6 @@
 {
-  "attribute.name.generic.cold_offset_threshold": "Insulation",
-  "attribute.name.generic.heat_offset_threshold": "Breeze",
+  "attribute.name.generic.cold_offset_threshold": "Freeze Protection",
+  "attribute.name.generic.heat_offset_threshold": "Overheat Protection",
   "commands.temperature.change.success": "Successfully changed temperature of %s from %s to %s",
   "commands.temperature.failure.entity.invalid": "%s is not a valid entity for this command!",
   "commands.temperature.failure.modifier.duplicate": "Modifier %s already exists on entity!",
@@ -15,6 +15,7 @@
   "effect.thermia.frost_resistance": "Frost Resistance",
   "effect.thermia.hyperthermia": "Hyperthermia",
   "effect.thermia.hypothermia": "Hypothermia",
+  "enchantment.thermia.frost_protection": "Frost Protection",
   "item.minecraft.lingering_potion.effect.frost_resistance": "Splash Potion of Frost Resistance",
   "item.minecraft.potion.effect.frost_resistance": "Potion of Frost Resistance",
   "item.minecraft.splash_potion.effect.frost_resistance": "Splash Potion of Frost Resistance",

@@ -37,10 +37,10 @@ public record TargetTemperature(double value) {
             return targetTemperature;
         }
 
-        double baseTemperature = entity.getAttributeValue(
+        final double baseTemperature = entity.getAttributeValue(
                 ThermiaAttributes.BASE_TEMPERATURE
         );
-        double ambientTemperature = TemperatureHelper.getAmbientTemperature(
+        final double ambientTemperature = TemperatureHelper.getAmbientTemperature(
                 entity.getWorld(),
                 entity.getBlockPos(),
                 entity

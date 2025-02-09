@@ -73,4 +73,25 @@ public class ThermiaTags {
             );
         }
     }
+
+    public static class Enchantment {
+        public static final TagKey<net.minecraft.enchantment.Enchantment> PROVIDES_CHILL = TagKey.of(
+                RegistryKeys.ENCHANTMENT,
+                Thermia.modIdentifier("provides_chill")
+        );
+        public static final TagKey<net.minecraft.enchantment.Enchantment> PROVIDES_WARMTH = TagKey.of(
+                RegistryKeys.ENCHANTMENT,
+                Thermia.modIdentifier("provides_warmth")
+        );
+
+        public static final TagKey<net.minecraft.enchantment.Enchantment> HYPOTHERMIA_PROTECTION = TagKey.of(
+                RegistryKeys.ENCHANTMENT,
+                Thermia.modIdentifier("hypothermia_protection")
+        );
+
+        public static final TagKey<net.minecraft.enchantment.Enchantment> HYPERTHERMIA_PROTECTION = TagKey.of(
+                RegistryKeys.ENCHANTMENT,
+                Thermia.modIdentifier("hyperthermia_protection")
+        );
+    }
 }
