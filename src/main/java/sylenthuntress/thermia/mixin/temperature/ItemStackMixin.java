@@ -9,11 +9,11 @@ import net.minecraft.component.type.AttributeModifiersComponent;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.consume.ApplyEffectsConsumeEffect;
-import net.minecraft.registry.entry.RegistryEntryList;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.Nullable;
@@ -44,8 +44,6 @@ public abstract class ItemStackMixin implements ComponentHolder {
 
     @Shadow public abstract Item getItem();
 
-    @Shadow public abstract boolean isIn(RegistryEntryList<Item> registryEntryList);
-
     @Inject(
             method = "<init>(Lnet/minecraft/item/ItemConvertible;ILnet/minecraft/component/MergedComponentMap;)V",
             at = @At("TAIL")
@@ -65,12 +63,29 @@ public abstract class ItemStackMixin implements ComponentHolder {
             );
 
             if (this.isIn(ThermiaTags.Item.Consumable.APPLIES_FROST_RESISTANCE)) {
-                //noinspection DataFlowIssue
-                component.onConsumeEffects().add(
+                @SuppressWarnings("DataFlowIssue") final var consumeEffects = component.onConsumeEffects();
+
+                int duration = consumeEffects.stream().mapToInt(consumeEffect -> {
+                    if (consumeEffect instanceof ApplyEffectsConsumeEffect consumeStatusEffect) {
+                        return consumeStatusEffect.effects().stream().mapToInt(effect
+                                -> effect.getEffectType() == StatusEffects.FIRE_RESISTANCE
+                                ? effect.getDuration()
+                                : 0
+                        ).sum();
+                    }
+
+                    return 0;
+                }).sum();
+
+                if (duration == 0) {
+                    duration = 1200;
+                }
+
+                consumeEffects.add(
                         new ApplyEffectsConsumeEffect(
                                 new StatusEffectInstance(
                                         ThermiaStatusEffects.FROST_RESISTANCE,
-                                        6000
+                                        duration
                                 )
                         )
                 );
