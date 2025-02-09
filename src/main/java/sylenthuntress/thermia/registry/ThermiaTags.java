@@ -1,8 +1,5 @@
 package sylenthuntress.thermia.registry;
 
-import net.minecraft.block.Block;
-import net.minecraft.entity.EntityType;
-import net.minecraft.item.Item;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.TagKey;
 import sylenthuntress.thermia.Thermia;
