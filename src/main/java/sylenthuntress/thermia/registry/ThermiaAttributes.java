@@ -16,7 +16,7 @@ public class ThermiaAttributes {
                     97,
                     -100,
                     200
-            )
+            ).setTracked(true).setCategory(EntityAttribute.Category.POSITIVE)
     );
     public static final RegistryEntry.Reference<EntityAttribute> HEAT_OFFSET_THRESHOLD = Registry.registerReference(
             Registries.ATTRIBUTE,
@@ -24,9 +24,9 @@ public class ThermiaAttributes {
             new ClampedEntityAttribute(
                     "attribute.name.generic.heat_offset_threshold",
                     3,
-                    -100,
-                    200
-            )
+                    -255,
+                    255
+            ).setTracked(true).setCategory(EntityAttribute.Category.POSITIVE)
     );
     public static final RegistryEntry.Reference<EntityAttribute> COLD_OFFSET_THRESHOLD = Registry.registerReference(
             Registries.ATTRIBUTE,
@@ -34,9 +34,9 @@ public class ThermiaAttributes {
             new ClampedEntityAttribute(
                     "attribute.name.generic.cold_offset_threshold",
                     2,
-                    -100,
-                    200
-            )
+                    -255,
+                    255
+            ).setTracked(true).setCategory(EntityAttribute.Category.POSITIVE)
     );
 
     public static void registerAll() {
