@@ -22,7 +22,6 @@ public record TemperatureModifier(Identifier id, double amount, TemperatureModif
                     )
                     .apply(instance, TemperatureModifier::new)
     );
-    public static final Codec<TemperatureModifier> CODEC = MAP_CODEC.codec();
     public static final PacketCodec<ByteBuf, TemperatureModifier> PACKET_CODEC = PacketCodec.tuple(
             Identifier.PACKET_CODEC,
             TemperatureModifier::id,
