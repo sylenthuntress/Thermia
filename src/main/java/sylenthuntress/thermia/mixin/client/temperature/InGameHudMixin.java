@@ -25,7 +25,7 @@ public class InGameHudMixin {
     @ModifyExpressionValue(method = "renderMiscOverlays", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerEntity;getFreezingScale()F"))
     private float thermia$incrementFrozenOverlay(float original) {
         return TemperatureHelper.getTemperatureManager(this.client.player).isHypothermic()
-                ? Math.max(1F, 0.5F * (1 + this.client.player.getStatusEffect(ThermiaStatusEffects.HYPOTHERMIA).getAmplifier() * 0.1F))
+                ? Math.min(1F, 0.01F + (0.99F * this.client.player.getStatusEffect(ThermiaStatusEffects.HYPOTHERMIA).getAmplifier() * 0.1F))
                 : original;
     }
 }
