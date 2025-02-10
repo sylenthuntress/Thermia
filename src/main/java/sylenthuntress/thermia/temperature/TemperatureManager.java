@@ -147,7 +147,7 @@ public class TemperatureManager {
     }
 
     public double getTemperature() {
-        if (hasTemperature()) {
+        if (!hasTemperature()) {
             return entity.getAttributeValue(ThermiaAttributes.BASE_TEMPERATURE);
         }
 
@@ -161,7 +161,7 @@ public class TemperatureManager {
     }
 
     public double getModifiedTemperature() {
-        if (hasTemperature()) {
+        if (!hasTemperature()) {
             return entity.getAttributeValue(ThermiaAttributes.BASE_TEMPERATURE);
         }
 
