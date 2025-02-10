@@ -20,20 +20,21 @@ public class TemperatureManager {
     }
 
     public double setTemperature(double newTemperature) {
-        if (hasTemperature()) {
-            return 0;
-        }
-
-        if (!entity.getWorld().isClient()) {
-            entity.setAttached(
+        if (!canHaveTemperature() || entity.getWorld().isClient()) {
+            return entity.getAttachedOrCreate(
                     ThermiaAttachmentTypes.TEMPERATURE,
-                    Temperature.setValue(newTemperature)
-            );
+                    () -> new Temperature(entity)
+            ).value();
         }
 
-        return entity.getAttachedOrElse(
+        entity.setAttached(
                 ThermiaAttachmentTypes.TEMPERATURE,
-                new Temperature(entity)
+                Temperature.setValue(newTemperature)
+        );
+
+        return entity.getAttachedOrCreate(
+                ThermiaAttachmentTypes.TEMPERATURE,
+                () -> new Temperature(entity)
         ).value();
     }
 
@@ -42,6 +43,7 @@ public class TemperatureManager {
         if (canHaveTemperature())
             for (double inputTemperature : inputTemperatures)
                newTemperature += inputTemperature;
+
         return setTemperature(newTemperature);
     }
 
@@ -151,13 +153,10 @@ public class TemperatureManager {
             return entity.getAttributeValue(ThermiaAttributes.BASE_TEMPERATURE);
         }
 
-        if (canHaveTemperature())
-            return entity.getAttachedOrElse(
-                    ThermiaAttachmentTypes.TEMPERATURE,
-                    new Temperature(entity)
-            ).value();
-
-        return 0;
+        return entity.getAttachedOrCreate(
+                ThermiaAttachmentTypes.TEMPERATURE,
+                () -> new Temperature(entity)
+        ).value();
     }
 
     public double getModifiedTemperature() {
