@@ -316,6 +316,10 @@ public class TemperatureCommand {
                 throw ENTITY_FAILED_EXCEPTION.create(target.getName());
             }
             ArrayList<TemperatureModifier> temperatureModifiers = TemperatureHelper.getTemperatureManager(target).getTemperatureModifiers().getList();
+            temperatureModifiers.removeIf(
+                    temperatureModifier -> temperatureModifier.id().toString().startsWith("thermia:granted/")
+            );
+
             return temperatureModifiers.stream().map(TemperatureModifier::id);
         }
 

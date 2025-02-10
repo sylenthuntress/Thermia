@@ -63,14 +63,14 @@ public class TemperatureManager {
     public double[] stepPassiveInteractions() {
         double[] interactionTemperatures = {0, 0};
         getTemperatureModifiers().removeModifiers(
-                Thermia.modIdentifier("powder_snow"),
-                Thermia.modIdentifier("on_fire"),
-                Thermia.modIdentifier("lava")
+                Thermia.modIdentifier("granted/powder_snow"),
+                Thermia.modIdentifier("granted/on_fire"),
+                Thermia.modIdentifier("granted/lava")
         );
         if (entity.inPowderSnow) {
             interactionTemperatures[0] -= 0.05;
             getTemperatureModifiers().addModifier(new TemperatureModifier(
-                            Thermia.modIdentifier("powder_snow"),
+                    Thermia.modIdentifier("granted/powder_snow"),
                             -10F,
                             TemperatureModifier.Operation.ADD_VALUE
                     )
@@ -79,7 +79,7 @@ public class TemperatureManager {
         if (entity.isOnFire() && !entity.isFireImmune()) {
             interactionTemperatures[1] += 0.05;
             getTemperatureModifiers().addModifier(new TemperatureModifier(
-                            Thermia.modIdentifier("on_fire"),
+                    Thermia.modIdentifier("granted/on_fire"),
                             10F,
                             TemperatureModifier.Operation.ADD_VALUE
                     )
@@ -88,7 +88,7 @@ public class TemperatureManager {
         if (entity.getBlockStateAtPos().getFluidState().isIn(FluidTags.LAVA)) {
             interactionTemperatures[1] += 0.1;
             getTemperatureModifiers().addModifier(new TemperatureModifier(
-                            Thermia.modIdentifier("lava"),
+                    Thermia.modIdentifier("granted/lava"),
                             30F,
                             TemperatureModifier.Operation.ADD_VALUE
                     )

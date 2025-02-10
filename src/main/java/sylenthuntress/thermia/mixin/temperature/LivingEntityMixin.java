@@ -201,7 +201,7 @@ public abstract class LivingEntityMixin extends Entity implements LivingEntityAc
                     continue;
                 }
 
-                thermia$temperatureManager.getTemperatureModifiers().addModifier(
+                thermia$temperatureManager.getTemperatureModifiers().addGrantedModifier(
                         entry.modifier()
                 );
             }
@@ -222,7 +222,7 @@ public abstract class LivingEntityMixin extends Entity implements LivingEntityAc
             }
 
             thermia$temperatureManager.getTemperatureModifiers().removeModifier(
-                    entry.modifier().id()
+                    entry.modifier().id().withPrefixedPath("granted/")
             );
         }
     }

@@ -47,6 +47,16 @@ public class TemperatureModifierContainer {
         return false;
     }
 
+    public boolean addGrantedModifier(TemperatureModifier modifier) {
+        modifier = new TemperatureModifier(
+                modifier.id().withPrefixedPath("granted/"),
+                modifier.amount(),
+                modifier.operation()
+        );
+
+        return addModifier(modifier);
+    }
+
     public boolean addModifiers(TemperatureModifier... modifiers) {
         boolean bl = false;
         for (TemperatureModifier modifier : modifiers) {
