@@ -12,11 +12,15 @@ import sylenthuntress.thermia.registry.ThermiaTags;
 
 @SuppressWarnings("UnstableApiUsage")
 public record TargetTemperature(double value) {
-    public final static TargetTemperature DEFAULT = new TargetTemperature(0);
+    public final static TargetTemperature DEFAULT = new TargetTemperature(97);
     public static Codec<TargetTemperature> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             Codec.DOUBLE.fieldOf("target_temperature").forGetter(TargetTemperature::value)
     ).apply(instance, TargetTemperature::new));
     public static PacketCodec<ByteBuf, TargetTemperature> PACKET_CODEC = PacketCodecs.codec(CODEC);
+
+    public TargetTemperature(LivingEntity entity) {
+        this(entity.getAttributeValue(ThermiaAttributes.BASE_TEMPERATURE));
+    }
 
     public static TargetTemperature setValue(double newTemperature) {
         return new TargetTemperature(newTemperature);

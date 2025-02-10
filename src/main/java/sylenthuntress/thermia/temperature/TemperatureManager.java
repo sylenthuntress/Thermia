@@ -19,7 +19,6 @@ public class TemperatureManager {
         entity = livingEntity;
     }
 
-    @SuppressWarnings("DataFlowIssue")
     public double setTemperature(double newTemperature) {
         if (!hasTemperature()) {
             return 0;
@@ -32,7 +31,10 @@ public class TemperatureManager {
             );
         }
 
-        return entity.getAttached(ThermiaAttachmentTypes.TEMPERATURE).value();
+        return entity.getAttachedOrElse(
+                ThermiaAttachmentTypes.TEMPERATURE,
+                new Temperature(entity)
+        ).value();
     }
 
     public double modifyTemperature(double... inputTemperatures) {
@@ -44,7 +46,10 @@ public class TemperatureManager {
     }
 
     public double getTargetTemperature() {
-        return entity.getAttachedOrElse(ThermiaAttachmentTypes.TARGET_TEMPERATURE, TargetTemperature.DEFAULT).value();
+        return entity.getAttachedOrElse(
+                ThermiaAttachmentTypes.TARGET_TEMPERATURE,
+                new TargetTemperature(entity)
+        ).value();
     }
 
     public void stepPassiveTemperature() {
@@ -143,9 +148,10 @@ public class TemperatureManager {
 
     public double getTemperature() {
         if (hasTemperature())
-            return entity.getAttachedOrCreate(
+            return entity.getAttachedOrElse(
                     ThermiaAttachmentTypes.TEMPERATURE,
-                    () -> new Temperature(entity.getAttributeValue(ThermiaAttributes.BASE_TEMPERATURE))).value();
+                    new Temperature(entity)
+            ).value();
         return 0;
     }
 
