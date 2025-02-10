@@ -20,7 +20,7 @@ public class TemperatureManager {
     }
 
     public double setTemperature(double newTemperature) {
-        if (!hasTemperature()) {
+        if (hasTemperature()) {
             return 0;
         }
 
@@ -39,7 +39,7 @@ public class TemperatureManager {
 
     public double modifyTemperature(double... inputTemperatures) {
         double newTemperature = getTemperature();
-        if (hasTemperature())
+        if (canHaveTemperature())
             for (double inputTemperature : inputTemperatures)
                newTemperature += inputTemperature;
         return setTemperature(newTemperature);
@@ -53,7 +53,7 @@ public class TemperatureManager {
     }
 
     public void stepPassiveTemperature() {
-        if (!hasTemperature()) {
+        if (!canHaveTemperature()) {
             return;
         }
 
@@ -147,15 +147,24 @@ public class TemperatureManager {
     }
 
     public double getTemperature() {
-        if (hasTemperature())
+        if (hasTemperature()) {
+            return entity.getAttributeValue(ThermiaAttributes.BASE_TEMPERATURE);
+        }
+
+        if (canHaveTemperature())
             return entity.getAttachedOrElse(
                     ThermiaAttachmentTypes.TEMPERATURE,
                     new Temperature(entity)
             ).value();
+
         return 0;
     }
 
     public double getModifiedTemperature() {
+        if (hasTemperature()) {
+            return entity.getAttributeValue(ThermiaAttributes.BASE_TEMPERATURE);
+        }
+
         double temperature = getTemperature();
         for (TemperatureModifier modifier : getTemperatureModifiers().getList()) {
             switch (modifier.operation()) {
@@ -166,9 +175,16 @@ public class TemperatureManager {
         return temperature;
     }
 
-    public boolean hasTemperature() {
+    public boolean canHaveTemperature() {
         return entity.isAlive()
                 && !entity.getType().isIn(ThermiaTags.EntityType.TEMPERATURE_IMMUNE);
+    }
+
+    public boolean hasTemperature() {
+        return !(entity.hasStatusEffect(ThermiaStatusEffects.THERMOREGULATION)
+                || entity.isSpectator()
+                || entity.isInCreativeMode())
+                && canHaveTemperature();
     }
 
     public TemperatureModifierContainer getTemperatureModifiers() {
@@ -187,8 +203,7 @@ public class TemperatureManager {
         return isHypothermic() ||
                 getTargetTemperature() < (entity.getAttributeValue(ThermiaAttributes.BASE_TEMPERATURE) -
                         entity.getAttributeValue(ThermiaAttributes.COLD_OFFSET_THRESHOLD))
-                && !entity.isInCreativeMode()
-                && !entity.isSpectator();
+                        && hasTemperature();
     }
 
     public boolean shouldBlurVision() {
@@ -199,8 +214,7 @@ public class TemperatureManager {
         return isHyperthermic() ||
                 getTargetTemperature() > (entity.getAttributeValue(ThermiaAttributes.BASE_TEMPERATURE) +
                         entity.getAttributeValue(ThermiaAttributes.HEAT_OFFSET_THRESHOLD))
-                && !entity.isInCreativeMode()
-                && !entity.isSpectator();
+                        && hasTemperature();
     }
 
     public int getHypothermiaAmplifier() {

@@ -4,6 +4,7 @@ import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentSyncPredicate;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
 import sylenthuntress.thermia.Thermia;
+import sylenthuntress.thermia.temperature.GrantedThermoregulation;
 import sylenthuntress.thermia.temperature.TargetTemperature;
 import sylenthuntress.thermia.temperature.Temperature;
 
@@ -26,6 +27,16 @@ public class ThermiaAttachmentTypes {
                     .persistent(TargetTemperature.CODEC)
                     .syncWith(
                             TargetTemperature.PACKET_CODEC,
+                            AttachmentSyncPredicate.all()
+                    )
+    );
+    public static final AttachmentType<GrantedThermoregulation> GRANTED_THERMOREGULATION = AttachmentRegistry.create(
+            Thermia.modIdentifier("granted_thermoregulation"),
+            builder -> builder
+                    .initializer(() -> GrantedThermoregulation.DEFAULT)
+                    .persistent(GrantedThermoregulation.CODEC)
+                    .syncWith(
+                            GrantedThermoregulation.PACKET_CODEC,
                             AttachmentSyncPredicate.all()
                     )
     );

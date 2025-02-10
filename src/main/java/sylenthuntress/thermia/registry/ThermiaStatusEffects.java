@@ -5,10 +5,12 @@ import net.minecraft.entity.effect.StatusEffectCategory;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.util.Colors;
 import sylenthuntress.thermia.Thermia;
 import sylenthuntress.thermia.registry.status_effects.FrostResistanceEffect;
 import sylenthuntress.thermia.registry.status_effects.HyperthermiaEffect;
 import sylenthuntress.thermia.registry.status_effects.HypothermiaEffect;
+import sylenthuntress.thermia.registry.status_effects.Thermoregulation;
 
 public class ThermiaStatusEffects {
     public static final RegistryEntry<StatusEffect> HYPOTHERMIA = register(
@@ -22,6 +24,10 @@ public class ThermiaStatusEffects {
     public static final RegistryEntry<StatusEffect> FROST_RESISTANCE = register(
             "frost_resistance",
             new FrostResistanceEffect(StatusEffectCategory.BENEFICIAL, 12445695)
+    );
+    public static final RegistryEntry<StatusEffect> THERMOREGULATION = register(
+            "thermoregulation",
+            new Thermoregulation(StatusEffectCategory.BENEFICIAL, Colors.LIGHT_GRAY)
     );
 
     private static RegistryEntry<StatusEffect> register(String id, StatusEffect statusEffect) {

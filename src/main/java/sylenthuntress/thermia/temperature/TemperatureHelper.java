@@ -139,7 +139,7 @@ public abstract class TemperatureHelper {
 
     public static boolean lacksTemperature(Entity entity) {
         return !(entity.isLiving()
-                && getTemperatureManager(entity).hasTemperature());
+                && getTemperatureManager(entity).canHaveTemperature());
     }
 
     @SuppressWarnings("unused")

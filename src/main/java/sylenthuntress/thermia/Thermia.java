@@ -2,6 +2,8 @@ package sylenthuntress.thermia;
 
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
+import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,5 +29,21 @@ public class Thermia implements ModInitializer {
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) ->
                 TemperatureCommand.register(dispatcher.getRoot())
         );
+
+        // Apply thermoregulation on respawn
+        ServerPlayerEvents.AFTER_RESPAWN.register((
+                oldPlayer,
+                newPlayer,
+                alive) -> newPlayer.addStatusEffect(
+                new StatusEffectInstance(
+                        ThermiaStatusEffects.THERMOREGULATION,
+                        1500,
+                        0,
+                        false,
+                        false,
+                        true
+                ),
+                null
+        ));
     }
 }
