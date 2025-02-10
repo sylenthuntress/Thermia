@@ -194,7 +194,7 @@ public abstract class LivingEntityMixin extends Entity implements LivingEntityAc
             final ItemStack stack = this.getEquippedStack(slot);
 
             for (TemperatureModifiersComponent.Entry entry : stack.getOrDefault(
-                    ThermiaComponents.TEMPERATURE_MODIFIERS_COMPONENT,
+                    ThermiaComponents.TEMPERATURE_MODIFIERS,
                     TemperatureModifiersComponent.DEFAULT
             ).modifiers()) {
                 if (!entry.slot().matches(slot)) {
@@ -214,7 +214,7 @@ public abstract class LivingEntityMixin extends Entity implements LivingEntityAc
     )
     private void thermia$removeTemperatureModifiers(ItemStack removedEquipment, EquipmentSlot slot, AttributeContainer container, CallbackInfo ci) {
         for (TemperatureModifiersComponent.Entry entry : removedEquipment.getOrDefault(
-                ThermiaComponents.TEMPERATURE_MODIFIERS_COMPONENT,
+                ThermiaComponents.TEMPERATURE_MODIFIERS,
                 TemperatureModifiersComponent.DEFAULT
         ).modifiers()) {
             if (!entry.slot().matches(slot)) {

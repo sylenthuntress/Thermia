@@ -16,7 +16,7 @@ public class ConsumableTemperatureTooltip implements ItemTooltipCallback {
     @SuppressWarnings("DataFlowIssue")
     @Override
     public void getTooltip(ItemStack stack, Item.TooltipContext context, TooltipType type, List<Text> lines) {
-        if (!stack.contains(ThermiaComponents.CONSUMABLE_TEMPERATURE_COMPONENT)) {
+        if (!stack.contains(ThermiaComponents.CONSUMABLE_TEMPERATURE)) {
             return;
         }
 
@@ -29,9 +29,9 @@ public class ConsumableTemperatureTooltip implements ItemTooltipCallback {
                 ScreenTexts.EMPTY
         );
 
-        double amount = stack.get(ThermiaComponents.CONSUMABLE_TEMPERATURE_COMPONENT).temperature();
-        final double minAmount = stack.get(ThermiaComponents.CONSUMABLE_TEMPERATURE_COMPONENT).minTemperature();
-        final double maxAmount = stack.get(ThermiaComponents.CONSUMABLE_TEMPERATURE_COMPONENT).maxTemperature();
+        double amount = stack.get(ThermiaComponents.CONSUMABLE_TEMPERATURE).temperature();
+        final double minAmount = stack.get(ThermiaComponents.CONSUMABLE_TEMPERATURE).minTemperature();
+        final double maxAmount = stack.get(ThermiaComponents.CONSUMABLE_TEMPERATURE).maxTemperature();
 
         if (minAmount < maxAmount) {
             if (amount != 0) {

@@ -42,11 +42,11 @@ public abstract class ItemStackMixin implements ComponentHolder {
         }
 
         if (this.contains(DataComponentTypes.CONSUMABLE)
-                && !this.contains(ThermiaComponents.CONSUMABLE_TEMPERATURE_COMPONENT)) {
+                && !this.contains(ThermiaComponents.CONSUMABLE_TEMPERATURE)) {
             final var component = this.get(DataComponentTypes.CONSUMABLE);
 
             this.set(
-                    ThermiaComponents.CONSUMABLE_TEMPERATURE_COMPONENT,
+                    ThermiaComponents.CONSUMABLE_TEMPERATURE,
                     new ConsumableTemperatureComponent(thermia$calculateConsumableTemperatures())
             );
 

@@ -45,14 +45,14 @@ public abstract class ItemStackMixin implements ComponentHolder {
         var component = (AttributeModifiersComponent) obj;
 
         // Guard if no temperature modifiers are found on stack, or if they're hidden
-        if (!this.contains(ThermiaComponents.TEMPERATURE_MODIFIERS_COMPONENT)
-                || !this.get(ThermiaComponents.TEMPERATURE_MODIFIERS_COMPONENT).showInTooltip()) {
+        if (!this.contains(ThermiaComponents.TEMPERATURE_MODIFIERS)
+                || !this.get(ThermiaComponents.TEMPERATURE_MODIFIERS).showInTooltip()) {
             return component;
         }
 
         // Add temperature modifiers as faux attribute modifiers
         for (TemperatureModifiersComponent.Entry entry
-                : this.get(ThermiaComponents.TEMPERATURE_MODIFIERS_COMPONENT).modifiers()) {
+                : this.get(ThermiaComponents.TEMPERATURE_MODIFIERS).modifiers()) {
             component = component.with(
                     ThermiaAttributes.BASE_TEMPERATURE,
                     new EntityAttributeModifier(
@@ -79,8 +79,8 @@ public abstract class ItemStackMixin implements ComponentHolder {
             )
     )
     private boolean thermia$allowTemperatureModifiers(boolean original) {
-        if (this.contains(ThermiaComponents.TEMPERATURE_MODIFIERS_COMPONENT)) {
-            return original || this.get(ThermiaComponents.TEMPERATURE_MODIFIERS_COMPONENT).showInTooltip();
+        if (this.contains(ThermiaComponents.TEMPERATURE_MODIFIERS)) {
+            return original || this.get(ThermiaComponents.TEMPERATURE_MODIFIERS).showInTooltip();
         }
 
         return original;
@@ -129,7 +129,7 @@ public abstract class ItemStackMixin implements ComponentHolder {
         // Combine similar modifiers into one tooltip
         double amount = 0;
         for (TemperatureModifiersComponent.Entry entry
-                : instance.get(ThermiaComponents.TEMPERATURE_MODIFIERS_COMPONENT).modifiers()) {
+                : instance.get(ThermiaComponents.TEMPERATURE_MODIFIERS).modifiers()) {
             if (entry.slot() != modifierSlot
                     || entry.modifier().operation().asAttributeOperation() != modifier.operation()) {
                 continue;
