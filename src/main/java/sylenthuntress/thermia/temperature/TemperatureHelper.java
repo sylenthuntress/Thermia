@@ -16,12 +16,12 @@ import net.minecraft.world.LightType;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.dimension.DimensionType;
-import org.jetbrains.annotations.Nullable;
 import sylenthuntress.thermia.access.temperature.LivingEntityAccess;
 import sylenthuntress.thermia.registry.ThermiaComponents;
 import sylenthuntress.thermia.registry.ThermiaTags;
 import sylenthuntress.thermia.registry.data_components.SunBlockingComponent;
 
+@SuppressWarnings("deprecation")
 public abstract class TemperatureHelper {
     public static double getRegionalTemperature(World world, BlockPos blockPos) {
         final DimensionType dimension = world.getDimension();
@@ -122,7 +122,7 @@ public abstract class TemperatureHelper {
         return fluidTemperature;
     }
 
-    public static double getAmbientTemperature(World world, BlockPos blockPos, @Nullable Entity entity) {
+    public static double getAmbientTemperature(World world, BlockPos blockPos) {
         double ambientTemperature = 100;
         double biomeTemperature = getRegionalTemperature(world, blockPos);
         double blockTemperature = getBlockTemperature(world, blockPos);

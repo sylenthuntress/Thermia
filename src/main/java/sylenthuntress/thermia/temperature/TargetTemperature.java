@@ -46,8 +46,7 @@ public record TargetTemperature(double value) {
         );
         final double ambientTemperature = TemperatureHelper.getAmbientTemperature(
                 entity.getWorld(),
-                entity.getBlockPos(),
-                entity
+                entity.getBlockPos()
         );
 
         targetTemperature = (baseTemperature + ambientTemperature) / 2;

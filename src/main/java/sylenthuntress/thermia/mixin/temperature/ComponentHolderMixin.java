@@ -119,6 +119,15 @@ public interface ComponentHolderMixin {
                         )
                 );
             }
+            if (stack.isIn(ThermiaTags.Item.Equippable.BlocksSunlight.HEAD)) {
+                stack.set(
+                        ThermiaComponents.SUN_BLOCKING,
+                        new SunBlockingComponent(
+                                1,
+                                AttributeModifierSlot.HEAD
+                        )
+                );
+            }
             if (stack.isIn(ThermiaTags.Item.Equippable.BlocksSunlight.LEGS)) {
                 stack.set(
                         ThermiaComponents.SUN_BLOCKING,

@@ -95,32 +95,10 @@ public class TemperatureCommand {
                             .executes(context -> executeRegional(context.getSource(), EntityArgumentType.getEntity(context, "target"), 1))
                             .then(CommandManager.argument("scale", FloatArgumentType.floatArg())
                                     .executes(context -> executeRegional(context.getSource(), EntityArgumentType.getEntity(context, "target"), FloatArgumentType.getFloat(context, "scale")))))
-                    .then(CommandManager.literal("ambient")
-                            .executes(context -> executeAmbient(context.getSource(), EntityArgumentType.getEntity(context, "target"), 1))
-                            .then(CommandManager.argument("scale", FloatArgumentType.floatArg())
-                                    .executes(context -> executeAmbient(context.getSource(), EntityArgumentType.getEntity(context, "target"), FloatArgumentType.getFloat(context, "scale")))))
                     .then(CommandManager.literal("target")
                             .executes(context -> executeTarget(context.getSource(), EntityArgumentType.getEntity(context, "target"), 1))
                             .then(CommandManager.argument("scale", FloatArgumentType.floatArg())
                                     .executes(context -> executeTarget(context.getSource(), EntityArgumentType.getEntity(context, "target"), FloatArgumentType.getFloat(context, "scale"))))).build();
-        }
-
-        private static int executeAmbient(ServerCommandSource source, Entity target, float multiplier) throws CommandSyntaxException {
-            if (TemperatureHelper.lacksTemperature(target)) {
-                throw ENTITY_FAILED_EXCEPTION.create(target.getName());
-            }
-
-            double ambientTemperature = TemperatureHelper.getAmbientTemperature(target.getWorld(), target.getBlockPos(), target);
-            source.sendFeedback(
-                    () -> Text.translatable(
-                            "commands.temperature.get.entity.success",
-                            "Ambient",
-                            target.getName(),
-                            ambientTemperature
-                    ),
-                    false
-            );
-            return (int) ((ambientTemperature * multiplier) * 1000);
         }
 
         private static int executeBase(ServerCommandSource source, Entity target, float multiplier) throws CommandSyntaxException {
@@ -418,7 +396,7 @@ public class TemperatureCommand {
             if (!source.getWorld().isPosLoaded(blockPos))
                 throw UNLOADED_POSITION_EXCEPTION.create(blockPos.toShortString());
 
-            double ambientTemperature = TemperatureHelper.getAmbientTemperature(source.getWorld(), blockPos, null);
+            double ambientTemperature = TemperatureHelper.getAmbientTemperature(source.getWorld(), blockPos);
             source.sendFeedback(
                     () -> Text.translatable(
                             "commands.temperature.get.position.success",

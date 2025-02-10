@@ -5,7 +5,6 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.component.type.AttributeModifierSlot;
 import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.network.codec.PacketCodecs;
 import net.minecraft.util.Util;
 import sylenthuntress.thermia.temperature.TemperatureModifier;
 
@@ -16,13 +15,6 @@ import java.util.Locale;
 
 public record TemperatureModifiersComponent(List<Entry> modifiers, boolean showInTooltip) {
     public static final TemperatureModifiersComponent DEFAULT = new TemperatureModifiersComponent(List.of(), true);
-    public static final PacketCodec<RegistryByteBuf, TemperatureModifiersComponent> PACKET_CODEC = PacketCodec.tuple(
-            TemperatureModifiersComponent.Entry.PACKET_CODEC.collect(PacketCodecs.toList()),
-            TemperatureModifiersComponent::modifiers,
-            PacketCodecs.BOOLEAN,
-            TemperatureModifiersComponent::showInTooltip,
-            TemperatureModifiersComponent::new
-    );
     public static final DecimalFormat DECIMAL_FORMAT = Util.make(
             new DecimalFormat("#.##"), format -> format.setDecimalFormatSymbols(DecimalFormatSymbols.getInstance(Locale.ROOT))
     );
