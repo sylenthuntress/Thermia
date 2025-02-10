@@ -45,39 +45,78 @@ public interface ComponentHolderMixin {
             return obj;
         }
 
-        // Apply default insulating attributes
-        if (stack.contains(DataComponentTypes.EQUIPPABLE)
-                && stack.isIn(ThermiaTags.Item.Equippable.INSULATING)) {
+        // Apply default equippable attributes
+        if (stack.contains(DataComponentTypes.EQUIPPABLE)) {
+            if (stack.isIn(ThermiaTags.Item.Equippable.INSULATING)) {
+                final EquipmentSlot itemSlot = stack.get(
+                        DataComponentTypes.EQUIPPABLE
+                ).slot();
 
-            final EquipmentSlot itemSlot = stack.get(
-                    DataComponentTypes.EQUIPPABLE
-            ).slot();
+                component = component.with(
+                        ThermiaAttributes.COLD_OFFSET_THRESHOLD,
+                        new EntityAttributeModifier(
+                                Thermia.modIdentifier("cold_offset_modifier."
+                                        + "."
+                                        + itemSlot.asString()
+                                ),
+                                2,
+                                EntityAttributeModifier.Operation.ADD_VALUE
+                        ),
+                        AttributeModifierSlot.forEquipmentSlot(
+                                itemSlot
+                        )
+                );
 
-            component = component.with(
-                    ThermiaAttributes.COLD_OFFSET_THRESHOLD,
-                    new EntityAttributeModifier(
-                            Thermia.modIdentifier("cold_offset_modifier."
-                                    + itemSlot.asString()),
-                            2,
-                            EntityAttributeModifier.Operation.ADD_VALUE
-                    ),
-                    AttributeModifierSlot.forEquipmentSlot(
-                            itemSlot
-                    )
-            );
+                component = component.with(
+                        ThermiaAttributes.HEAT_OFFSET_THRESHOLD,
+                        new EntityAttributeModifier(
+                                Thermia.modIdentifier("heat_offset_modifier."
+                                        + "."
+                                        + itemSlot.asString()
+                                ),
+                                -0.2,
+                                EntityAttributeModifier.Operation.ADD_MULTIPLIED_BASE
+                        ),
+                        AttributeModifierSlot.forEquipmentSlot(
+                                itemSlot
+                        )
+                );
+            }
+            if (stack.isIn(ThermiaTags.Item.Equippable.BREEZY)) {
+                final EquipmentSlot itemSlot = stack.get(
+                        DataComponentTypes.EQUIPPABLE
+                ).slot();
 
-            component = component.with(
-                    ThermiaAttributes.HEAT_OFFSET_THRESHOLD,
-                    new EntityAttributeModifier(
-                            Thermia.modIdentifier("heat_offset_modifier."
-                                    + itemSlot.asString()),
-                            -0.2,
-                            EntityAttributeModifier.Operation.ADD_MULTIPLIED_BASE
-                    ),
-                    AttributeModifierSlot.forEquipmentSlot(
-                            itemSlot
-                    )
-            );
+                component = component.with(
+                        ThermiaAttributes.HEAT_OFFSET_THRESHOLD,
+                        new EntityAttributeModifier(
+                                Thermia.modIdentifier("heat_offset_modifier."
+                                        + "."
+                                        + itemSlot.asString()
+                                ),
+                                2,
+                                EntityAttributeModifier.Operation.ADD_VALUE
+                        ),
+                        AttributeModifierSlot.forEquipmentSlot(
+                                itemSlot
+                        )
+                );
+
+                component = component.with(
+                        ThermiaAttributes.COLD_OFFSET_THRESHOLD,
+                        new EntityAttributeModifier(
+                                Thermia.modIdentifier("cold_offset_modifier."
+                                        + "."
+                                        + itemSlot.asString()
+                                ),
+                                -0.2,
+                                EntityAttributeModifier.Operation.ADD_MULTIPLIED_BASE
+                        ),
+                        AttributeModifierSlot.forEquipmentSlot(
+                                itemSlot
+                        )
+                );
+            }
         }
 
         // Apply default sun blocking attributes
@@ -163,7 +202,8 @@ public interface ComponentHolderMixin {
         }
 
         // Apply default enchantment attribute modifiers
-        for (RegistryEntry<Enchantment> enchantment : stack.getEnchantments().getEnchantments()) {
+        final var enchantments = stack.getEnchantments();
+        for (RegistryEntry<Enchantment> enchantment : enchantments.getEnchantments()) {
             for (AttributeModifierSlot slot : enchantment.value().definition().slots()) {
                 if (enchantment.isIn(ThermiaTags.Enchantment.HYPERTHERMIA_PROTECTION)) {
                     component = component.with(
@@ -175,7 +215,7 @@ public interface ComponentHolderMixin {
                                                     .replaceFirst("[A-Za-z0-9]+:", "")
                                                     + ".heat_offset_threshold"
                                     ),
-                                    2 + 0.25 * stack.getEnchantments().getLevel(enchantment),
+                                    2 + 0.25 * enchantments.getLevel(enchantment),
                                     EntityAttributeModifier.Operation.ADD_VALUE
                             ),
                             slot
@@ -192,46 +232,13 @@ public interface ComponentHolderMixin {
                                                     .replaceFirst("[A-Za-z0-9]+:", "")
                                                     + ".cold_offset_threshold"
                                     ),
-                                    2 + 0.25 * stack.getEnchantments().getLevel(enchantment),
+                                    2 + 0.25 * enchantments.getLevel(enchantment),
                                     EntityAttributeModifier.Operation.ADD_VALUE
                             ),
                             slot
                     );
                 }
 
-                if (enchantment.isIn(ThermiaTags.Enchantment.PROVIDES_CHILL)) {
-                    component = component.with(
-                            ThermiaAttributes.BASE_TEMPERATURE,
-                            new EntityAttributeModifier(
-                                    Thermia.modIdentifier(
-                                            "enchantment."
-                                                    + enchantment.getIdAsString()
-                                                    .replaceFirst("[A-Za-z0-9]+:", "")
-                                                    + ".chill"
-                                    ),
-                                    -(2 + 0.25 * stack.getEnchantments().getLevel(enchantment)),
-                                    EntityAttributeModifier.Operation.ADD_VALUE
-                            ),
-                            slot
-                    );
-                }
-
-                if (enchantment.isIn(ThermiaTags.Enchantment.PROVIDES_WARMTH)) {
-                    component = component.with(
-                            ThermiaAttributes.BASE_TEMPERATURE,
-                            new EntityAttributeModifier(
-                                    Thermia.modIdentifier(
-                                            "enchantment."
-                                                    + enchantment.getIdAsString()
-                                                    .replaceFirst("[A-Za-z0-9]+:", "")
-                                                    + ".warmth"
-                                    ),
-                                    2 + 0.25 * stack.getEnchantments().getLevel(enchantment),
-                                    EntityAttributeModifier.Operation.ADD_VALUE
-                            ),
-                            slot
-                    );
-                }
             }
         }
 

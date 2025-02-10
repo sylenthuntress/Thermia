@@ -72,6 +72,21 @@ public class ThermiaTags {
                     Thermia.modIdentifier("equippable_temperature/insulating")
             );
 
+            public static final TagKey<net.minecraft.item.Item> BREEZY = TagKey.of(
+                    RegistryKeys.ITEM,
+                    Thermia.modIdentifier("equippable_temperature/breezy")
+            );
+
+            public static final TagKey<net.minecraft.item.Item> COLD_WHEN_HELD = TagKey.of(
+                    RegistryKeys.ITEM,
+                    Thermia.modIdentifier("equippable_temperature/cold_when_held")
+            );
+
+            public static final TagKey<net.minecraft.item.Item> HOT_WHEN_HELD = TagKey.of(
+                    RegistryKeys.ITEM,
+                    Thermia.modIdentifier("equippable_temperature/hot_when_held")
+            );
+
             public static final TagKey<net.minecraft.item.Item> BLOCKS_SUNLIGHT = TagKey.of(
                     RegistryKeys.ITEM,
                     Thermia.modIdentifier("blocks_sunlight")

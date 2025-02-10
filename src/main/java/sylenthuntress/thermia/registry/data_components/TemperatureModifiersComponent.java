@@ -10,6 +10,7 @@ import sylenthuntress.thermia.temperature.TemperatureModifier;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -29,6 +30,19 @@ public record TemperatureModifiersComponent(List<Entry> modifiers, boolean showI
             BASE_CODEC, TemperatureModifiersComponent.Entry.CODEC.listOf(), entries
                     -> new TemperatureModifiersComponent(entries, true)
     );
+
+    public TemperatureModifiersComponent with(TemperatureModifier modifier, AttributeModifierSlot slot) {
+        ArrayList<Entry> newModifiers = new ArrayList<>(modifiers);
+
+        newModifiers.add(
+                new Entry(
+                        modifier,
+                        slot
+                )
+        );
+
+        return new TemperatureModifiersComponent(newModifiers, this.showInTooltip);
+    }
 
     public record Entry(TemperatureModifier modifier, AttributeModifierSlot slot) {
         public static final Codec<TemperatureModifiersComponent.Entry> CODEC = RecordCodecBuilder.create(
