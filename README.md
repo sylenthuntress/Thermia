@@ -27,5 +27,5 @@ slowing you down and damaging you over time. Similarly, higher temperatures may 
 which damages you and removes your ability to sprint. You must use suitable blocks, items, and
 equipment to combat extreme climates like the Nether!
 
-Similarly to my mod [Unbreakable](https://modrinth.com/mod/durability-rework), this mod is highly customizable.
+Similarly to my other mod [Unbreakable](https://modrinth.com/mod/durability-rework), this mod is highly customizable.
 Currently, customization is only supported through datapacks and resource packs, but a config is planned.

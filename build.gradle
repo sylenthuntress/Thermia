@@ -57,9 +57,6 @@ publishMods {
         requires("fabric-api")
         optional("modmenu")
         incompatible("tough-as-nails")
-
-        clientRequired = true
-        serverRequired = true
     }
 
     github {
