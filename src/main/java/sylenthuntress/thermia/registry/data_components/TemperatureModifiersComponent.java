@@ -3,8 +3,7 @@ package sylenthuntress.thermia.registry.data_components;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.component.type.AttributeModifierSlot;
-import net.minecraft.network.RegistryByteBuf;
-import net.minecraft.network.codec.PacketCodec;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
 import sylenthuntress.thermia.temperature.TemperatureModifier;
 
@@ -32,6 +31,10 @@ public record TemperatureModifiersComponent(List<Entry> modifiers, boolean showI
     );
 
     public TemperatureModifiersComponent with(TemperatureModifier modifier, AttributeModifierSlot slot) {
+        if (hasModifier(modifier.id())) {
+            return this;
+        }
+
         ArrayList<Entry> newModifiers = new ArrayList<>(modifiers);
 
         newModifiers.add(
@@ -44,6 +47,10 @@ public record TemperatureModifiersComponent(List<Entry> modifiers, boolean showI
         return new TemperatureModifiersComponent(newModifiers, this.showInTooltip);
     }
 
+    public boolean hasModifier(Identifier id) {
+        return modifiers.stream().anyMatch((entry -> entry.modifier().idMatches(id)));
+    }
+
     public record Entry(TemperatureModifier modifier, AttributeModifierSlot slot) {
         public static final Codec<TemperatureModifiersComponent.Entry> CODEC = RecordCodecBuilder.create(
                 instance -> instance.group(
@@ -51,13 +58,6 @@ public record TemperatureModifiersComponent(List<Entry> modifiers, boolean showI
                                 AttributeModifierSlot.CODEC.optionalFieldOf("slot", AttributeModifierSlot.ANY).forGetter(TemperatureModifiersComponent.Entry::slot)
                         )
                         .apply(instance, TemperatureModifiersComponent.Entry::new)
-        );
-        public static final PacketCodec<RegistryByteBuf, TemperatureModifiersComponent.Entry> PACKET_CODEC = PacketCodec.tuple(
-                TemperatureModifier.PACKET_CODEC,
-                TemperatureModifiersComponent.Entry::modifier,
-                AttributeModifierSlot.PACKET_CODEC,
-                TemperatureModifiersComponent.Entry::slot,
-                TemperatureModifiersComponent.Entry::new
         );
     }
 }

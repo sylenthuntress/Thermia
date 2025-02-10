@@ -14,9 +14,7 @@ import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.consume.ApplyEffectsConsumeEffect;
 import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.registry.entry.RegistryEntryList;
 import net.minecraft.registry.tag.TagKey;
-import net.minecraft.text.Text;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -42,12 +40,6 @@ public abstract class ItemStackMixin implements ComponentHolder {
     @Shadow
     @Nullable
     public abstract <T> T set(ComponentType<? super T> type, @Nullable T value);
-
-    @Shadow
-    public abstract boolean isIn(RegistryEntryList<Item> registryEntryList);
-
-    @Shadow
-    public abstract Text getName();
 
     @Shadow
     public abstract boolean hasEnchantments();
@@ -181,7 +173,7 @@ public abstract class ItemStackMixin implements ComponentHolder {
                             component.with(
                                     new TemperatureModifier(
                                             Thermia.modIdentifier(
-                                                    "enchantment."
+                                                    "granted/enchantment."
                                                             + enchantment.getIdAsString()
                                                             .replaceFirst("[A-Za-z0-9]+:", "")
                                                             + ".chill"
@@ -200,7 +192,7 @@ public abstract class ItemStackMixin implements ComponentHolder {
                             component.with(
                                     new TemperatureModifier(
                                             Thermia.modIdentifier(
-                                                    "enchantment."
+                                                    "granted/enchantment."
                                                             + enchantment.getIdAsString()
                                                             .replaceFirst("[A-Za-z0-9]+:", "")
                                                             + ".warmth"
