@@ -218,8 +218,8 @@ public class TemperatureCommand {
     public static class SetTemperatureNode {
         public static LiteralCommandNode<ServerCommandSource> get() {
             return CommandManager.literal("set")
-                    .then(CommandManager.argument("value", FloatArgumentType.floatArg())
-                            .executes(context -> execute(context.getSource(), EntityArgumentType.getEntity(context, "target"), FloatArgumentType.getFloat(context, "value")))).build();
+                    .then(CommandManager.argument("amount", FloatArgumentType.floatArg())
+                            .executes(context -> execute(context.getSource(), EntityArgumentType.getEntity(context, "target"), FloatArgumentType.getFloat(context, "amount")))).build();
         }
 
         private static int execute(ServerCommandSource source, Entity target, double value) throws CommandSyntaxException {
@@ -243,8 +243,8 @@ public class TemperatureCommand {
     public static class AddTemperatureNode {
         public static LiteralCommandNode<ServerCommandSource> get() {
             return CommandManager.literal("add")
-                    .then(CommandManager.argument("value", FloatArgumentType.floatArg())
-                            .executes(context -> execute(context.getSource(), EntityArgumentType.getEntity(context, "target"), FloatArgumentType.getFloat(context, "value")))).build();
+                    .then(CommandManager.argument("amount", FloatArgumentType.floatArg())
+                            .executes(context -> execute(context.getSource(), EntityArgumentType.getEntity(context, "target"), FloatArgumentType.getFloat(context, "amount")))).build();
         }
 
         private static int execute(ServerCommandSource source, Entity target, double value) throws CommandSyntaxException {
@@ -273,16 +273,16 @@ public class TemperatureCommand {
             return CommandManager.literal("modifier")
                     .then(CommandManager.literal("add")
                             .then(CommandManager.argument("id", IdentifierArgumentType.identifier())
-                                    .then(CommandManager.argument("value", DoubleArgumentType.doubleArg())
+                                    .then(CommandManager.argument("amount", DoubleArgumentType.doubleArg())
                                             .then(CommandManager.literal("add_value")
-                                                    .executes(context -> executeAdd(context.getSource(), EntityArgumentType.getEntity(context, "target"), IdentifierArgumentType.getIdentifier(context, "id"), DoubleArgumentType.getDouble(context, "value"), TemperatureModifier.Operation.ADD_VALUE)))
+                                                    .executes(context -> executeAdd(context.getSource(), EntityArgumentType.getEntity(context, "target"), IdentifierArgumentType.getIdentifier(context, "id"), DoubleArgumentType.getDouble(context, "amount"), TemperatureModifier.Operation.ADD_VALUE)))
                                             .then(CommandManager.literal("add_multiplied_value")
-                                                    .executes(context -> executeAdd(context.getSource(), EntityArgumentType.getEntity(context, "target"), IdentifierArgumentType.getIdentifier(context, "id"), DoubleArgumentType.getDouble(context, "value"), TemperatureModifier.Operation.ADD_MULTIPLIED_VALUE))))))
+                                                    .executes(context -> executeAdd(context.getSource(), EntityArgumentType.getEntity(context, "target"), IdentifierArgumentType.getIdentifier(context, "id"), DoubleArgumentType.getDouble(context, "amount"), TemperatureModifier.Operation.ADD_MULTIPLIED_VALUE))))))
                     .then(CommandManager.literal("remove")
                             .then(CommandManager.argument("id", IdentifierArgumentType.identifier())
                                     .suggests((context, builder) -> CommandSource.suggestIdentifiers(streamModifiers(EntityArgumentType.getEntity(context, "target")), builder))
                                     .executes(context -> executeRemove(context.getSource(), EntityArgumentType.getEntity(context, "target"), IdentifierArgumentType.getIdentifier(context, "id")))))
-                    .then(CommandManager.literal("value")
+                    .then(CommandManager.literal("amount")
                             .then(CommandManager.literal("get")
                                     .then(CommandManager.argument("id", IdentifierArgumentType.identifier())
                                             .suggests((context, builder) -> CommandSource.suggestIdentifiers(streamModifiers(EntityArgumentType.getEntity(context, "target")), builder))
@@ -336,12 +336,12 @@ public class TemperatureCommand {
                             "commands.temperature.modifier.get.success",
                             id.toString(),
                             target.getName(),
-                            modifier.value()
+                            modifier.amount()
                     ),
                     false
             );
 
-            return (int) ((modifier.value() * scale) * 1000);
+            return (int) ((modifier.amount() * scale) * 1000);
         }
 
         private static int executeAdd(ServerCommandSource source, Entity target, Identifier id, double value, TemperatureModifier.Operation operation) throws CommandSyntaxException {

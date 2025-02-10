@@ -1,27 +1,29 @@
 {
-  "required": true,
-  "minVersion": "0.8",
-  "package": "sylenthuntress.thermia.mixin",
-  "refmap": "${mod_id}.refmap.json",
+  "client": [
+    "client.temperature.ClientPlayerEntityMixin",
+    "client.temperature.GameRendererMixin",
+    "client.temperature.InGameHudHeartTypeMixin",
+    "client.temperature.InGameHudMixin",
+    "client.temperature.ItemStackMixin",
+    "client.temperature.LivingEntityRendererMixin",
+    "client.temperature.StatusEffectsDisplayMixin"
+  ],
   "compatibilityLevel": "JAVA_18",
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "minVersion": "0.8",
   "mixins": [
+    "temperature.ComponentHolderMixin",
     "temperature.CreeperEntityMixin",
     "temperature.EntityMixin",
     "temperature.ItemStackMixin",
     "temperature.LivingEntityMixin",
     "temperature.PlayerEntityMixin"
   ],
-  "server": [],
-  "injectors": {
-    "defaultRequire": 1
-  },
-  "client": [
-    "client.temperature.ClientPlayerEntityMixin",
-    "client.temperature.GameRendererMixin",
-    "client.temperature.InGameHudHeartTypeMixin",
-    "client.temperature.InGameHudMixin",
-    "client.temperature.LivingEntityRendererMixin",
-    "client.temperature.StatusEffectsDisplayMixin"
-  ]
+  "package": "sylenthuntress.thermia.mixin",
+  "refmap": "${mod_id}.refmap.json",
+  "required": true,
+  "server": []
 }
 

@@ -153,8 +153,8 @@ public class TemperatureManager {
         double temperature = getTemperature();
         for (TemperatureModifier modifier : getTemperatureModifiers().getList()) {
             switch (modifier.operation()) {
-                case ADD_VALUE -> temperature += modifier.value();
-                case ADD_MULTIPLIED_VALUE -> temperature += temperature * modifier.value();
+                case ADD_VALUE -> temperature += modifier.amount();
+                case ADD_MULTIPLIED_VALUE -> temperature += temperature * modifier.amount();
             }
         }
         return temperature;

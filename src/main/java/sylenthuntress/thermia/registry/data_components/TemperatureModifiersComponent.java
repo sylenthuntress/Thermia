@@ -1,0 +1,57 @@
+package sylenthuntress.thermia.registry.data_components;
+
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.component.type.AttributeModifierSlot;
+import net.minecraft.network.RegistryByteBuf;
+import net.minecraft.network.codec.PacketCodec;
+import net.minecraft.network.codec.PacketCodecs;
+import net.minecraft.util.Util;
+import sylenthuntress.thermia.temperature.TemperatureModifier;
+
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.util.List;
+import java.util.Locale;
+
+public record TemperatureModifiersComponent(List<Entry> modifiers, boolean showInTooltip) {
+    public static final TemperatureModifiersComponent DEFAULT = new TemperatureModifiersComponent(List.of(), true);
+    public static final PacketCodec<RegistryByteBuf, TemperatureModifiersComponent> PACKET_CODEC = PacketCodec.tuple(
+            TemperatureModifiersComponent.Entry.PACKET_CODEC.collect(PacketCodecs.toList()),
+            TemperatureModifiersComponent::modifiers,
+            PacketCodecs.BOOLEAN,
+            TemperatureModifiersComponent::showInTooltip,
+            TemperatureModifiersComponent::new
+    );
+    public static final DecimalFormat DECIMAL_FORMAT = Util.make(
+            new DecimalFormat("#.##"), format -> format.setDecimalFormatSymbols(DecimalFormatSymbols.getInstance(Locale.ROOT))
+    );
+    private static final Codec<TemperatureModifiersComponent> BASE_CODEC = RecordCodecBuilder.create(
+            instance -> instance.group(
+                            TemperatureModifiersComponent.Entry.CODEC.listOf().fieldOf("modifiers").forGetter(TemperatureModifiersComponent::modifiers),
+                            Codec.BOOL.optionalFieldOf("show_in_tooltip", true).forGetter(TemperatureModifiersComponent::showInTooltip)
+                    )
+                    .apply(instance, TemperatureModifiersComponent::new)
+    );
+    public static final Codec<TemperatureModifiersComponent> CODEC = Codec.withAlternative(
+            BASE_CODEC, TemperatureModifiersComponent.Entry.CODEC.listOf(), entries
+                    -> new TemperatureModifiersComponent(entries, true)
+    );
+
+    public record Entry(TemperatureModifier modifier, AttributeModifierSlot slot) {
+        public static final Codec<TemperatureModifiersComponent.Entry> CODEC = RecordCodecBuilder.create(
+                instance -> instance.group(
+                                TemperatureModifier.MAP_CODEC.forGetter(TemperatureModifiersComponent.Entry::modifier),
+                                AttributeModifierSlot.CODEC.optionalFieldOf("slot", AttributeModifierSlot.ANY).forGetter(TemperatureModifiersComponent.Entry::slot)
+                        )
+                        .apply(instance, TemperatureModifiersComponent.Entry::new)
+        );
+        public static final PacketCodec<RegistryByteBuf, TemperatureModifiersComponent.Entry> PACKET_CODEC = PacketCodec.tuple(
+                TemperatureModifier.PACKET_CODEC,
+                TemperatureModifiersComponent.Entry::modifier,
+                AttributeModifierSlot.PACKET_CODEC,
+                TemperatureModifiersComponent.Entry::slot,
+                TemperatureModifiersComponent.Entry::new
+        );
+    }
+}

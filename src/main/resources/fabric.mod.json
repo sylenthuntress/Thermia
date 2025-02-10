@@ -17,6 +17,9 @@
   "entrypoints": {
     "main": [
       "sylenthuntress.thermia.Thermia"
+    ],
+    "client": [
+      "sylenthuntress.thermia.client.ThermiaClient"
     ]
   },
   "mixins": [

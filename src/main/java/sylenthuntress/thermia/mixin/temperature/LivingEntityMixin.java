@@ -26,12 +26,17 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import sylenthuntress.thermia.access.temperature.LivingEntityAccess;
 import sylenthuntress.thermia.registry.ThermiaAttributes;
+import sylenthuntress.thermia.registry.ThermiaComponents;
 import sylenthuntress.thermia.registry.ThermiaStatusEffects;
 import sylenthuntress.thermia.registry.ThermiaTags;
+import sylenthuntress.thermia.registry.data_components.TemperatureModifiersComponent;
 import sylenthuntress.thermia.temperature.TemperatureHelper;
 import sylenthuntress.thermia.temperature.TemperatureManager;
+
+import java.util.Map;
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity implements LivingEntityAccess {
@@ -171,6 +176,48 @@ public abstract class LivingEntityMixin extends Entity implements LivingEntityAc
             if (source.isIn(DamageTypeTags.IS_LIGHTNING))
                 interactionTemperatures[1] += 10;
             temperatureManager.modifyTemperature(interactionTemperatures);
+        }
+    }
+
+    @Inject(
+            method = "getEquipmentChanges",
+            at = @At("HEAD")
+    )
+    private void thermia$addTemperatureModifiers(CallbackInfoReturnable<Map<EquipmentSlot, ItemStack>> cir) {
+        for (EquipmentSlot slot : EquipmentSlot.VALUES) {
+            final ItemStack stack = this.getEquippedStack(slot);
+
+            for (TemperatureModifiersComponent.Entry entry : stack.getOrDefault(
+                    ThermiaComponents.TEMPERATURE_MODIFIERS_COMPONENT,
+                    TemperatureModifiersComponent.DEFAULT
+            ).modifiers()) {
+                if (!entry.slot().matches(slot)) {
+                    continue;
+                }
+
+                thermia$temperatureManager.getTemperatureModifiers().addModifier(
+                        entry.modifier()
+                );
+            }
+        }
+    }
+
+    @Inject(
+            method = "onEquipmentRemoved",
+            at = @At("TAIL")
+    )
+    private void thermia$removeTemperatureModifiers(ItemStack removedEquipment, EquipmentSlot slot, AttributeContainer container, CallbackInfo ci) {
+        for (TemperatureModifiersComponent.Entry entry : removedEquipment.getOrDefault(
+                ThermiaComponents.TEMPERATURE_MODIFIERS_COMPONENT,
+                TemperatureModifiersComponent.DEFAULT
+        ).modifiers()) {
+            if (!entry.slot().matches(slot)) {
+                continue;
+            }
+
+            thermia$temperatureManager.getTemperatureModifiers().removeModifier(
+                    entry.modifier().id()
+            );
         }
     }
 }

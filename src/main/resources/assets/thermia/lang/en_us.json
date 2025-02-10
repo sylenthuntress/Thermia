@@ -1,4 +1,5 @@
 {
+  "attribute.name.generic.base_temperature": "Body Temperature",
   "attribute.name.generic.cold_offset_threshold": "Freeze Protection",
   "attribute.name.generic.heat_offset_threshold": "Overheat Protection",
   "commands.temperature.change.success": "Successfully changed temperature of %s from %s to %s",
@@ -19,5 +20,14 @@
   "item.minecraft.lingering_potion.effect.frost_resistance": "Splash Potion of Frost Resistance",
   "item.minecraft.potion.effect.frost_resistance": "Potion of Frost Resistance",
   "item.minecraft.splash_potion.effect.frost_resistance": "Splash Potion of Frost Resistance",
+  "temperature.modifiers.consumable": "When consumed:",
+  "temperature.modifier.random": " + %s...%s°F degrees",
+  "temperature.modifier.random.neutral": "%s...%s°F degrees",
+  "temperature.modifier.random.cold": "%s...%s°F degrees ❄",
+  "temperature.modifier.random.hot": "%s...%s°F degrees \uD83D\uDD25",
+  "temperature.modifier.cold.0": "-%s°F degrees ❄",
+  "temperature.modifier.cold.1": "-%s%% temperature ❄",
+  "temperature.modifier.hot.0": "+%s°F degrees \uD83D\uDD25",
+  "temperature.modifier.hot.1": "+%s%% temperature \uD83D\uDD25",
   "thermia.discord": "Discord"
 }
