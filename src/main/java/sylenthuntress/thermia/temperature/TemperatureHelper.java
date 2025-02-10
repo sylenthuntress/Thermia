@@ -3,19 +3,24 @@ package sylenthuntress.thermia.temperature;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBiomeTags;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.registry.tag.FluidTags;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.LightType;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.dimension.DimensionType;
 import org.jetbrains.annotations.Nullable;
 import sylenthuntress.thermia.access.temperature.LivingEntityAccess;
+import sylenthuntress.thermia.registry.ThermiaComponents;
 import sylenthuntress.thermia.registry.ThermiaTags;
+import sylenthuntress.thermia.registry.data_components.SunBlockingComponent;
 
 public abstract class TemperatureHelper {
     public static double getRegionalTemperature(World world, BlockPos blockPos) {
@@ -26,10 +31,11 @@ public abstract class TemperatureHelper {
         if (dimension.ultrawarm())
             regionalTemperature *= 2;
 
-        // Guard return in nether-like dimensions
+        // Guard return for skylight calculations in nether-like dimensions
         if (dimension.hasCeiling() || dimension.hasFixedTime())
             return (-1 + regionalTemperature) * 5;
 
+        // Calculate skylight modifier
         float maxTimeBonus = biome.isIn(ConventionalBiomeTags.IS_DRY) ? 2.5F : 1F;
         float timeBonus = (float) (
                 (maxTimeBonus / 2) * Math.cos(
@@ -40,6 +46,28 @@ public abstract class TemperatureHelper {
         if (!world.isSkyVisibleAllowingSea(blockPos.add(0, 1, 0))) {
             timeBonus -= maxTimeBonus * 0.5F;
         }
+
+        for (Entity entity
+                : world.getNonSpectatingEntities(Entity.class, Box.from(Vec3d.of(blockPos.add(0, 6, 0))))) {
+            timeBonus -= 0.1F;
+
+            if (entity instanceof LivingEntity livingEntity) {
+                for (EquipmentSlot slot : EquipmentSlot.VALUES) {
+                    final var component = livingEntity.getEquippedStack(slot).getOrDefault(
+                            ThermiaComponents.SUN_BLOCKING,
+                            SunBlockingComponent.DEFAULT
+                    );
+
+                    if (!component.slot().matches(slot)) {
+                        continue;
+                    }
+
+                    timeBonus -= component.amount();
+                }
+            }
+        }
+
+        // Apply skylight modifier
         if (regionalTemperature >= 0) {
             regionalTemperature *= timeBonus;
         }

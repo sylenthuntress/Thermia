@@ -11,10 +11,13 @@ import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.entry.RegistryEntry;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import sylenthuntress.thermia.Thermia;
 import sylenthuntress.thermia.registry.ThermiaAttributes;
+import sylenthuntress.thermia.registry.ThermiaComponents;
 import sylenthuntress.thermia.registry.ThermiaTags;
+import sylenthuntress.thermia.registry.data_components.SunBlockingComponent;
 
 @Mixin(ComponentHolder.class)
 public interface ComponentHolderMixin {
@@ -22,13 +25,27 @@ public interface ComponentHolderMixin {
             method = "getOrDefault",
             at = @At("RETURN")
     )
-    private Object applyDefaultModifiers(Object obj) {
+    private Object thermia$applyDefaultModifiers$1(Object obj) {
+        return thermia$calculateDefaultModifiers(obj);
+    }
+
+    @ModifyReturnValue(
+            method = "get",
+            at = @At("RETURN")
+    )
+    private Object thermia$applyDefaultModifiers$2(Object obj) {
+        return thermia$calculateDefaultModifiers(obj);
+    }
+
+    @Unique
+    default Object thermia$calculateDefaultModifiers(Object obj) {
         //noinspection ConstantValue
         if (!((ComponentHolder) this instanceof ItemStack stack)
                 || !(obj instanceof AttributeModifiersComponent component)) {
             return obj;
         }
 
+        // Apply default insulating attributes
         if (stack.contains(DataComponentTypes.EQUIPPABLE)
                 && stack.isIn(ThermiaTags.Item.Equippable.INSULATING)) {
 
@@ -63,10 +80,80 @@ public interface ComponentHolderMixin {
             );
         }
 
+        // Apply default sun blocking attributes
+        if (!stack.contains(ThermiaComponents.SUN_BLOCKING)
+                && stack.isIn(ThermiaTags.Item.Equippable.BLOCKS_SUNLIGHT)) {
+            if (stack.isIn(ThermiaTags.Item.Equippable.BlocksSunlight.ANY)) {
+                stack.set(
+                        ThermiaComponents.SUN_BLOCKING,
+                        new SunBlockingComponent(
+                                1,
+                                AttributeModifierSlot.ANY
+                        )
+                );
+            }
+            if (stack.isIn(ThermiaTags.Item.Equippable.BlocksSunlight.BODY)) {
+                stack.set(
+                        ThermiaComponents.SUN_BLOCKING,
+                        new SunBlockingComponent(
+                                1,
+                                AttributeModifierSlot.BODY
+                        )
+                );
+            }
+            if (stack.isIn(ThermiaTags.Item.Equippable.BlocksSunlight.FEET)) {
+                stack.set(
+                        ThermiaComponents.SUN_BLOCKING,
+                        new SunBlockingComponent(
+                                1,
+                                AttributeModifierSlot.FEET
+                        )
+                );
+            }
+            if (stack.isIn(ThermiaTags.Item.Equippable.BlocksSunlight.HANDS)) {
+                stack.set(
+                        ThermiaComponents.SUN_BLOCKING,
+                        new SunBlockingComponent(
+                                1,
+                                AttributeModifierSlot.HAND
+                        )
+                );
+            }
+            if (stack.isIn(ThermiaTags.Item.Equippable.BlocksSunlight.LEGS)) {
+                stack.set(
+                        ThermiaComponents.SUN_BLOCKING,
+                        new SunBlockingComponent(
+                                1,
+                                AttributeModifierSlot.LEGS
+                        )
+                );
+            }
+            if (stack.isIn(ThermiaTags.Item.Equippable.BlocksSunlight.MAINHAND)) {
+                stack.set(
+                        ThermiaComponents.SUN_BLOCKING,
+                        new SunBlockingComponent(
+                                1,
+                                AttributeModifierSlot.MAINHAND
+                        )
+                );
+            }
+            if (stack.isIn(ThermiaTags.Item.Equippable.BlocksSunlight.OFFHAND)) {
+                stack.set(
+                        ThermiaComponents.SUN_BLOCKING,
+                        new SunBlockingComponent(
+                                1,
+                                AttributeModifierSlot.OFFHAND
+                        )
+                );
+            }
+        }
+
+        // Guard-return for unenchanted items
         if (!stack.hasEnchantments()) {
             return component;
         }
 
+        // Apply default enchantment attribute modifiers
         for (RegistryEntry<Enchantment> enchantment : stack.getEnchantments().getEnchantments()) {
             for (AttributeModifierSlot slot : enchantment.value().definition().slots()) {
                 if (enchantment.isIn(ThermiaTags.Enchantment.HYPERTHERMIA_PROTECTION)) {

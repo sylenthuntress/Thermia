@@ -71,6 +71,53 @@ public class ThermiaTags {
                     RegistryKeys.ITEM,
                     Thermia.modIdentifier("equippable_temperature/insulating")
             );
+
+            public static final TagKey<net.minecraft.item.Item> BLOCKS_SUNLIGHT = TagKey.of(
+                    RegistryKeys.ITEM,
+                    Thermia.modIdentifier("blocks_sunlight")
+            );
+
+            public static class BlocksSunlight {
+                public static final TagKey<net.minecraft.item.Item> ANY = TagKey.of(
+                        RegistryKeys.ITEM,
+                        Thermia.modIdentifier("blocks_sunlight/any")
+                );
+
+                public static final TagKey<net.minecraft.item.Item> BODY = TagKey.of(
+                        RegistryKeys.ITEM,
+                        Thermia.modIdentifier("blocks_sunlight/body")
+                );
+
+                public static final TagKey<net.minecraft.item.Item> FEET = TagKey.of(
+                        RegistryKeys.ITEM,
+                        Thermia.modIdentifier("blocks_sunlight/feet")
+                );
+
+                public static final TagKey<net.minecraft.item.Item> HANDS = TagKey.of(
+                        RegistryKeys.ITEM,
+                        Thermia.modIdentifier("blocks_sunlight/hands")
+                );
+
+                public static final TagKey<net.minecraft.item.Item> HEAD = TagKey.of(
+                        RegistryKeys.ITEM,
+                        Thermia.modIdentifier("blocks_sunlight/HEAD")
+                );
+
+                public static final TagKey<net.minecraft.item.Item> LEGS = TagKey.of(
+                        RegistryKeys.ITEM,
+                        Thermia.modIdentifier("blocks_sunlight/legs")
+                );
+
+                public static final TagKey<net.minecraft.item.Item> MAINHAND = TagKey.of(
+                        RegistryKeys.ITEM,
+                        Thermia.modIdentifier("blocks_sunlight/mainhand")
+                );
+
+                public static final TagKey<net.minecraft.item.Item> OFFHAND = TagKey.of(
+                        RegistryKeys.ITEM,
+                        Thermia.modIdentifier("blocks_sunlight/offhand")
+                );
+            }
         }
     }
 
