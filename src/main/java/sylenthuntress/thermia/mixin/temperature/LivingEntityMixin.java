@@ -79,6 +79,12 @@ public abstract class LivingEntityMixin extends Entity implements LivingEntityAc
     @Shadow
     public abstract ItemStack getEquippedStack(EquipmentSlot slot);
 
+    @Shadow
+    public abstract double getAttributeValue(RegistryEntry<EntityAttribute> attribute);
+
+    @Shadow
+    public abstract double getAttributeBaseValue(RegistryEntry<EntityAttribute> attribute);
+
     public TemperatureManager thermia$getTemperatureManager() {
         return thermia$temperatureManager;
     }
@@ -219,5 +225,14 @@ public abstract class LivingEntityMixin extends Entity implements LivingEntityAc
                     entry.modifier().id()
             );
         }
+    }
+
+    @ModifyReturnValue(
+            method = "canFreeze",
+            at = @At("RETURN")
+    )
+    private boolean thermia$applyInsulation(boolean original) {
+        return original && this.getAttributeValue(ThermiaAttributes.COLD_OFFSET_THRESHOLD)
+                < 8 + this.getAttributeBaseValue(ThermiaAttributes.COLD_OFFSET_THRESHOLD);
     }
 }

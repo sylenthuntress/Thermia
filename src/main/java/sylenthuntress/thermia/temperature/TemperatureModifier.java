@@ -70,8 +70,7 @@ public record TemperatureModifier(Identifier id, double amount, TemperatureModif
         public static Operation asTemperatureOperation(EntityAttributeModifier.Operation operation) {
             return switch (operation) {
                 case ADD_VALUE -> ADD_VALUE;
-                case ADD_MULTIPLIED_BASE -> ADD_MULTIPLIED_VALUE;
-                case ADD_MULTIPLIED_TOTAL -> ADD_MULTIPLIED_VALUE;
+                case ADD_MULTIPLIED_BASE, ADD_MULTIPLIED_TOTAL -> ADD_MULTIPLIED_VALUE;
             };
         }
 

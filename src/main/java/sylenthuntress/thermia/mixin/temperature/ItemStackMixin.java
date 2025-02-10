@@ -4,7 +4,6 @@ import net.minecraft.component.ComponentHolder;
 import net.minecraft.component.ComponentType;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.MergedComponentMap;
-import net.minecraft.component.type.ItemEnchantmentsComponent;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.item.Item;
@@ -32,12 +31,6 @@ public abstract class ItemStackMixin implements ComponentHolder {
     @Shadow
     @Nullable
     public abstract <T> T set(ComponentType<? super T> type, @Nullable T value);
-
-    @Shadow
-    public abstract ItemEnchantmentsComponent getEnchantments();
-
-    @Shadow
-    public abstract boolean hasEnchantments();
 
     @Inject(
             method = "<init>(Lnet/minecraft/item/ItemConvertible;ILnet/minecraft/component/MergedComponentMap;)V",
