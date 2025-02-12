@@ -112,8 +112,11 @@ public abstract class TemperatureHelper {
             FluidState fluidState = world.getFluidState(pos);
             if (fluidState.isIn(FluidTags.LAVA))
                 fluidTemperature += 1f;
-            if (world.getBlockState(pos).get(Properties.WATERLOGGED, false) || fluidState.isIn(FluidTags.WATER)) {
-                if (getRegionalTemperature(world, pos) > 0)
+            }
+
+            if (world.getBlockState(pos).get(Properties.WATERLOGGED, false)
+                    || fluidState.isIn(FluidTags.WATER)) {
+                if (getRegionalTemperature(world, pos) < 0) {
                     fluidTemperature -= 0.1f;
                 }
                 fluidTemperature -= 0.1f;
