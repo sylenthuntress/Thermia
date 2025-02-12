@@ -7,6 +7,7 @@ import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
+import sylenthuntress.thermia.Thermia;
 import sylenthuntress.thermia.registry.ThermiaComponents;
 import sylenthuntress.thermia.registry.data_components.TemperatureModifiersComponent;
 
@@ -30,8 +31,24 @@ public class ConsumableTemperatureTooltip implements ItemTooltipCallback {
         );
 
         double amount = stack.get(ThermiaComponents.CONSUMABLE_TEMPERATURE).temperature();
-        final double minAmount = stack.get(ThermiaComponents.CONSUMABLE_TEMPERATURE).minTemperature();
-        final double maxAmount = stack.get(ThermiaComponents.CONSUMABLE_TEMPERATURE).maxTemperature();
+        double minAmount = stack.get(ThermiaComponents.CONSUMABLE_TEMPERATURE).minTemperature();
+        double maxAmount = stack.get(ThermiaComponents.CONSUMABLE_TEMPERATURE).maxTemperature();
+        String temperatureScale = "temperature.scale.fahrenheit";
+
+        switch (Thermia.CONFIG.temperatureScaleDisplay()) {
+            case CELSIUS -> {
+                amount *= 5.0 / 9.0;
+                minAmount *= 5.0 / 9.0;
+                maxAmount *= 5.0 / 9.0;
+                temperatureScale = "temperature.scale.celsius";
+            }
+            case KELVIN -> {
+                amount *= 5.0 / 9.0;
+                minAmount *= 5.0 / 9.0;
+                maxAmount *= 5.0 / 9.0;
+                temperatureScale = "temperature.scale.kelvin";
+            }
+        }
 
         if (minAmount < maxAmount) {
             if (amount != 0) {
@@ -40,6 +57,8 @@ public class ConsumableTemperatureTooltip implements ItemTooltipCallback {
                                 "temperature.modifier.random",
                                 minAmount,
                                 maxAmount
+                        ).append(
+                                Text.translatable(temperatureScale)
                         ).formatted(Formatting.GRAY, Formatting.ITALIC)
                 );
             } else {
@@ -49,6 +68,10 @@ public class ConsumableTemperatureTooltip implements ItemTooltipCallback {
                                     "temperature.modifier.random.hot",
                                     TemperatureModifiersComponent.DECIMAL_FORMAT.format(minAmount),
                                     TemperatureModifiersComponent.DECIMAL_FORMAT.format(maxAmount)
+                            ).append(
+                                    Text.translatable(temperatureScale)
+                            ).append(
+                                    Text.translatable("temperature.symbol.fire", " ")
                             ).formatted(Formatting.GOLD)
                     );
                 } else if (minAmount < 0.0 && maxAmount < 0.0) {
@@ -57,6 +80,10 @@ public class ConsumableTemperatureTooltip implements ItemTooltipCallback {
                                     "temperature.modifier.random.cold",
                                     TemperatureModifiersComponent.DECIMAL_FORMAT.format(minAmount),
                                     TemperatureModifiersComponent.DECIMAL_FORMAT.format(maxAmount)
+                            ).append(
+                                    Text.translatable(temperatureScale)
+                            ).append(
+                                    Text.translatable("temperature.symbol.snowflake", " ")
                             ).formatted(Formatting.AQUA)
                     );
                 } else {
@@ -65,6 +92,8 @@ public class ConsumableTemperatureTooltip implements ItemTooltipCallback {
                                     "temperature.modifier.random.neutral",
                                     minAmount,
                                     maxAmount
+                            ).append(
+                                    Text.translatable(temperatureScale)
                             ).formatted(Formatting.BLUE)
                     );
                 }
@@ -78,6 +107,10 @@ public class ConsumableTemperatureTooltip implements ItemTooltipCallback {
                     Text.translatable(
                             "temperature.modifier.hot.0",
                             TemperatureModifiersComponent.DECIMAL_FORMAT.format(amount)
+                    ).append(
+                            Text.translatable(temperatureScale)
+                    ).append(
+                            Text.translatable("temperature.symbol.fire", " ")
                     ).formatted(Formatting.GOLD)
             );
         } else if (amount < 0.0) {
@@ -85,6 +118,10 @@ public class ConsumableTemperatureTooltip implements ItemTooltipCallback {
                     Text.translatable(
                             "temperature.modifier.cold.0",
                             TemperatureModifiersComponent.DECIMAL_FORMAT.format(-amount)
+                    ).append(
+                            Text.translatable(temperatureScale)
+                    ).append(
+                            Text.translatable("temperature.symbol.snowflake", " ")
                     ).formatted(Formatting.AQUA)
             );
         }

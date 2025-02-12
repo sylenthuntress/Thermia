@@ -12,7 +12,7 @@ import sylenthuntress.thermia.Thermia;
 @Config(name = "thermia-config", wrapperName = "ThermiaConfig")
 public class ThermiaConfigModel {
     // Client-only settings
-    @Sync(value = Option.SyncMode.NONE)
+    @Sync(value = Option.SyncMode.INFORM_SERVER)
     public TemperatureScaleDisplay temperatureScaleDisplay = TemperatureScaleDisplay.FAHRENHEIT;
 
     public enum TemperatureScaleDisplay {

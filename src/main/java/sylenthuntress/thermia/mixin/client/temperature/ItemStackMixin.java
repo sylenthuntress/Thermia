@@ -19,6 +19,7 @@ import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
+import sylenthuntress.thermia.Thermia;
 import sylenthuntress.thermia.registry.ThermiaAttributes;
 import sylenthuntress.thermia.registry.ThermiaComponents;
 import sylenthuntress.thermia.registry.data_components.TemperatureModifiersComponent;
@@ -138,6 +139,18 @@ public abstract class ItemStackMixin implements ComponentHolder {
             amount += entry.modifier().amount();
         }
 
+        String temperatureScale = "temperature.scale.fahrenheit";
+        switch (Thermia.CONFIG.temperatureScaleDisplay()) {
+            case CELSIUS -> {
+                amount *= 5.0 / 9.0;
+                temperatureScale = "temperature.scale.celsius";
+            }
+            case KELVIN -> {
+                amount *= 5.0 / 9.0;
+                temperatureScale = "temperature.scale.kelvin";
+            }
+        }
+
         // Change the display amount based on operation
         final double displayAmount;
         if (modifier.operation().ordinal() > 0) {
@@ -154,6 +167,10 @@ public abstract class ItemStackMixin implements ComponentHolder {
                                     + TemperatureModifier.Operation.asTemperatureOperation(modifier.operation())
                                     .getId(),
                             TemperatureModifiersComponent.DECIMAL_FORMAT.format(displayAmount)
+                    ).append(
+                            Text.translatable(temperatureScale)
+                    ).append(
+                            Text.translatable("temperature.symbol.fire", " ")
                     ).formatted(Formatting.GOLD)
             );
         } else if (amount < 0.0) {
@@ -163,6 +180,10 @@ public abstract class ItemStackMixin implements ComponentHolder {
                                     + TemperatureModifier.Operation.asTemperatureOperation(modifier.operation())
                                     .getId(),
                             TemperatureModifiersComponent.DECIMAL_FORMAT.format(-displayAmount)
+                    ).append(
+                            Text.translatable(temperatureScale)
+                    ).append(
+                            Text.translatable("temperature.symbol.snowflake", " ")
                     ).formatted(Formatting.AQUA)
             );
         }

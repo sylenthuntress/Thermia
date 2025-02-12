@@ -1,0 +1,7 @@
+{
+  "text.config.thermia-config.title": "Thermia Config",
+  "text.config.thermia-config.option.temperatureScaleDisplay": "Temperature scale to use for display",
+  "text.config.thermia-config.enum.temperatureScaleDisplay.fahrenheit": "Fahrenheit",
+  "text.config.thermia-config.enum.temperatureScaleDisplay.celsius": "Celsius",
+  "text.config.thermia-config.enum.temperatureScaleDisplay.kelvin": "Kelvin"
+}

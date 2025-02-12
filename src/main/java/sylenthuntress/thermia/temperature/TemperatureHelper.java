@@ -1,5 +1,6 @@
 package sylenthuntress.thermia.temperature;
 
+import io.wispforest.owo.config.ConfigSynchronizer;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBiomeTags;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
@@ -8,7 +9,10 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.registry.tag.FluidTags;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.state.property.Properties;
+import net.minecraft.text.Text;
+import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
@@ -16,13 +20,23 @@ import net.minecraft.world.LightType;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.dimension.DimensionType;
+import sylenthuntress.thermia.Thermia;
 import sylenthuntress.thermia.access.temperature.LivingEntityAccess;
+import sylenthuntress.thermia.config.ThermiaConfigModel;
 import sylenthuntress.thermia.registry.ThermiaComponents;
 import sylenthuntress.thermia.registry.ThermiaTags;
 import sylenthuntress.thermia.registry.data_components.SunBlockingComponent;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.util.Locale;
+
 @SuppressWarnings("deprecation")
 public abstract class TemperatureHelper {
+    public static final DecimalFormat DECIMAL_FORMAT = Util.make(
+            new DecimalFormat("#.###"), format -> format.setDecimalFormatSymbols(DecimalFormatSymbols.getInstance(Locale.ROOT))
+    );
+
     public static double getRegionalTemperature(World world, BlockPos blockPos) {
         final DimensionType dimension = world.getDimension();
         final RegistryEntry<Biome> biome = world.getBiome(blockPos);
@@ -166,6 +180,30 @@ public abstract class TemperatureHelper {
 
         public static double kelvinToCelsius(double temperature) {
             return temperature - 273.15;
+        }
+
+        public static Text convertForClient(ServerPlayerEntity player, double temperature) {
+            @SuppressWarnings("DataFlowIssue") var temperatureScaleDisplay = (ThermiaConfigModel.TemperatureScaleDisplay)
+                    ConfigSynchronizer.getClientOptions(
+                            player,
+                            "thermia-config"
+                    ).get(Thermia.CONFIG.keys.temperatureScaleDisplay);
+
+            String temperatureScale = "temperature.scale.fahrenheit";
+            switch (temperatureScaleDisplay) {
+                case CELSIUS -> {
+                    temperature = fahrenheitToCelsius(temperature);
+                    temperatureScale = "temperature.scale.celsius";
+                }
+                case KELVIN -> {
+                    temperature = fahrenheitToKelvin(temperature);
+                    temperatureScale = "temperature.scale.kelvin";
+                }
+            }
+
+            return Text.literal(
+                    DECIMAL_FORMAT.format(temperature)
+            ).append(Text.translatable(temperatureScale));
         }
     }
 }
