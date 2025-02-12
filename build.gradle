@@ -109,6 +109,9 @@ dependencies {
     modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
     annotationProcessor group: 'io.github.llamalad7', name: 'mixinextras-common', version: '0.3.5'
+    modImplementation("com.terraformersmc:modmenu:${modmenu_version}")
+    annotationProcessor modImplementation("io.wispforest:owo-lib:${owo_version}")
+    include "io.wispforest:owo-sentinel:${owo_version}"
 }
 
 processResources {
@@ -117,6 +120,8 @@ processResources {
             'stability'                    : stability,
             'group'                        : project.group,
             'minecraft_version'            : minecraft_version,
+            'owo_version'    : owo_version,
+            'modmenu_version': modmenu_version,
             'yarn_mappings'                : yarn_mappings,
             'fabric_version'               : fabric_version,
             'fabric_loader_version'        : fabric_loader_version,

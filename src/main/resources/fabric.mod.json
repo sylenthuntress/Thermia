@@ -30,7 +30,8 @@
     "fabricloader": ">=${fabric_loader_version}",
     "fabric-api": ">=${fabric_version}",
     "minecraft": "${minecraft_version}",
-    "java": ">=${java_version}"
+    "java": ">=${java_version}",
+    "owo-lib": ">=${owo_version}"
   },
   "suggests": {
     "another-mod": "*"
