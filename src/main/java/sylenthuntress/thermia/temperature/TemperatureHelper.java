@@ -91,11 +91,7 @@ public abstract class TemperatureHelper {
             return blockTemperature;
 
         for (BlockPos pos : BlockPos.iterate(blockPos.add(-4, -4, -4), blockPos.add(4, 4, 4))) {
-            BlockState blockState = world.getBlockState(pos);
-            if (blockState.isIn(ThermiaTags.Block.COLD_BLOCKS))
-                blockTemperature -= 0.1;
-            if (blockState.isIn(ThermiaTags.Block.HOT_BLOCKS))
-                blockTemperature += 0.1;
+            blockTemperature += world.getReceivedRedstonePower(pos) / 8F;
 
             final BlockState nearbyBlock = world.getBlockState(pos);
             if (nearbyBlock.isIn(ThermiaTags.Block.COLD_BLOCKS)) {
