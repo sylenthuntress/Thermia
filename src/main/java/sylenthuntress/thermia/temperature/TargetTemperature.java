@@ -30,7 +30,7 @@ public record TargetTemperature(double value) {
     public static double calculateTargetTemperature(LivingEntity entity) {
         double targetTemperature;
         if (!TemperatureHelper.getTemperatureManager(entity).hasTemperature()
-                && entity.getType().isIn(ThermiaTags.EntityType.CLIMATE_AFFECTED)) {
+                || !entity.getType().isIn(ThermiaTags.EntityType.CLIMATE_AFFECTED)) {
             targetTemperature = entity.getAttributeValue(ThermiaAttributes.BASE_TEMPERATURE);
 
             entity.setAttached(
@@ -40,9 +40,7 @@ public record TargetTemperature(double value) {
             return targetTemperature;
         }
 
-        final double baseTemperature = entity.getAttributeValue(
-                ThermiaAttributes.BASE_TEMPERATURE
-        );
+        final double baseTemperature = entity.getAttributeValue(ThermiaAttributes.BASE_TEMPERATURE);
         final double ambientTemperature = TemperatureHelper.getAmbientTemperature(
                 entity.getWorld(),
                 entity.getBlockPos()
