@@ -97,8 +97,17 @@ public abstract class TemperatureHelper {
             if (blockState.isIn(ThermiaTags.Block.HOT_BLOCKS))
                 blockTemperature += 0.1;
 
-            FluidState fluidState = blockState.getFluidState();
-            if (fluidState.isIn(FluidTags.LAVA) && fluidState.isStill())
+            final BlockState nearbyBlock = world.getBlockState(pos);
+            if (nearbyBlock.isIn(ThermiaTags.Block.COLD_BLOCKS)) {
+                blockTemperature -= 0.2;
+            }
+            if (nearbyBlock.isIn(ThermiaTags.Block.HOT_BLOCKS)
+                    || nearbyBlock.get(Properties.LIT, false)) {
+                blockTemperature += 0.2;
+            }
+
+            final FluidState fluidState = nearbyBlock.getFluidState();
+            if (fluidState.isIn(FluidTags.LAVA) && fluidState.isStill()) {
                 blockTemperature += 1;
         }
 
