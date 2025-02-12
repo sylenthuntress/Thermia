@@ -83,7 +83,7 @@ public abstract class TemperatureHelper {
         if (world.getBlockState(blockPos).get(Properties.WATERLOGGED, false) || world.getBlockState(blockPos).isLiquid())
             blockTemperature = getFluidTemperature(world, blockPos);
 
-        blockTemperature -= (blockPos.getY() - world.getSeaLevel()) * 0.13F;
+        blockTemperature -= (blockPos.getY() - world.getSeaLevel()) * 0.1F;
         blockTemperature += world.getLightLevel(LightType.BLOCK, blockPos) / 4f;
 
         // Early guard-return
