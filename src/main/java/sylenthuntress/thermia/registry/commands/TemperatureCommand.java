@@ -23,7 +23,6 @@ import sylenthuntress.thermia.temperature.TemperatureHelper;
 import sylenthuntress.thermia.temperature.TemperatureManager;
 import sylenthuntress.thermia.temperature.TemperatureModifier;
 
-import java.util.ArrayList;
 import java.util.stream.Stream;
 
 public class TemperatureCommand {
@@ -31,10 +30,13 @@ public class TemperatureCommand {
             name -> Text.stringifiedTranslatable("commands.temperature.failure.entity.invalid", name)
     );
     private static final DynamicCommandExceptionType INVALID_MODIFIER_EXCEPTION = new DynamicCommandExceptionType(
-            id -> Text.stringifiedTranslatable("commands.temperature.failure.modifier.invalid", id.toString())
+            id -> Text.stringifiedTranslatable("commands.temperature.failure.modifier.invalid", id)
     );
     private static final DynamicCommandExceptionType DUPLICATE_MODIFIER_EXCEPTION = new DynamicCommandExceptionType(
-            id -> Text.stringifiedTranslatable("commands.temperature.failure.modifier.duplicate", id.toString())
+            id -> Text.stringifiedTranslatable("commands.temperature.failure.modifier.duplicate", id)
+    );
+    private static final DynamicCommandExceptionType NO_MODIFIERS_EXCEPTION = new DynamicCommandExceptionType(
+            name -> Text.stringifiedTranslatable("commands.temperature.failure.modifier.none", name)
     );
     private static final DynamicCommandExceptionType INVALID_POSITION_EXCEPTION = new DynamicCommandExceptionType(
             position -> Text.stringifiedTranslatable("commands.temperature.failure.position.invalid", position)
@@ -91,10 +93,6 @@ public class TemperatureCommand {
                             .executes(context -> executeBase(context.getSource(), EntityArgumentType.getEntity(context, "target"), 1))
                             .then(CommandManager.argument("scale", FloatArgumentType.floatArg())
                                     .executes(context -> executeBase(context.getSource(), EntityArgumentType.getEntity(context, "target"), FloatArgumentType.getFloat(context, "scale")))))
-                    .then(CommandManager.literal("regional")
-                            .executes(context -> executeRegional(context.getSource(), EntityArgumentType.getEntity(context, "target"), 1))
-                            .then(CommandManager.argument("scale", FloatArgumentType.floatArg())
-                                    .executes(context -> executeRegional(context.getSource(), EntityArgumentType.getEntity(context, "target"), FloatArgumentType.getFloat(context, "scale")))))
                     .then(CommandManager.literal("target")
                             .executes(context -> executeTarget(context.getSource(), EntityArgumentType.getEntity(context, "target"), 1))
                             .then(CommandManager.argument("scale", FloatArgumentType.floatArg())
@@ -135,25 +133,6 @@ public class TemperatureCommand {
                     false
             );
             return (int) ((temperatureManager.getModifiedTemperature() * multiplier) * 1000);
-        }
-
-        private static int executeRegional(ServerCommandSource source, Entity target, float multiplier) throws CommandSyntaxException {
-            if (TemperatureHelper.lacksTemperature(target)) {
-                throw ENTITY_FAILED_EXCEPTION.create(target.getName());
-            }
-
-            double regionalTemperature = TemperatureHelper.getRegionalTemperature(target.getWorld(), target.getBlockPos());
-            source.sendFeedback(
-                    () -> Text.translatable(
-                            "commands.temperature.get.position.success",
-                            "Regional",
-                            target.getName(),
-                            regionalTemperature
-                    ),
-                    false
-            );
-
-            return (int) ((regionalTemperature * multiplier) * 1000);
         }
 
         private static int executeTarget(ServerCommandSource source, Entity target, float multiplier) throws CommandSyntaxException {
@@ -251,6 +230,7 @@ public class TemperatureCommand {
             return CommandManager.literal("modifier")
                     .then(CommandManager.literal("add")
                             .then(CommandManager.argument("id", IdentifierArgumentType.identifier())
+                                    .executes(context -> executeAdd(context.getSource(), EntityArgumentType.getEntity(context, "target"), IdentifierArgumentType.getIdentifier(context, "id"), DoubleArgumentType.getDouble(context, "amount"), TemperatureModifier.Operation.ADD_VALUE))
                                     .then(CommandManager.argument("amount", DoubleArgumentType.doubleArg())
                                             .then(CommandManager.literal("add_value")
                                                     .executes(context -> executeAdd(context.getSource(), EntityArgumentType.getEntity(context, "target"), IdentifierArgumentType.getIdentifier(context, "id"), DoubleArgumentType.getDouble(context, "amount"), TemperatureModifier.Operation.ADD_VALUE)))
@@ -259,22 +239,63 @@ public class TemperatureCommand {
                     .then(CommandManager.literal("remove")
                             .then(CommandManager.argument("id", IdentifierArgumentType.identifier())
                                     .suggests((context, builder) -> CommandSource.suggestIdentifiers(streamModifiers(EntityArgumentType.getEntity(context, "target")), builder))
-                                    .executes(context -> executeRemove(context.getSource(), EntityArgumentType.getEntity(context, "target"), IdentifierArgumentType.getIdentifier(context, "id")))))
-                            .then(CommandManager.literal("get")
-                                    .then(CommandManager.argument("id", IdentifierArgumentType.identifier())
-                                            .suggests((context, builder) -> CommandSource.suggestIdentifiers(streamModifiers(EntityArgumentType.getEntity(context, "target")), builder))
-                                            .executes(context -> executeGet(context.getSource(), EntityArgumentType.getEntity(context, "target"), IdentifierArgumentType.getIdentifier(context, "id"), 1))
-                                            .then(CommandManager.argument("scale", FloatArgumentType.floatArg())
-                                                    .executes(context -> executeGet(context.getSource(), EntityArgumentType.getEntity(context, "target"), IdentifierArgumentType.getIdentifier(context, "id"), FloatArgumentType.getFloat(context, "scale")))))).build();
+                                    .executes(context -> executeRemove(context.getSource(), EntityArgumentType.getEntity(context, "target"), IdentifierArgumentType.getIdentifier(context, "id"))))
+                            .then(CommandManager.literal("*")
+                                    .executes(context -> executeRemoveAll(context.getSource(), EntityArgumentType.getEntity(context, "target")))))
+                    .then(CommandManager.literal("get")
+                            .then(CommandManager.argument("id", IdentifierArgumentType.identifier())
+                                    .suggests((context, builder) -> CommandSource.suggestIdentifiers(streamModifiers(EntityArgumentType.getEntity(context, "target")), builder))
+                                    .executes(context -> executeGet(context.getSource(), EntityArgumentType.getEntity(context, "target"), IdentifierArgumentType.getIdentifier(context, "id"), 1))
+                                    .then(CommandManager.argument("scale", FloatArgumentType.floatArg())
+                                            .executes(context -> executeGet(context.getSource(), EntityArgumentType.getEntity(context, "target"), IdentifierArgumentType.getIdentifier(context, "id"), FloatArgumentType.getFloat(context, "scale")))))).build();
+        }
+
+        private static int executeRemoveAll(ServerCommandSource source, Entity target) throws CommandSyntaxException {
+            if (TemperatureHelper.lacksTemperature(target)) {
+                throw ENTITY_FAILED_EXCEPTION.create(target.getName());
+            }
+
+            var temperatureModifiers = TemperatureHelper.getTemperatureManager(target).getTemperatureModifiers();
+            if (temperatureModifiers.getList()
+                    .stream().map(TemperatureModifier::id).noneMatch(TemperatureModifier::notGranted)) {
+                throw NO_MODIFIERS_EXCEPTION.create(target.getName());
+            }
+
+            int modifierCount = 0;
+
+            for (Identifier id : temperatureModifiers.getList().stream().map(TemperatureModifier::id).toList()) {
+                if (TemperatureModifier.isGranted(id)) {
+                    continue;
+                }
+
+                temperatureModifiers.removeModifier(id);
+                modifierCount++;
+            }
+
+            int displayedModifierCount = modifierCount;
+            source.sendFeedback(
+                    () -> Text.stringifiedTranslatable(
+                            "commands.temperature.modifier.remove_all.success",
+                            displayedModifierCount,
+                            target.getName()
+                    ),
+                    false
+            );
+
+            return displayedModifierCount;
         }
 
         private static int executeRemove(ServerCommandSource source, Entity target, Identifier id) throws CommandSyntaxException {
             if (TemperatureHelper.lacksTemperature(target)) {
                 throw ENTITY_FAILED_EXCEPTION.create(target.getName());
             }
-            if (!TemperatureHelper.getTemperatureManager(target).getTemperatureModifiers().removeModifier(id)) {
-                throw INVALID_MODIFIER_EXCEPTION.create(id);
+
+            var temperatureModifiers = TemperatureHelper.getTemperatureManager(target).getTemperatureModifiers();
+            if (!temperatureModifiers.hasModifier(id)) {
+                throw INVALID_MODIFIER_EXCEPTION.create(id.toString());
             }
+
+            temperatureModifiers.removeModifier(id);
 
             source.sendFeedback(
                     () -> Text.stringifiedTranslatable(
@@ -292,12 +313,10 @@ public class TemperatureCommand {
             if (TemperatureHelper.lacksTemperature(target)) {
                 throw ENTITY_FAILED_EXCEPTION.create(target.getName());
             }
-            ArrayList<TemperatureModifier> temperatureModifiers = TemperatureHelper.getTemperatureManager(target).getTemperatureModifiers().getList();
-            temperatureModifiers.removeIf(
-                    temperatureModifier -> temperatureModifier.id().toString().startsWith("thermia:granted/")
-            );
 
-            return temperatureModifiers.stream().map(TemperatureModifier::id);
+            var temperatureModifiers = TemperatureHelper.getTemperatureManager(target).getTemperatureModifiers().getList();
+
+            return temperatureModifiers.stream().map(TemperatureModifier::id).filter(TemperatureModifier::notGranted);
         }
 
 
@@ -306,15 +325,16 @@ public class TemperatureCommand {
                 throw ENTITY_FAILED_EXCEPTION.create(target.getName());
             }
 
-            TemperatureModifier modifier = TemperatureHelper.getTemperatureManager(target).getTemperatureModifiers().getModifier(id);
-
-            if (modifier == null) {
-                throw INVALID_MODIFIER_EXCEPTION.create(id);
+            var temperatureModifiers = TemperatureHelper.getTemperatureManager(target).getTemperatureModifiers();
+            if (!temperatureModifiers.hasModifier(id)) {
+                throw INVALID_MODIFIER_EXCEPTION.create(id.toString());
             }
+
+            TemperatureModifier modifier = temperatureModifiers.getModifier(id);
 
             source.sendFeedback(
                     () -> Text.stringifiedTranslatable(
-                            "commands.temperature.modifier.get.success" + modifier.operation().ordinal(),
+                            "commands.temperature.modifier.get.success." + modifier.operation().ordinal(),
                             id.toString(),
                             target.getName(),
                             modifier.operation() == TemperatureModifier.Operation.ADD_VALUE
@@ -332,9 +352,12 @@ public class TemperatureCommand {
                 throw ENTITY_FAILED_EXCEPTION.create(target.getName());
             }
 
-            if (!TemperatureHelper.getTemperatureManager(target).getTemperatureModifiers().addModifier(new TemperatureModifier(id, value, operation))) {
-                throw DUPLICATE_MODIFIER_EXCEPTION.create(id);
+            var temperatureModifiers = TemperatureHelper.getTemperatureManager(target).getTemperatureModifiers();
+            if (temperatureModifiers.hasModifier(id)) {
+                throw DUPLICATE_MODIFIER_EXCEPTION.create(id.toString());
             }
+
+            temperatureModifiers.addModifier(new TemperatureModifier(id, value, operation));
 
             source.sendFeedback(
                     () -> Text.stringifiedTranslatable(

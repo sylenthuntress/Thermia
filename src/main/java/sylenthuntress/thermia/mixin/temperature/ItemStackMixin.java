@@ -136,7 +136,7 @@ public abstract class ItemStackMixin implements ComponentHolder {
                     ThermiaComponents.TEMPERATURE_MODIFIERS,
                     component.with(
                             new TemperatureModifier(
-                                    Thermia.modIdentifier("granted/cold_when_held"),
+                                    Thermia.modIdentifier("cold_when_held"),
                                     -1,
                                     TemperatureModifier.Operation.ADD_VALUE
                             ),
@@ -149,7 +149,7 @@ public abstract class ItemStackMixin implements ComponentHolder {
                     ThermiaComponents.TEMPERATURE_MODIFIERS,
                     component.with(
                             new TemperatureModifier(
-                                    Thermia.modIdentifier("granted/hot_when_held"),
+                                    Thermia.modIdentifier("hot_when_held"),
                                     1,
                                     TemperatureModifier.Operation.ADD_VALUE
                             ),
@@ -173,7 +173,7 @@ public abstract class ItemStackMixin implements ComponentHolder {
                             component.with(
                                     new TemperatureModifier(
                                             Thermia.modIdentifier(
-                                                    "granted/enchantment."
+                                                    "enchantment."
                                                             + enchantment.getIdAsString()
                                                             .replaceFirst("[A-Za-z0-9]+:", "")
                                                             + ".chill"
@@ -192,7 +192,7 @@ public abstract class ItemStackMixin implements ComponentHolder {
                             component.with(
                                     new TemperatureModifier(
                                             Thermia.modIdentifier(
-                                                    "granted/enchantment."
+                                                    "enchantment."
                                                             + enchantment.getIdAsString()
                                                             .replaceFirst("[A-Za-z0-9]+:", "")
                                                             + ".warmth"
