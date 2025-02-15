@@ -178,6 +178,30 @@ public class TemperatureManager {
         return temperature;
     }
 
+    public float distanceFromTemperateBounds(double temperature) {
+        double clampedTemperature = Math.clamp(
+                temperature,
+                getBaseTemperature() - entity.getAttributeValue(ThermiaAttributes.COLD_OFFSET_THRESHOLD),
+                getBaseTemperature() + entity.getAttributeValue(ThermiaAttributes.HEAT_OFFSET_THRESHOLD)
+        );
+
+        return (float) Math.abs(temperature - clampedTemperature);
+    }
+
+    public float normalizeWithinTemperateBounds(double temperature) {
+        return normalizeWithinTemperateBounds(temperature, getBaseTemperature());
+    }
+
+    public float normalizeWithinTemperateBounds(double temperature, double baseTemperature) {
+        double clampedTemperature = Math.clamp(
+                temperature,
+                baseTemperature - entity.getAttributeValue(ThermiaAttributes.COLD_OFFSET_THRESHOLD),
+                baseTemperature + entity.getAttributeValue(ThermiaAttributes.HEAT_OFFSET_THRESHOLD)
+        );
+
+        return (float) Math.abs(1 - temperature / clampedTemperature);
+    }
+
     public boolean canHaveTemperature() {
         return entity.isAlive()
                 && !entity.getType().isIn(ThermiaTags.EntityType.TEMPERATURE_IMMUNE);

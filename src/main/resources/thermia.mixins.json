@@ -19,7 +19,9 @@
     "temperature.EntityMixin",
     "temperature.ItemStackMixin",
     "temperature.LivingEntityMixin",
-    "temperature.PlayerEntityMixin"
+    "temperature.PathAwareEntityMixin",
+    "temperature.PlayerEntityMixin",
+    "temperature.WanderAroundGoalMixin"
   ],
   "package": "sylenthuntress.thermia.mixin",
   "refmap": "${mod_id}.refmap.json",
