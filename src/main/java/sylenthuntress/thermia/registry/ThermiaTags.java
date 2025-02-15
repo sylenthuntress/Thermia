@@ -16,18 +16,6 @@ public class ThermiaTags {
         );
     }
     public static class EntityType {
-        public static final TagKey<net.minecraft.entity.EntityType<?>> COLD_MOBS = TagKey.of(
-                RegistryKeys.ENTITY_TYPE,
-                Thermia.modIdentifier("climate/cold_mobs")
-        );
-        public static final TagKey<net.minecraft.entity.EntityType<?>> HOT_MOBS = TagKey.of(
-                RegistryKeys.ENTITY_TYPE,
-                Thermia.modIdentifier("climate/hot_mobs")
-        );
-        public static final TagKey<net.minecraft.entity.EntityType<?>> NETHER_MOBS = TagKey.of(
-                RegistryKeys.ENTITY_TYPE,
-                Thermia.modIdentifier("climate/nether_mobs")
-        );
         public static final TagKey<net.minecraft.entity.EntityType<?>> UNDEAD_MOBS = TagKey.of(
                 RegistryKeys.ENTITY_TYPE,
                 Thermia.modIdentifier("climate/undead_mobs")
@@ -35,10 +23,6 @@ public class ThermiaTags {
         public static final TagKey<net.minecraft.entity.EntityType<?>> TEMPERATURE_IMMUNE = TagKey.of(
                 RegistryKeys.ENTITY_TYPE,
                 Thermia.modIdentifier("climate/temperature_immune")
-        );
-        public static final TagKey<net.minecraft.entity.EntityType<?>> CLIMATE_AFFECTED = TagKey.of(
-                RegistryKeys.ENTITY_TYPE,
-                Thermia.modIdentifier("climate/affected")
         );
     }
     public static class Item {
