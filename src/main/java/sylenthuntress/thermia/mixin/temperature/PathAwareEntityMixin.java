@@ -21,9 +21,8 @@ public class PathAwareEntityMixin {
         }
 
         var temperatureManager = TemperatureHelper.getTemperatureManager(entity);
-        double ambientTemperature = TemperatureHelper.getAmbientTemperature(entity.getWorld(), pos);
         float temperatureFavor = temperatureManager.distanceFromTemperateBounds(
-                (ambientTemperature
+                (TemperatureHelper.getBlockTemperature(entity.getWorld(), pos)
                         + temperatureManager.getModifiedTemperature()) / 2
         ) * 0.1F;
 

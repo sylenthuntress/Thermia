@@ -85,8 +85,7 @@ public abstract class TemperatureHelper {
     public static double getBlockTemperature(World world, BlockPos blockPos) {
         final BlockState blockState = world.getBlockState(blockPos);
         double blockTemperature = 0;
-        if (world.getBlockState(blockPos).get(Properties.WATERLOGGED, false) || world.getBlockState(blockPos).isLiquid()) {
-        if (blockState.get(Properties.WATERLOGGED, false) || blockState.isLiquid())
+        if (blockState.get(Properties.WATERLOGGED, false) || blockState.isLiquid()) {
             blockTemperature = getFluidTemperature(world, blockPos);
         }
 
