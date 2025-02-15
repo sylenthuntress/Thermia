@@ -251,7 +251,7 @@ public class TemperatureManager {
     }
 
     public int getHypothermiaAmplifier() {
-        if (entity.hasStatusEffect(ThermiaStatusEffects.FROST_RESISTANCE)) {
+        if (entity.hasStatusEffect(ThermiaStatusEffects.FROST_RESISTANCE) || !entity.canFreeze()) {
             return -1;
         }
 
@@ -268,7 +268,7 @@ public class TemperatureManager {
     }
 
     public int getHyperthermiaAmplifier() {
-        if (entity.hasStatusEffect(StatusEffects.FIRE_RESISTANCE)) {
+        if (entity.hasStatusEffect(StatusEffects.FIRE_RESISTANCE) || entity.isFireImmune()) {
             return -1;
         }
 
