@@ -16,6 +16,18 @@ public class ThermiaTags {
         );
     }
     public static class EntityType {
+        public static final TagKey<net.minecraft.entity.EntityType<?>> CLIMATE_UNAFFECTED = TagKey.of(
+                RegistryKeys.ENTITY_TYPE,
+                Thermia.modIdentifier("climate/unaffected")
+        );
+        public static final TagKey<net.minecraft.entity.EntityType<?>> HAS_FUR = TagKey.of(
+                RegistryKeys.ENTITY_TYPE,
+                Thermia.modIdentifier("climate/has_fur")
+        );
+        public static final TagKey<net.minecraft.entity.EntityType<?>> HAS_WOOL = TagKey.of(
+                RegistryKeys.ENTITY_TYPE,
+                Thermia.modIdentifier("climate/has_wool")
+        );
         public static final TagKey<net.minecraft.entity.EntityType<?>> UNDEAD_MOBS = TagKey.of(
                 RegistryKeys.ENTITY_TYPE,
                 Thermia.modIdentifier("climate/undead_mobs")

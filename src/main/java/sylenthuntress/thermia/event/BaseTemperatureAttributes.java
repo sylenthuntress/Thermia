@@ -7,6 +7,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.world.biome.Biome;
 import sylenthuntress.thermia.registry.ThermiaAttributes;
+import sylenthuntress.thermia.registry.ThermiaTags;
 import sylenthuntress.thermia.temperature.TemperatureHelper;
 
 public class BaseTemperatureAttributes implements ServerEntityEvents.Load {
@@ -57,6 +58,19 @@ public class BaseTemperatureAttributes implements ServerEntityEvents.Load {
         }
         if (biome.value().getPrecipitation(entity.getBlockPos(), world.getSeaLevel()) == Biome.Precipitation.SNOW) {
             coldOffset += 3;
+        }
+
+        if (entity.getType().isIn(ThermiaTags.EntityType.HAS_FUR)) {
+            coldOffset += 2;
+            heatOffset -= 1.5;
+        }
+        if (entity.getType().isIn(ThermiaTags.EntityType.HAS_WOOL)) {
+            coldOffset += 4.5;
+            heatOffset -= 2.5;
+        }
+        if (entity.getType().isIn(ThermiaTags.EntityType.UNDEAD_MOBS)) {
+            coldOffset += 10;
+            heatOffset += 3;
         }
 
         var attributeInstance = entity.getAttributes().getCustomInstance(ThermiaAttributes.COLD_OFFSET_THRESHOLD);
