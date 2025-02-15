@@ -22,8 +22,8 @@ public class CalculateBaseTemperature implements ServerEntityEvents.Load {
             return;
         }
 
-        double regionalTemperature = TemperatureHelper.getRegionalTemperature(entity.getWorld(), entity.getBlockPos());
-        baseTemperature = (baseTemperature + regionalTemperature) / 2;
+        double ambientTemperature = TemperatureHelper.getAmbientTemperature(entity.getWorld(), entity.getBlockPos());
+        baseTemperature = (baseTemperature + ambientTemperature) / 2;
 
         var attributeInstance = livingEntity.getAttributes().getCustomInstance(ThermiaAttributes.BASE_TEMPERATURE);
         if (attributeInstance != null) {
