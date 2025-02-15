@@ -3,11 +3,13 @@ package sylenthuntress.thermia;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sylenthuntress.thermia.event.CalculateBaseTemperature;
 import sylenthuntress.thermia.registry.*;
 import sylenthuntress.thermia.registry.commands.TemperatureCommand;
 
@@ -30,6 +32,8 @@ public class Thermia implements ModInitializer {
         ThermiaComponents.registerAll();
         ThermiaAttachmentTypes.init();
         ThermiaPotions.registerAll();
+        ServerEntityEvents.ENTITY_LOAD.register(new CalculateBaseTemperature());
+
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) ->
                 TemperatureCommand.register(dispatcher.getRoot())
         );

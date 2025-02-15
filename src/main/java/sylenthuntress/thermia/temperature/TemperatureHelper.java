@@ -26,14 +26,14 @@ public abstract class TemperatureHelper {
     public static double getRegionalTemperature(World world, BlockPos blockPos) {
         final DimensionType dimension = world.getDimension();
         final RegistryEntry<Biome> biome = world.getBiome(blockPos);
-        float regionalTemperature = biome.value().getTemperature();
+        float biomeTemperature = biome.value().getTemperature();
 
         if (dimension.ultrawarm())
-            regionalTemperature *= 2;
+            biomeTemperature *= 2;
 
         // Guard return for skylight calculations in nether-like dimensions
         if (dimension.hasCeiling() || dimension.hasFixedTime())
-            return (-1 + regionalTemperature) * 5;
+            return (-1 + biomeTemperature) * 5;
 
         // Calculate skylight modifier
         float maxTimeBonus = biome.isIn(ConventionalBiomeTags.IS_DRY) ? 2.5F : 1F;
@@ -68,22 +68,26 @@ public abstract class TemperatureHelper {
         }
 
         // Apply skylight modifier
-        if (regionalTemperature >= 0) {
-            regionalTemperature *= timeBonus;
+        if (biomeTemperature >= 0) {
+            biomeTemperature *= timeBonus;
         }
         else {
-            regionalTemperature = -(-regionalTemperature * timeBonus);
+            biomeTemperature = -(-biomeTemperature * timeBonus);
         }
 
-        return (-1 + regionalTemperature) * 5;
+        double regionalTemperature = 100 + (-1 + biomeTemperature) * 5;
+
+        regionalTemperature -= (blockPos.getY() - world.getSeaLevel()) * 0.13F;
+
+        return regionalTemperature;
     }
 
     public static double getBlockTemperature(World world, BlockPos blockPos) {
         double blockTemperature = 0;
-        if (world.getBlockState(blockPos).get(Properties.WATERLOGGED, false) || world.getBlockState(blockPos).isLiquid())
+        if (world.getBlockState(blockPos).get(Properties.WATERLOGGED, false) || world.getBlockState(blockPos).isLiquid()) {
             blockTemperature = getFluidTemperature(world, blockPos);
+        }
 
-        blockTemperature -= (blockPos.getY() - world.getSeaLevel()) * 0.13F;
         blockTemperature += world.getLightLevel(LightType.BLOCK, blockPos) / 4f;
 
         // Early guard-return
@@ -123,10 +127,9 @@ public abstract class TemperatureHelper {
     }
 
     public static double getAmbientTemperature(World world, BlockPos blockPos) {
-        double ambientTemperature = 100;
-        double biomeTemperature = getRegionalTemperature(world, blockPos);
+        double regionalTemperature = getRegionalTemperature(world, blockPos);
         double blockTemperature = getBlockTemperature(world, blockPos);
-        return ambientTemperature + biomeTemperature + blockTemperature;
+        return regionalTemperature + blockTemperature;
     }
 
     public static TemperatureManager getTemperatureManager(LivingEntity entity) {
