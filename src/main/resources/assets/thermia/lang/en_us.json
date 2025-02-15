@@ -35,7 +35,7 @@
   "tag.entity_type.climate.has_wool": "Has Wool",
   "tag.entity_type.climate.temperature_immune": "Temperature Immune",
   "tag.entity_type.climate.unaffected": "Unaffected by Climate",
-  "tag.entity_type.climate.undead_mobs": "Undead",
+  "tag.entity_type.climate.is_undead": "Undead",
   "temperature.modifier.cold.0": "-%s°F degrees ❄",
   "temperature.modifier.cold.1": "-%s%% temperature ❄",
   "temperature.modifier.hot.0": "+%s°F degrees \uD83D\uDD25",

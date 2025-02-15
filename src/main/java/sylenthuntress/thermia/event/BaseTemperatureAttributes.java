@@ -68,7 +68,7 @@ public class BaseTemperatureAttributes implements ServerEntityEvents.Load {
             coldOffset += 4.5;
             heatOffset -= 2.5;
         }
-        if (entity.getType().isIn(ThermiaTags.EntityType.UNDEAD_MOBS)) {
+        if (entity.getType().isIn(ThermiaTags.EntityType.UNDEAD)) {
             coldOffset += 10;
             heatOffset += 3;
         }

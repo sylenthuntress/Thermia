@@ -28,9 +28,9 @@ public class ThermiaTags {
                 RegistryKeys.ENTITY_TYPE,
                 Thermia.modIdentifier("climate/has_wool")
         );
-        public static final TagKey<net.minecraft.entity.EntityType<?>> UNDEAD_MOBS = TagKey.of(
+        public static final TagKey<net.minecraft.entity.EntityType<?>> UNDEAD = TagKey.of(
                 RegistryKeys.ENTITY_TYPE,
-                Thermia.modIdentifier("climate/undead_mobs")
+                Thermia.modIdentifier("climate/is_undead")
         );
         public static final TagKey<net.minecraft.entity.EntityType<?>> TEMPERATURE_IMMUNE = TagKey.of(
                 RegistryKeys.ENTITY_TYPE,

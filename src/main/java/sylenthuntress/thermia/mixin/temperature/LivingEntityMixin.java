@@ -144,7 +144,7 @@ public abstract class LivingEntityMixin extends Entity implements LivingEntityAc
                     interactionTemperatures[0] -= 1.5;
                 if (source.isIn(DamageTypeTags.IS_FIRE))
                     interactionTemperatures[1] += 1.5;
-                if (source.getAttacker().getType().isIn(ThermiaTags.EntityType.UNDEAD_MOBS))
+                if (source.getAttacker().getType().isIn(ThermiaTags.EntityType.UNDEAD))
                     interactionTemperatures[0] -= 0.1;
                 if (source.getAttacker().getType().isIn(EntityTypeTags.FREEZE_HURTS_EXTRA_TYPES))
                     interactionTemperatures[1] += 0.5;
