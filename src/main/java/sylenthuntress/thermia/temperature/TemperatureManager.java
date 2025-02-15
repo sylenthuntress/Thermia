@@ -10,6 +10,8 @@ import sylenthuntress.thermia.registry.ThermiaAttributes;
 import sylenthuntress.thermia.registry.ThermiaStatusEffects;
 import sylenthuntress.thermia.registry.ThermiaTags;
 
+import java.util.Comparator;
+
 @SuppressWarnings("UnstableApiUsage")
 public class TemperatureManager {
     protected final LivingEntity entity;
@@ -168,11 +170,15 @@ public class TemperatureManager {
             return entity.getAttributeValue(ThermiaAttributes.BASE_TEMPERATURE);
         }
 
+        var temperatureModifiers = getTemperatureModifiers().getList();
+        temperatureModifiers.sort(Comparator.comparingInt(modifier -> modifier.operation().ordinal()));
+
         double temperature = getTemperature();
-        for (TemperatureModifier modifier : getTemperatureModifiers().getList()) {
+        for (TemperatureModifier modifier : temperatureModifiers) {
             switch (modifier.operation()) {
                 case ADD_VALUE -> temperature += modifier.amount();
                 case ADD_MULTIPLIED_VALUE -> temperature += temperature * modifier.amount();
+                case SET_TOTAL -> temperature = modifier.amount();
             }
         }
         return temperature;

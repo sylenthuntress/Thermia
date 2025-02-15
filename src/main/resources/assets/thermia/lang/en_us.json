@@ -30,6 +30,7 @@
   "temperature.modifier.random.neutral": "%s...%s°F degrees",
   "temperature.modifier.random.cold": "%s...%s°F degrees ❄",
   "temperature.modifier.random.hot": "%s...%s°F degrees \uD83D\uDD25",
+  "temperature.modifier.new": "-> %s°F degrees",
   "temperature.modifier.cold.0": "-%s°F degrees ❄",
   "temperature.modifier.cold.1": "-%s%% temperature ❄",
   "temperature.modifier.hot.0": "+%s°F degrees \uD83D\uDD25",

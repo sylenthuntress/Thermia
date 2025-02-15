@@ -31,8 +31,8 @@ public record TemperatureModifier(Identifier id, double amount, TemperatureModif
 
     public enum Operation implements StringIdentifiable {
         ADD_VALUE("add_value", 0, EntityAttributeModifier.Operation.ADD_VALUE),
-        ADD_MULTIPLIED_VALUE("add_multiplied_value", 1, EntityAttributeModifier.Operation.ADD_MULTIPLIED_BASE);
-        
+        ADD_MULTIPLIED_VALUE("add_multiplied_value", 1, EntityAttributeModifier.Operation.ADD_MULTIPLIED_BASE),
+        SET_TOTAL("set_total", 2, EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
 
         public static final Codec<TemperatureModifier.Operation> CODEC = StringIdentifiable.createCodec(TemperatureModifier.Operation::values);
 
@@ -58,7 +58,8 @@ public record TemperatureModifier(Identifier id, double amount, TemperatureModif
         public static Operation asTemperatureOperation(EntityAttributeModifier.Operation operation) {
             return switch (operation) {
                 case ADD_VALUE -> ADD_VALUE;
-                case ADD_MULTIPLIED_BASE, ADD_MULTIPLIED_TOTAL -> ADD_MULTIPLIED_VALUE;
+                case ADD_MULTIPLIED_BASE -> ADD_MULTIPLIED_VALUE;
+                case ADD_MULTIPLIED_TOTAL -> SET_TOTAL;
             };
         }
 

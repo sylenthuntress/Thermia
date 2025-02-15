@@ -10,7 +10,7 @@ import sylenthuntress.thermia.Thermia;
 import sylenthuntress.thermia.registry.status_effects.FrostResistanceEffect;
 import sylenthuntress.thermia.registry.status_effects.HyperthermiaEffect;
 import sylenthuntress.thermia.registry.status_effects.HypothermiaEffect;
-import sylenthuntress.thermia.registry.status_effects.Thermoregulation;
+import sylenthuntress.thermia.registry.status_effects.ThermoregulationEffect;
 
 public class ThermiaStatusEffects {
     public static final RegistryEntry<StatusEffect> HYPOTHERMIA = register(
@@ -27,7 +27,7 @@ public class ThermiaStatusEffects {
     );
     public static final RegistryEntry<StatusEffect> THERMOREGULATION = register(
             "thermoregulation",
-            new Thermoregulation(StatusEffectCategory.BENEFICIAL, Colors.LIGHT_GRAY)
+            new ThermoregulationEffect(StatusEffectCategory.BENEFICIAL, Colors.LIGHT_GRAY)
     );
 
     private static RegistryEntry<StatusEffect> register(String id, StatusEffect statusEffect) {
