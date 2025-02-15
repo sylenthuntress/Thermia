@@ -93,27 +93,34 @@ public abstract class TemperatureHelper {
     }
 
     public static double getBlockTemperature(World world, BlockPos blockPos) {
+        final BlockState blockState = world.getBlockState(blockPos);
         double blockTemperature = 0;
-        if (world.getBlockState(blockPos).get(Properties.WATERLOGGED, false) || world.getBlockState(blockPos).isLiquid())
+        if (blockState.get(Properties.WATERLOGGED, false) || blockState.isLiquid())
             blockTemperature = getFluidTemperature(world, blockPos);
 
-        blockTemperature -= (blockPos.getY() - world.getSeaLevel()) * 0.13F;
-        blockTemperature += world.getLightLevel(LightType.BLOCK, blockPos) / 4f;
+        blockTemperature -= (blockPos.getY() - world.getSeaLevel()) * 0.1F;
+        blockTemperature += world.getLightLevel(LightType.BLOCK, blockPos) / 4F;
 
         // Early guard-return
-        if (!world.getBlockState(blockPos).isAir())
+        if (!blockState.isAir())
             return blockTemperature;
 
         for (BlockPos pos : BlockPos.iterate(blockPos.add(-4, -4, -4), blockPos.add(4, 4, 4))) {
-            BlockState blockState = world.getBlockState(pos);
-            if (blockState.isIn(ThermiaTags.Block.COLD_BLOCKS))
-                blockTemperature -= 0.1;
-            if (blockState.isIn(ThermiaTags.Block.HOT_BLOCKS))
-                blockTemperature += 0.1;
+            blockTemperature += world.getReceivedRedstonePower(pos) / 8F;
 
-            FluidState fluidState = blockState.getFluidState();
-            if (fluidState.isIn(FluidTags.LAVA) && fluidState.isStill())
+            final BlockState nearbyBlock = world.getBlockState(pos);
+            if (nearbyBlock.isIn(ThermiaTags.Block.COLD_BLOCKS)) {
+                blockTemperature -= 0.2;
+            }
+            if (nearbyBlock.isIn(ThermiaTags.Block.HOT_BLOCKS)
+                    || nearbyBlock.get(Properties.LIT, false)) {
+                blockTemperature += 0.2;
+            }
+
+            final FluidState fluidState = nearbyBlock.getFluidState();
+            if (fluidState.isIn(FluidTags.LAVA) && fluidState.isStill()) {
                 blockTemperature += 1;
+            }
         }
 
         return blockTemperature;
@@ -123,13 +130,17 @@ public abstract class TemperatureHelper {
         double fluidTemperature = 0;
 
         for (BlockPos pos : BlockPos.iterate(blockPos.add(-1, -2, -1), blockPos.add(1, 2, 1))) {
-            FluidState fluidState = world.getFluidState(pos);
-            if (fluidState.isIn(FluidTags.LAVA))
+            final FluidState fluidState = world.getFluidState(pos);
+            if (fluidState.isIn(FluidTags.LAVA)) {
                 fluidTemperature += 1f;
-            if (world.getBlockState(pos).get(Properties.WATERLOGGED, false) || fluidState.isIn(FluidTags.WATER)) {
-                if (getRegionalTemperature(world, pos) > 0)
+            }
+
+            if (world.getBlockState(pos).get(Properties.WATERLOGGED, false)
+                    || fluidState.isIn(FluidTags.WATER)) {
+                if (getRegionalTemperature(world, pos) < 0) {
                     fluidTemperature -= 0.1f;
-                fluidTemperature -= 0.025f;
+                }
+                fluidTemperature -= 0.1f;
             }
         }
 

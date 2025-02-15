@@ -55,7 +55,7 @@ public class TemperatureCommand {
         targetNode.addChild(GetEntityTemperatureNode.get());
         targetNode.addChild(SetTemperatureNode.get());
         targetNode.addChild(AddTemperatureNode.get());
-        targetNode.addChild(ModifyTemperatureNode.get());
+        targetNode.addChild(ModifierTemperatureNode.get());
 
         //  Add the sub-nodes as children of the position selection node
         var positionNode = CommandManager.argument("position", BlockPosArgumentType.blockPos())
@@ -273,7 +273,7 @@ public class TemperatureCommand {
 
     }
 
-    public static class ModifyTemperatureNode {
+    public static class ModifierTemperatureNode {
         public static LiteralCommandNode<ServerCommandSource> get() {
             return CommandManager.literal("modifier")
                     .then(CommandManager.literal("add")
@@ -287,13 +287,12 @@ public class TemperatureCommand {
                             .then(CommandManager.argument("id", IdentifierArgumentType.identifier())
                                     .suggests((context, builder) -> CommandSource.suggestIdentifiers(streamModifiers(EntityArgumentType.getEntity(context, "target")), builder))
                                     .executes(context -> executeRemove(context.getSource(), EntityArgumentType.getEntity(context, "target"), IdentifierArgumentType.getIdentifier(context, "id")))))
-                    .then(CommandManager.literal("amount")
                             .then(CommandManager.literal("get")
                                     .then(CommandManager.argument("id", IdentifierArgumentType.identifier())
                                             .suggests((context, builder) -> CommandSource.suggestIdentifiers(streamModifiers(EntityArgumentType.getEntity(context, "target")), builder))
                                             .executes(context -> executeGet(context.getSource(), EntityArgumentType.getEntity(context, "target"), IdentifierArgumentType.getIdentifier(context, "id"), 1))
                                             .then(CommandManager.argument("scale", FloatArgumentType.floatArg())
-                                                    .executes(context -> executeGet(context.getSource(), EntityArgumentType.getEntity(context, "target"), IdentifierArgumentType.getIdentifier(context, "id"), FloatArgumentType.getFloat(context, "scale"))))))).build();
+                                                    .executes(context -> executeGet(context.getSource(), EntityArgumentType.getEntity(context, "target"), IdentifierArgumentType.getIdentifier(context, "id"), FloatArgumentType.getFloat(context, "scale")))))).build();
         }
 
         private static int executeRemove(ServerCommandSource source, Entity target, Identifier id) throws CommandSyntaxException {
@@ -342,12 +341,14 @@ public class TemperatureCommand {
 
             source.sendFeedback(
                     () -> Text.stringifiedTranslatable(
-                            "commands.temperature.modifier.get.success",
+                            "commands.temperature.modifier.get.success" + modifier.operation().ordinal(),
                             id.toString(),
                             target.getName(),
                             TemperatureHelper.Conversions.convertForClient(
                                     source.getPlayer(),
-                                    modifier.amount()
+                                    modifier.operation() == TemperatureModifier.Operation.ADD_VALUE
+                                            ? modifier.amount()
+                                            : modifier.amount() * 100.0
                             )
                     ),
                     false

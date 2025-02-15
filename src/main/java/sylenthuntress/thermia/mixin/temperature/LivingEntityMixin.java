@@ -1,7 +1,6 @@
 package sylenthuntress.thermia.mixin.temperature;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
-import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBiomeTags;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
@@ -104,26 +103,32 @@ public abstract class LivingEntityMixin extends Entity implements LivingEntityAc
         thermia$temperatureManager = new TemperatureManager((LivingEntity) (Object) this);
         double coldOffsetThreshold = 2;
         double heatOffsetThreshold = 3;
-        if (this.getType().isIn(ThermiaTags.EntityType.COLD_MOBS))
-            coldOffsetThreshold += 15;
-        if (this.getType().isIn(ThermiaTags.EntityType.HOT_MOBS))
-            heatOffsetThreshold += 15;
-        if (this.getType().isIn(ThermiaTags.EntityType.NETHER_MOBS)) {
-            heatOffsetThreshold += 10;
-            coldOffsetThreshold += 6;
-        }
-        if (this.getType().isIn(ThermiaTags.EntityType.UNDEAD_MOBS)) {
-            heatOffsetThreshold += 20;
-            coldOffsetThreshold += 20;
-        }
-        if (!this.isPlayer()) {
-            if (world.getBiome(this.getBlockPos()).isIn(ConventionalBiomeTags.IS_COLD))
-                coldOffsetThreshold += 5;
-            if (world.getBiome(this.getBlockPos()).isIn(ConventionalBiomeTags.IS_DRY)) {
-                heatOffsetThreshold += 5;
-                coldOffsetThreshold += 5;
-            }
-        }
+//        if (this.getType().isIn(ThermiaTags.EntityType.COLD_MOBS)) {
+//            coldOffsetThreshold += 15;
+//        }
+//        if (this.getType().isIn(ThermiaTags.EntityType.HOT_MOBS)) {
+//            heatOffsetThreshold += 15;
+//        }
+//        if (this.getType().isIn(ThermiaTags.EntityType.NETHER_MOBS)) {
+//            heatOffsetThreshold += 10;
+//            coldOffsetThreshold += 6;
+//        }
+//        if (this.getType().isIn(ThermiaTags.EntityType.UNDEAD_MOBS)) {
+//            heatOffsetThreshold += 20;
+//            coldOffsetThreshold += 20;
+//        }
+//
+//        if (!this.isPlayer()) {
+//            final var biome = world.getBiome(this.getBlockPos());
+//
+//            if (biome.isIn(ConventionalBiomeTags.IS_COLD))
+//                coldOffsetThreshold += 15;
+//            if (biome.isIn(ConventionalBiomeTags.IS_DRY)) {
+//                heatOffsetThreshold += 5;
+//                coldOffsetThreshold += 5;
+//            }
+//        }
+
         thermia$setAttributeBase(ThermiaAttributes.COLD_OFFSET_THRESHOLD, coldOffsetThreshold);
         thermia$setAttributeBase(ThermiaAttributes.HEAT_OFFSET_THRESHOLD, heatOffsetThreshold);
     }

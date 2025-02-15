@@ -12,6 +12,8 @@
   "commands.temperature.get.position.success": "%s temperature at %s is %s",
   "commands.temperature.modifier.add.success": "Successfully added modifier %s to %s!",
   "commands.temperature.modifier.remove.success": "Successfully removed modifier %s from %s!",
+  "commands.temperature.modifier.get.success.0": "Value of additive modifier %s for %s is %s!",
+  "commands.temperature.modifier.get.success.1": "Value of multiplicative modifier %s for %s is %s%!",
   "effect.duration.thermia": "Regulate your temperature!",
   "effect.thermia.frost_resistance": "Frost Resistance",
   "effect.thermia.hyperthermia": "Hyperthermia",
