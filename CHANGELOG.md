@@ -15,10 +15,13 @@
 - Added `set_total` temperature modifier operation
 - Tweaked entity tags
 - Made mild optimizations
+- Added jar manifest
 
 **Bugfixes**
 
 - Fixed missing translations
 - Fixed some faulty conditions
+- I'm not fixing the bug that armor stands can sweat and shiver. I can, but it's REALLY funny.
 
-**Developer's Note**: I'm not fixing the bug that armor stands can sweat and shiver. I can, but it's REALLY funny.
+**Developer's Note**: Sorry for the major update so soon. Some of my planned features were larger than assumed, and I
+had more motivation than I thought ^v^
