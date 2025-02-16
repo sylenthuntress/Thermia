@@ -141,24 +141,45 @@ public abstract class TemperatureHelper {
         return fluidTemperature;
     }
 
+    @SuppressWarnings("DuplicateBranchesInSwitch")
+    public static double getSeasonalTemperature(World world) {
+        if (!FabricLoader.getInstance().isModLoaded("sereneseasons")) {
+            return 0;
+        }
+
+        double seasonTemperature = 0.0;
+
+        ServiceLoader<SereneSeasonsCompatBase> loader = ServiceLoader.load(SereneSeasonsCompatBase.class);
+        if (loader.findFirst().isEmpty()) {
+            return 0;
+        }
+        var seasonState = loader.findFirst().get().getSeasonState(world);
+        var season = seasonState.getSubSeason();
+
+        switch (season) {
+            case EARLY_AUTUMN -> seasonTemperature = 0.5;
+            case MID_AUTUMN -> seasonTemperature = 0;
+            case LATE_AUTUMN -> seasonTemperature = -0.5;
+            case EARLY_WINTER -> seasonTemperature = -1.25;
+            case MID_WINTER -> seasonTemperature = -2;
+            case LATE_WINTER -> seasonTemperature = -1.25;
+            case EARLY_SPRING -> seasonTemperature = -0.5;
+            case MID_SPRING -> seasonTemperature = 0;
+            case LATE_SPRING -> seasonTemperature = 0.5;
+            case EARLY_SUMMER -> seasonTemperature = 1.25;
+            case MID_SUMMER -> seasonTemperature = 2;
+            case LATE_SUMMER -> seasonTemperature = 1.25;
+        }
+
+        return seasonTemperature;
+    }
+
     public static double getAmbientTemperature(World world, BlockPos blockPos) {
         double regionalTemperature = getRegionalTemperature(world, blockPos);
         double blockTemperature = getBlockTemperature(world, blockPos);
+        double seasonalTemperature = getSeasonalTemperature(world);
 
-        if (FabricLoader.getInstance().isModLoaded("sereneseasons")) {
-            ServiceLoader<SereneSeasonsCompatBase> loader = ServiceLoader.load(SereneSeasonsCompatBase.class);
-            if (loader.findFirst().isEmpty()) {
-                return regionalTemperature + blockTemperature;
-            }
-            var season = loader.findFirst().get().getSeasonState(world).getSeason();
-            switch (season) {
-                case AUTUMN -> regionalTemperature -= 2;
-                case WINTER -> regionalTemperature -= 7;
-                case SUMMER -> regionalTemperature += 5;
-            }
-        }
-
-        return regionalTemperature + blockTemperature;
+        return regionalTemperature + blockTemperature + seasonalTemperature;
     }
 
     public static TemperatureManager getTemperatureManager(LivingEntity entity) {

@@ -6,6 +6,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
 import com.mojang.brigadier.tree.CommandNode;
 import com.mojang.brigadier.tree.LiteralCommandNode;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.argument.BlockPosArgumentType;
 import net.minecraft.command.argument.EntityArgumentType;
@@ -18,11 +19,13 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import sylenthuntress.thermia.compat.SereneSeasonsCompatBase;
 import sylenthuntress.thermia.registry.ThermiaAttributes;
 import sylenthuntress.thermia.temperature.TemperatureHelper;
 import sylenthuntress.thermia.temperature.TemperatureManager;
 import sylenthuntress.thermia.temperature.TemperatureModifier;
 
+import java.util.ServiceLoader;
 import java.util.stream.Stream;
 
 public class TemperatureCommand {
@@ -43,6 +46,9 @@ public class TemperatureCommand {
     );
     private static final DynamicCommandExceptionType UNLOADED_POSITION_EXCEPTION = new DynamicCommandExceptionType(
             position -> Text.stringifiedTranslatable("commands.temperature.failure.position.unloaded", position)
+    );
+    private static final DynamicCommandExceptionType ODD_EXCEPTION = new DynamicCommandExceptionType(
+            none -> Text.stringifiedTranslatable("commands.temperature.failure.what")
     );
 
     // Thanks to eggohito for the suggestion on optimizing this!
@@ -376,7 +382,7 @@ public class TemperatureCommand {
 
     public static class GetPositionTemperatureNode {
         public static LiteralCommandNode<ServerCommandSource> get() {
-            return CommandManager.literal("get")
+            var node = CommandManager.literal("get")
                     .executes(context -> executeAmbient(context.getSource(), BlockPosArgumentType.getBlockPos(context, "position"), 1.0F))
                     .then(CommandManager.literal("ambient")
                             .executes(context -> executeAmbient(context.getSource(), BlockPosArgumentType.getBlockPos(context, "position"), 1))
@@ -394,6 +400,17 @@ public class TemperatureCommand {
                             .executes(context -> executeRegional(context.getSource(), BlockPosArgumentType.getBlockPos(context, "position"), 1))
                             .then(CommandManager.argument("scale", FloatArgumentType.floatArg())
                                     .executes(context -> executeRegional(context.getSource(), BlockPosArgumentType.getBlockPos(context, "position"), FloatArgumentType.getFloat(context, "scale"))))).build();
+
+            if (FabricLoader.getInstance().isModLoaded("sereneseasons")) {
+                node.addChild(
+                        CommandManager.literal("seasonal")
+                                .executes(context -> executeSeasonal(context.getSource(), 1))
+                                .then(CommandManager.argument("scale", FloatArgumentType.floatArg())
+                                        .executes(context -> executeSeasonal(context.getSource(), FloatArgumentType.getFloat(context, "scale")))).build()
+                );
+            }
+
+            return node;
         }
 
         private static int executeRegional(ServerCommandSource source, BlockPos blockPos, float multiplier) throws CommandSyntaxException {
@@ -474,6 +491,27 @@ public class TemperatureCommand {
             );
 
             return (int) ((fluidTemperature * multiplier) * 1000);
+        }
+
+
+        private static int executeSeasonal(ServerCommandSource source, float multiplier) throws CommandSyntaxException {
+            World world = source.getWorld();
+            ServiceLoader<SereneSeasonsCompatBase> loader = ServiceLoader.load(SereneSeasonsCompatBase.class);
+            if (loader.findFirst().isEmpty()) {
+                throw ODD_EXCEPTION.create(0);
+            }
+            var season = loader.findFirst().get().getSeasonState(world).getSubSeason();
+
+            double seasonTemperature = TemperatureHelper.getSeasonalTemperature(source.getWorld());
+            source.sendFeedback(
+                    () -> Text.translatable(
+                            "commands.temperature.get.season.success",
+                            season.getSeason().name().toLowerCase(),
+                            seasonTemperature
+                    ),
+                    false
+            );
+            return (int) ((seasonTemperature * multiplier) * 1000);
         }
     }
 }
