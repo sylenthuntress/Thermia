@@ -1,5 +1,6 @@
 package sylenthuntress.thermia.config;
 
+import blue.endless.jankson.Comment;
 import io.wispforest.owo.config.Option;
 import io.wispforest.owo.config.annotation.*;
 import sylenthuntress.thermia.Thermia;
@@ -16,16 +17,20 @@ public class ThermiaConfigModel {
     // Client-only settings
     @SectionHeader(value = "clientSection")
     @Sync(value = Option.SyncMode.INFORM_SERVER)
+    @Comment(ThermiaConfigComments.TEMPERATURE_SCALE_DISPLAY)
     public TemperatureScaleDisplay temperatureScaleDisplay = TemperatureScaleDisplay.FAHRENHEIT;
 
     @Nest
     @Expanded
     @Sync(value = Option.SyncMode.NONE)
+    @Comment(ThermiaConfigComments.CLIMATE_EFFECT_DISPLAY)
     public ClimateEffectDisplay climateEffectDisplay = new ClimateEffectDisplay();
+
     // Temperature settings
     @SectionHeader(value = "temperatureSection")
     @Nest
     @Expanded
+    @Comment(ThermiaConfigComments.TEMPERATURE_CHECKS)
     public TemperatureChecks temperatureChecks = new TemperatureChecks();
     @Nest
     public EntityTemperature entityTemperature = new EntityTemperature();
@@ -33,11 +38,11 @@ public class ThermiaConfigModel {
     public static class ClimateEffectDisplay {
         @Sync(value = Option.SyncMode.INFORM_SERVER)
         public boolean SHOW_HYPOTHERMIA = true;
-        public boolean CUSTOM_HYPOTHERMIA = true;
+        public boolean CUSTOM_HYPOTHERMIA_DISPLAY = true;
 
         @Sync(value = Option.SyncMode.INFORM_SERVER)
         public boolean SHOW_HYPERTHERMIA = true;
-        public boolean CUSTOM_HYPERTHERMIA = true;
+        public boolean CUSTOM_HYPERTHERMIA_DISPLAY = true;
     }
 
     public static class TemperatureChecks {

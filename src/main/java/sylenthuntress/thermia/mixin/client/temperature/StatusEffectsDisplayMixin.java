@@ -39,9 +39,9 @@ public class StatusEffectsDisplayMixin {
     private void thermia$modifyDescription(Args args, @Local StatusEffectInstance effect) {
         if (!effect.getEffectType().matches(effectKey ->
                 (ThermiaStatusEffects.HYPOTHERMIA.matchesKey(effectKey)
-                        && Thermia.CONFIG.climateEffectDisplay.CUSTOM_HYPOTHERMIA())
+                        && Thermia.CONFIG.climateEffectDisplay.CUSTOM_HYPOTHERMIA_DISPLAY())
                         || (ThermiaStatusEffects.HYPERTHERMIA.matchesKey(effectKey)
-                        && Thermia.CONFIG.climateEffectDisplay.CUSTOM_HYPERTHERMIA())
+                        && Thermia.CONFIG.climateEffectDisplay.CUSTOM_HYPERTHERMIA_DISPLAY())
         )) {
             return;
         }
@@ -57,9 +57,9 @@ public class StatusEffectsDisplayMixin {
     private void thermia$disableDuration(Args args, @Local StatusEffectInstance effect) {
         if (!effect.getEffectType().matches(effectKey ->
                 (ThermiaStatusEffects.HYPOTHERMIA.matchesKey(effectKey)
-                        && Thermia.CONFIG.climateEffectDisplay.CUSTOM_HYPOTHERMIA())
+                        && Thermia.CONFIG.climateEffectDisplay.CUSTOM_HYPOTHERMIA_DISPLAY())
                         || (ThermiaStatusEffects.HYPERTHERMIA.matchesKey(effectKey)
-                        && Thermia.CONFIG.climateEffectDisplay.CUSTOM_HYPERTHERMIA())
+                        && Thermia.CONFIG.climateEffectDisplay.CUSTOM_HYPERTHERMIA_DISPLAY())
         ) || !effect.isInfinite()) {
             return;
         }
@@ -71,9 +71,9 @@ public class StatusEffectsDisplayMixin {
     private int thermia$enableLowAmplifier(int original, StatusEffectInstance effect) {
         return !effect.getEffectType().matches(effectKey ->
                 (ThermiaStatusEffects.HYPOTHERMIA.matchesKey(effectKey)
-                        && Thermia.CONFIG.climateEffectDisplay.CUSTOM_HYPOTHERMIA())
+                        && Thermia.CONFIG.climateEffectDisplay.CUSTOM_HYPOTHERMIA_DISPLAY())
                         || (ThermiaStatusEffects.HYPERTHERMIA.matchesKey(effectKey)
-                        && Thermia.CONFIG.climateEffectDisplay.CUSTOM_HYPERTHERMIA())
+                        && Thermia.CONFIG.climateEffectDisplay.CUSTOM_HYPERTHERMIA_DISPLAY())
         ) ? original : Math.max(1, original);
     }
 
@@ -81,9 +81,9 @@ public class StatusEffectsDisplayMixin {
     private int thermia$enableHighAmplifier(int original, StatusEffectInstance effect) {
         return !effect.getEffectType().matches(effectKey ->
                 (ThermiaStatusEffects.HYPOTHERMIA.matchesKey(effectKey)
-                        && Thermia.CONFIG.climateEffectDisplay.CUSTOM_HYPOTHERMIA())
+                        && Thermia.CONFIG.climateEffectDisplay.CUSTOM_HYPOTHERMIA_DISPLAY())
                         || (ThermiaStatusEffects.HYPERTHERMIA.matchesKey(effectKey)
-                        && Thermia.CONFIG.climateEffectDisplay.CUSTOM_HYPERTHERMIA())
+                        && Thermia.CONFIG.climateEffectDisplay.CUSTOM_HYPERTHERMIA_DISPLAY())
         ) && effect.getAmplifier() == 10 ? original : Math.max(9, original);
     }
 }
