@@ -101,36 +101,6 @@ public abstract class LivingEntityMixin extends Entity implements LivingEntityAc
     )
     private void thermia$setTemperatureManager(EntityType<? extends LivingEntity> entityType, World world, CallbackInfo ci) {
         thermia$temperatureManager = new TemperatureManager((LivingEntity) (Object) this);
-        double coldOffsetThreshold = 2;
-        double heatOffsetThreshold = 3;
-//        if (this.getType().isIn(ThermiaTags.EntityType.COLD_MOBS)) {
-//            coldOffsetThreshold += 15;
-//        }
-//        if (this.getType().isIn(ThermiaTags.EntityType.HOT_MOBS)) {
-//            heatOffsetThreshold += 15;
-//        }
-//        if (this.getType().isIn(ThermiaTags.EntityType.NETHER_MOBS)) {
-//            heatOffsetThreshold += 10;
-//            coldOffsetThreshold += 6;
-//        }
-//        if (this.getType().isIn(ThermiaTags.EntityType.UNDEAD_MOBS)) {
-//            heatOffsetThreshold += 20;
-//            coldOffsetThreshold += 20;
-//        }
-//
-//        if (!this.isPlayer()) {
-//            final var biome = world.getBiome(this.getBlockPos());
-//
-//            if (biome.isIn(ConventionalBiomeTags.IS_COLD))
-//                coldOffsetThreshold += 15;
-//            if (biome.isIn(ConventionalBiomeTags.IS_DRY)) {
-//                heatOffsetThreshold += 5;
-//                coldOffsetThreshold += 5;
-//            }
-//        }
-
-        thermia$setAttributeBase(ThermiaAttributes.COLD_OFFSET_THRESHOLD, coldOffsetThreshold);
-        thermia$setAttributeBase(ThermiaAttributes.HEAT_OFFSET_THRESHOLD, heatOffsetThreshold);
     }
 
     @Inject(
@@ -174,7 +144,7 @@ public abstract class LivingEntityMixin extends Entity implements LivingEntityAc
                     interactionTemperatures[0] -= 1.5;
                 if (source.isIn(DamageTypeTags.IS_FIRE))
                     interactionTemperatures[1] += 1.5;
-                if (source.getAttacker().getType().isIn(ThermiaTags.EntityType.UNDEAD_MOBS))
+                if (source.getAttacker().getType().isIn(ThermiaTags.EntityType.UNDEAD))
                     interactionTemperatures[0] -= 0.1;
                 if (source.getAttacker().getType().isIn(EntityTypeTags.FREEZE_HURTS_EXTRA_TYPES))
                     interactionTemperatures[1] += 0.5;

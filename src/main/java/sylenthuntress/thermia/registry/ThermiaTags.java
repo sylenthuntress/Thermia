@@ -16,29 +16,25 @@ public class ThermiaTags {
         );
     }
     public static class EntityType {
-        public static final TagKey<net.minecraft.entity.EntityType<?>> COLD_MOBS = TagKey.of(
+        public static final TagKey<net.minecraft.entity.EntityType<?>> CLIMATE_UNAFFECTED = TagKey.of(
                 RegistryKeys.ENTITY_TYPE,
-                Thermia.modIdentifier("climate/cold_mobs")
+                Thermia.modIdentifier("climate/unaffected")
         );
-        public static final TagKey<net.minecraft.entity.EntityType<?>> HOT_MOBS = TagKey.of(
+        public static final TagKey<net.minecraft.entity.EntityType<?>> HAS_FUR = TagKey.of(
                 RegistryKeys.ENTITY_TYPE,
-                Thermia.modIdentifier("climate/hot_mobs")
+                Thermia.modIdentifier("climate/has_fur")
         );
-        public static final TagKey<net.minecraft.entity.EntityType<?>> NETHER_MOBS = TagKey.of(
+        public static final TagKey<net.minecraft.entity.EntityType<?>> HAS_WOOL = TagKey.of(
                 RegistryKeys.ENTITY_TYPE,
-                Thermia.modIdentifier("climate/nether_mobs")
+                Thermia.modIdentifier("climate/has_wool")
         );
-        public static final TagKey<net.minecraft.entity.EntityType<?>> UNDEAD_MOBS = TagKey.of(
+        public static final TagKey<net.minecraft.entity.EntityType<?>> UNDEAD = TagKey.of(
                 RegistryKeys.ENTITY_TYPE,
-                Thermia.modIdentifier("climate/undead_mobs")
+                Thermia.modIdentifier("climate/is_undead")
         );
         public static final TagKey<net.minecraft.entity.EntityType<?>> TEMPERATURE_IMMUNE = TagKey.of(
                 RegistryKeys.ENTITY_TYPE,
                 Thermia.modIdentifier("climate/temperature_immune")
-        );
-        public static final TagKey<net.minecraft.entity.EntityType<?>> CLIMATE_AFFECTED = TagKey.of(
-                RegistryKeys.ENTITY_TYPE,
-                Thermia.modIdentifier("climate/affected")
         );
     }
     public static class Item {

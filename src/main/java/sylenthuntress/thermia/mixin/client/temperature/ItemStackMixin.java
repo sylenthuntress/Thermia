@@ -120,7 +120,7 @@ public abstract class ItemStackMixin implements ComponentHolder {
                 return;
             }
             slotIndex0 += 1;
-        } else if (modifier.operation().ordinal() <= 2) {
+        } else if (modifier.operation().ordinal() == 1) {
             if (slotIndex1 == modifierSlot.ordinal()) {
                 return;
             }
@@ -129,8 +129,7 @@ public abstract class ItemStackMixin implements ComponentHolder {
 
         // Combine similar modifiers into one tooltip
         double amount = 0;
-        for (TemperatureModifiersComponent.Entry entry
-                : instance.get(ThermiaComponents.TEMPERATURE_MODIFIERS).modifiers()) {
+        for (TemperatureModifiersComponent.Entry entry : instance.get(ThermiaComponents.TEMPERATURE_MODIFIERS).modifiers()) {
             if (entry.slot() != modifierSlot
                     || entry.modifier().operation().asAttributeOperation() != modifier.operation()) {
                 continue;
@@ -153,8 +152,16 @@ public abstract class ItemStackMixin implements ComponentHolder {
 
         // Change the display amount based on operation
         final double displayAmount;
-        if (modifier.operation().ordinal() > 0) {
+        if (modifier.operation().ordinal() == 1) {
             displayAmount = amount * 100.0;
+        } else if (modifier.operation().ordinal() == 2) {
+            consumer.accept(
+                    Text.translatable(
+                            "temperature.modifier.new",
+                            amount
+                    ).formatted(Formatting.BLUE)
+            );
+            return;
         } else {
             displayAmount = amount;
         }
@@ -173,7 +180,7 @@ public abstract class ItemStackMixin implements ComponentHolder {
                             Text.translatable("temperature.symbol.fire", " ")
                     ).formatted(Formatting.GOLD)
             );
-        } else if (amount < 0.0) {
+        } else {
             consumer.accept(
                     Text.translatable(
                             "temperature.modifier.cold."

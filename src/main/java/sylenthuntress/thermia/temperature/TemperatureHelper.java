@@ -2,6 +2,7 @@ package sylenthuntress.thermia.temperature;
 
 import io.wispforest.owo.config.ConfigSynchronizer;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBiomeTags;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
@@ -22,10 +23,13 @@ import net.minecraft.world.biome.Biome;
 import net.minecraft.world.dimension.DimensionType;
 import sylenthuntress.thermia.Thermia;
 import sylenthuntress.thermia.access.temperature.LivingEntityAccess;
+import sylenthuntress.thermia.compat.SereneSeasonsCompatBase;
 import sylenthuntress.thermia.config.ThermiaConfigModel;
 import sylenthuntress.thermia.registry.ThermiaComponents;
 import sylenthuntress.thermia.registry.ThermiaTags;
 import sylenthuntress.thermia.registry.data_components.SunBlockingComponent;
+
+import java.util.ServiceLoader;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -40,14 +44,14 @@ public abstract class TemperatureHelper {
     public static double getRegionalTemperature(World world, BlockPos blockPos) {
         final DimensionType dimension = world.getDimension();
         final RegistryEntry<Biome> biome = world.getBiome(blockPos);
-        float regionalTemperature = biome.value().getTemperature();
+        float biomeTemperature = biome.value().getTemperature();
 
         if (dimension.ultrawarm())
-            regionalTemperature *= 2;
+            biomeTemperature *= 2;
 
         // Guard return for skylight calculations in nether-like dimensions
         if (dimension.hasCeiling() || dimension.hasFixedTime())
-            return (-1 + regionalTemperature) * 5;
+            return (-1 + biomeTemperature) * 5;
 
         // Calculate skylight modifier
         float maxTimeBonus = biome.isIn(ConventionalBiomeTags.IS_DRY) ? 2.5F : 1F;
@@ -82,23 +86,27 @@ public abstract class TemperatureHelper {
         }
 
         // Apply skylight modifier
-        if (regionalTemperature >= 0) {
-            regionalTemperature *= timeBonus;
+        if (biomeTemperature >= 0) {
+            biomeTemperature *= timeBonus;
         }
         else {
-            regionalTemperature = -(-regionalTemperature * timeBonus);
+            biomeTemperature = -(-biomeTemperature * timeBonus);
         }
 
-        return (-1 + regionalTemperature) * 5;
+        double regionalTemperature = 100 + (-1 + biomeTemperature) * 5;
+
+        regionalTemperature -= (blockPos.getY() - world.getSeaLevel()) * 0.13F;
+
+        return regionalTemperature;
     }
 
     public static double getBlockTemperature(World world, BlockPos blockPos) {
         final BlockState blockState = world.getBlockState(blockPos);
         double blockTemperature = 0;
-        if (blockState.get(Properties.WATERLOGGED, false) || blockState.isLiquid())
+        if (blockState.get(Properties.WATERLOGGED, false) || blockState.isLiquid()) {
             blockTemperature = getFluidTemperature(world, blockPos);
+        }
 
-        blockTemperature -= (blockPos.getY() - world.getSeaLevel()) * 0.1F;
         blockTemperature += world.getLightLevel(LightType.BLOCK, blockPos) / 4F;
 
         // Early guard-return
@@ -147,11 +155,45 @@ public abstract class TemperatureHelper {
         return fluidTemperature;
     }
 
+    @SuppressWarnings("DuplicateBranchesInSwitch")
+    public static double getSeasonalTemperature(World world) {
+        if (!FabricLoader.getInstance().isModLoaded("sereneseasons")) {
+            return 0;
+        }
+
+        double seasonTemperature = 0.0;
+
+        ServiceLoader<SereneSeasonsCompatBase> loader = ServiceLoader.load(SereneSeasonsCompatBase.class);
+        if (loader.findFirst().isEmpty()) {
+            return 0;
+        }
+        var seasonState = loader.findFirst().get().getSeasonState(world);
+        var season = seasonState.getSubSeason();
+
+        switch (season) {
+            case EARLY_AUTUMN -> seasonTemperature = 0.5;
+            case MID_AUTUMN -> seasonTemperature = 0;
+            case LATE_AUTUMN -> seasonTemperature = -0.5;
+            case EARLY_WINTER -> seasonTemperature = -1.25;
+            case MID_WINTER -> seasonTemperature = -2;
+            case LATE_WINTER -> seasonTemperature = -1.25;
+            case EARLY_SPRING -> seasonTemperature = -0.5;
+            case MID_SPRING -> seasonTemperature = 0;
+            case LATE_SPRING -> seasonTemperature = 0.5;
+            case EARLY_SUMMER -> seasonTemperature = 1.25;
+            case MID_SUMMER -> seasonTemperature = 2;
+            case LATE_SUMMER -> seasonTemperature = 1.25;
+        }
+
+        return seasonTemperature;
+    }
+
     public static double getAmbientTemperature(World world, BlockPos blockPos) {
-        double ambientTemperature = 100;
-        double biomeTemperature = getRegionalTemperature(world, blockPos);
+        double regionalTemperature = getRegionalTemperature(world, blockPos);
         double blockTemperature = getBlockTemperature(world, blockPos);
-        return ambientTemperature + biomeTemperature + blockTemperature;
+        double seasonalTemperature = getSeasonalTemperature(world);
+
+        return regionalTemperature + blockTemperature + seasonalTemperature;
     }
 
     public static TemperatureManager getTemperatureManager(LivingEntity entity) {

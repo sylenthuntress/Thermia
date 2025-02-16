@@ -10,6 +10,8 @@ import sylenthuntress.thermia.registry.ThermiaAttributes;
 import sylenthuntress.thermia.registry.ThermiaStatusEffects;
 import sylenthuntress.thermia.registry.ThermiaTags;
 
+import java.util.Comparator;
+
 @SuppressWarnings("UnstableApiUsage")
 public class TemperatureManager {
     protected final LivingEntity entity;
@@ -159,19 +161,51 @@ public class TemperatureManager {
         ).value();
     }
 
+    public double getBaseTemperature() {
+        return entity.getAttributeValue(ThermiaAttributes.BASE_TEMPERATURE);
+    }
+
     public double getModifiedTemperature() {
         if (!hasTemperature()) {
             return entity.getAttributeValue(ThermiaAttributes.BASE_TEMPERATURE);
         }
 
+        var temperatureModifiers = getTemperatureModifiers().getList();
+        temperatureModifiers.sort(Comparator.comparingInt(modifier -> modifier.operation().ordinal()));
+
         double temperature = getTemperature();
-        for (TemperatureModifier modifier : getTemperatureModifiers().getList()) {
+        for (TemperatureModifier modifier : temperatureModifiers) {
             switch (modifier.operation()) {
                 case ADD_VALUE -> temperature += modifier.amount();
                 case ADD_MULTIPLIED_VALUE -> temperature += temperature * modifier.amount();
+                case SET_TOTAL -> temperature = modifier.amount();
             }
         }
         return temperature;
+    }
+
+    public float distanceFromTemperateBounds(double temperature) {
+        double clampedTemperature = Math.clamp(
+                temperature,
+                getBaseTemperature() - entity.getAttributeValue(ThermiaAttributes.COLD_OFFSET_THRESHOLD),
+                getBaseTemperature() + entity.getAttributeValue(ThermiaAttributes.HEAT_OFFSET_THRESHOLD)
+        );
+
+        return (float) Math.abs(temperature - clampedTemperature);
+    }
+
+    public float normalizeWithinTemperateBounds(double temperature) {
+        return normalizeWithinTemperateBounds(temperature, getBaseTemperature());
+    }
+
+    public float normalizeWithinTemperateBounds(double temperature, double baseTemperature) {
+        double clampedTemperature = Math.clamp(
+                temperature,
+                baseTemperature - entity.getAttributeValue(ThermiaAttributes.COLD_OFFSET_THRESHOLD),
+                baseTemperature + entity.getAttributeValue(ThermiaAttributes.HEAT_OFFSET_THRESHOLD)
+        );
+
+        return (float) Math.abs(1 - temperature / clampedTemperature);
     }
 
     public boolean canHaveTemperature() {
@@ -217,7 +251,7 @@ public class TemperatureManager {
     }
 
     public int getHypothermiaAmplifier() {
-        if (entity.hasStatusEffect(ThermiaStatusEffects.FROST_RESISTANCE)) {
+        if (entity.hasStatusEffect(ThermiaStatusEffects.FROST_RESISTANCE) || !entity.canFreeze()) {
             return -1;
         }
 
@@ -234,7 +268,7 @@ public class TemperatureManager {
     }
 
     public int getHyperthermiaAmplifier() {
-        if (entity.hasStatusEffect(StatusEffects.FIRE_RESISTANCE)) {
+        if (entity.hasStatusEffect(StatusEffects.FIRE_RESISTANCE) || entity.isFireImmune()) {
             return -1;
         }
 

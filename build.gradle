@@ -1,3 +1,4 @@
+//file:noinspection GroovyAssignabilityCheck
 import me.modmuss50.mpp.ReleaseType
 
 plugins {
@@ -101,6 +102,7 @@ repositories {
         url = "https://maven.terraformersmc.com/"
     }
     maven { url 'https://maven.wispforest.io/releases/' }
+    maven { url "https://api.modrinth.com/maven" }
 }
 
 dependencies {
@@ -112,6 +114,16 @@ dependencies {
     modImplementation("com.terraformersmc:modmenu:${modmenu_version}")
     annotationProcessor modImplementation("io.wispforest:owo-lib:${owo_version}")
     include "io.wispforest:owo-sentinel:${owo_version}"
+    modImplementation("com.terraformersmc:modmenu:${modmenu_version}")
+    annotationProcessor modImplementation("io.wispforest:owo-lib:${owo_version}")
+    include "io.wispforest:owo-sentinel:${owo_version}"
+
+    // Soft-dependencies
+    modCompileOnly "com.electronwill.night-config:toml:${nightconfig_version}"
+    modCompileOnly "com.electronwill.night-config:core:${nightconfig_version}"
+    modCompileOnly "maven.modrinth:serene-seasons:${serene_seasons_version}"
+    modCompileOnly "maven.modrinth:glitchcore:${glitchcore_version}"
+    compileOnly "net.jodah:typetools:0.6.3"
 }
 
 processResources {
@@ -162,6 +174,21 @@ base {
 }
 
 jar {
+    manifest {
+        attributes([
+                'Specification-Title'     : mod_name,
+                'Specification-Vendor'    : mod_author,
+                'Specification-Version'   : version,
+                'Implementation-Title'    : project.name,
+                'Implementation-Version'  : version,
+                'Implementation-Vendor'   : mod_author,
+                'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
+                'Timestamp'               : System.currentTimeMillis(),
+                'Built-On-Java'           : "${System.getProperty('java.vm.version')} (${System.getProperty('java.vm.vendor')})",
+                'Build-On-Minecraft'      : minecraft_version
+        ])
+    }
+
     from("LICENSE") {
         rename { "${it}_${project.base.archivesName.get()}" }
     }
