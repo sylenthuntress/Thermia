@@ -47,7 +47,7 @@ publishMods {
         requires("fabric-api")
         requires("owo-lib")
         optional("modmenu")
-        optional("sereneseasons")
+        optional("serene-seasons")
         incompatible("tough-as-nails")
 
         clientRequired = true
@@ -62,7 +62,7 @@ publishMods {
         requires("fabric-api")
         requires("owo-lib")
         optional("modmenu")
-        optional("sereneseasons")
+        optional("serene-seasons")
         incompatible("tough-as-nails")
     }
 
