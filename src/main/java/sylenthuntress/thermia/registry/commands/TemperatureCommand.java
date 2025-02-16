@@ -465,7 +465,7 @@ public class TemperatureCommand {
                             "commands.temperature.get.position.success",
                             "Block",
                             blockPos.toShortString(),
-                            blockTemperature
+                            97 + blockTemperature
                     ),
                     false
             );
@@ -485,7 +485,7 @@ public class TemperatureCommand {
                             "commands.temperature.get.position.success",
                             "Fluid",
                             blockPos.toShortString(),
-                            fluidTemperature
+                            97 + fluidTemperature
                     ),
                     false
             );
@@ -507,7 +507,7 @@ public class TemperatureCommand {
                     () -> Text.translatable(
                             "commands.temperature.get.season.success",
                             season.getSeason().name().toLowerCase(),
-                            seasonTemperature
+                            97 + seasonTemperature
                     ),
                     false
             );
