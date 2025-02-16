@@ -33,7 +33,7 @@ publishMods {
     version = "v" + project.version + "+" + project.minecraft_version
     type = ReleaseType.valueOf(project.stability)
     changelog = "# " + project.mod_name + " v" + project.version + "+" + project.minecraft_version +
-            "\n\n" + project.file("CHANGELOG.md").toString()
+            "\n\n" + project.file("CHANGELOG.md").getText()
 
     modLoaders.add("fabric")
 
