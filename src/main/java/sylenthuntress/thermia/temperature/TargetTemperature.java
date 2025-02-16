@@ -6,9 +6,9 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.codec.PacketCodecs;
+import sylenthuntress.thermia.config.ConfigHelper;
 import sylenthuntress.thermia.registry.ThermiaAttachmentTypes;
 import sylenthuntress.thermia.registry.ThermiaAttributes;
-import sylenthuntress.thermia.registry.ThermiaTags;
 
 @SuppressWarnings("UnstableApiUsage")
 public record TargetTemperature(double value) {
@@ -30,7 +30,7 @@ public record TargetTemperature(double value) {
     public static double calculateTargetTemperature(LivingEntity entity) {
         double targetTemperature;
         if (!TemperatureHelper.getTemperatureManager(entity).hasTemperature()
-                || entity.getType().isIn(ThermiaTags.EntityType.CLIMATE_UNAFFECTED)) {
+                || ConfigHelper.isInList$climateUnaffected(entity.getType())) {
             targetTemperature = entity.getAttributeValue(ThermiaAttributes.BASE_TEMPERATURE);
 
             entity.setAttached(

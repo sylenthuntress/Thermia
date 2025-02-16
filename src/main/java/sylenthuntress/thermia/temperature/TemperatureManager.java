@@ -1,9 +1,11 @@
 package sylenthuntress.thermia.temperature;
 
+import io.wispforest.owo.config.ConfigSynchronizer;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.registry.tag.FluidTags;
+import net.minecraft.server.network.ServerPlayerEntity;
 import sylenthuntress.thermia.Thermia;
 import sylenthuntress.thermia.registry.ThermiaAttachmentTypes;
 import sylenthuntress.thermia.registry.ThermiaAttributes;
@@ -111,6 +113,11 @@ public class TemperatureManager {
         int amplifier = getHypothermiaAmplifier();
         if (amplifier >= 0) {
             final var effect = ThermiaStatusEffects.HYPOTHERMIA;
+            boolean showIcon = entity instanceof ServerPlayerEntity player
+                    && (boolean) ConfigSynchronizer.getClientOptions(
+                    player,
+                    "thermia-config"
+            ).get(Thermia.CONFIG.keys.climateEffectDisplay_SHOW_HYPOTHERMIA);
 
             if (!entity.hasStatusEffect(effect) || entity.getStatusEffect(effect).isInfinite()) {
                 entity.setStatusEffect(new StatusEffectInstance(
@@ -119,13 +126,18 @@ public class TemperatureManager {
                         amplifier,
                         true,
                         false,
-                        true
+                        showIcon
                 ), null);
                 entity.getStatusEffect(effect).onApplied(entity);
             }
         }
         else if ((amplifier = getHyperthermiaAmplifier()) >= 0) {
             final var effect = ThermiaStatusEffects.HYPERTHERMIA;
+            boolean showIcon = entity instanceof ServerPlayerEntity player
+                    && (boolean) ConfigSynchronizer.getClientOptions(
+                    player,
+                    "thermia-config"
+            ).get(Thermia.CONFIG.keys.climateEffectDisplay_SHOW_HYPERTHERMIA);
 
             if (!entity.hasStatusEffect(effect) || entity.getStatusEffect(effect).isInfinite()) {
                 entity.setStatusEffect(new StatusEffectInstance(
@@ -134,7 +146,7 @@ public class TemperatureManager {
                         amplifier,
                         true,
                         false,
-                        true
+                        showIcon
                 ), null);
                 entity.getStatusEffect(effect).onApplied(entity);
             }
@@ -251,7 +263,9 @@ public class TemperatureManager {
     }
 
     public int getHypothermiaAmplifier() {
-        if (entity.hasStatusEffect(ThermiaStatusEffects.FROST_RESISTANCE) || !entity.canFreeze()) {
+        if (entity.hasStatusEffect(ThermiaStatusEffects.FROST_RESISTANCE)
+                || !entity.canFreeze()
+                || Thermia.CONFIG.entityTemperature.CAN_FREEZE()) {
             return -1;
         }
 
@@ -268,7 +282,9 @@ public class TemperatureManager {
     }
 
     public int getHyperthermiaAmplifier() {
-        if (entity.hasStatusEffect(StatusEffects.FIRE_RESISTANCE) || entity.isFireImmune()) {
+        if (entity.hasStatusEffect(StatusEffects.FIRE_RESISTANCE)
+                || entity.isFireImmune()
+                || Thermia.CONFIG.entityTemperature.CAN_OVERHEAT()) {
             return -1;
         }
 

@@ -22,18 +22,16 @@ import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.dimension.DimensionType;
 import sylenthuntress.thermia.Thermia;
-import sylenthuntress.thermia.access.temperature.LivingEntityAccess;
+import sylenthuntress.thermia.access.LivingEntityAccess;
 import sylenthuntress.thermia.compat.SereneSeasonsCompatBase;
-import sylenthuntress.thermia.config.ThermiaConfigModel;
 import sylenthuntress.thermia.registry.ThermiaComponents;
 import sylenthuntress.thermia.registry.ThermiaTags;
 import sylenthuntress.thermia.registry.data_components.SunBlockingComponent;
 
-import java.util.ServiceLoader;
-
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
+import java.util.ServiceLoader;
 
 @SuppressWarnings("deprecation")
 public abstract class TemperatureHelper {
@@ -42,6 +40,13 @@ public abstract class TemperatureHelper {
     );
 
     public static double getRegionalTemperature(World world, BlockPos blockPos) {
+        double regionalTemperature = 100.0F;
+
+        // Guard-return if config toggle is off
+        if (!Thermia.CONFIG.temperatureChecks.DO_REGIONAL()) {
+            return regionalTemperature;
+        }
+
         final DimensionType dimension = world.getDimension();
         final RegistryEntry<Biome> biome = world.getBiome(blockPos);
         float biomeTemperature = biome.value().getTemperature();
@@ -93,16 +98,20 @@ public abstract class TemperatureHelper {
             biomeTemperature = -(-biomeTemperature * timeBonus);
         }
 
-        double regionalTemperature = 100 + (-1 + biomeTemperature) * 5;
-
+        regionalTemperature += (-1 + biomeTemperature) * 5;
         regionalTemperature -= (blockPos.getY() - world.getSeaLevel()) * 0.13F;
-
         return regionalTemperature;
     }
 
     public static double getBlockTemperature(World world, BlockPos blockPos) {
-        final BlockState blockState = world.getBlockState(blockPos);
         double blockTemperature = 0;
+
+        // Guard-return if config toggle is off
+        if (!Thermia.CONFIG.temperatureChecks.DO_BLOCK()) {
+            return blockTemperature;
+        }
+
+        final BlockState blockState = world.getBlockState(blockPos);
         if (blockState.get(Properties.WATERLOGGED, false) || blockState.isLiquid()) {
             blockTemperature = getFluidTemperature(world, blockPos);
         }
@@ -137,6 +146,11 @@ public abstract class TemperatureHelper {
     public static double getFluidTemperature(World world, BlockPos blockPos) {
         double fluidTemperature = 0;
 
+        // Guard-return if config toggle is off
+        if (!Thermia.CONFIG.temperatureChecks.DO_FLUID()) {
+            return fluidTemperature;
+        }
+
         for (BlockPos pos : BlockPos.iterate(blockPos.add(-1, -2, -1), blockPos.add(1, 2, 1))) {
             final FluidState fluidState = world.getFluidState(pos);
             if (fluidState.isIn(FluidTags.LAVA)) {
@@ -157,11 +171,12 @@ public abstract class TemperatureHelper {
 
     @SuppressWarnings("DuplicateBranchesInSwitch")
     public static double getSeasonalTemperature(World world) {
-        if (!FabricLoader.getInstance().isModLoaded("sereneseasons")) {
-            return 0;
-        }
-
         double seasonTemperature = 0.0;
+
+        // Guard-return if config toggle is off
+        if (!FabricLoader.getInstance().isModLoaded("sereneseasons") || Thermia.CONFIG.temperatureChecks.DO_SEASONAL()) {
+            return seasonTemperature;
+        }
 
         ServiceLoader<SereneSeasonsCompatBase> loader = ServiceLoader.load(SereneSeasonsCompatBase.class);
         if (loader.findFirst().isEmpty()) {
@@ -210,7 +225,9 @@ public abstract class TemperatureHelper {
     }
 
     @SuppressWarnings("unused")
-    public static class Conversions {
+    public enum TemperatureScaleDisplay {
+        FAHRENHEIT, CELSIUS, KELVIN;
+
         public static double celsiusToFahrenheit(double temperature) {
             return (temperature * 9 / 5) + 32;
         }
@@ -236,7 +253,7 @@ public abstract class TemperatureHelper {
         }
 
         public static Text convertForClient(ServerPlayerEntity player, double temperature) {
-            @SuppressWarnings("DataFlowIssue") var temperatureScaleDisplay = (ThermiaConfigModel.TemperatureScaleDisplay)
+            @SuppressWarnings("DataFlowIssue") var temperatureScaleDisplay = (TemperatureScaleDisplay)
                     ConfigSynchronizer.getClientOptions(
                             player,
                             "thermia-config"

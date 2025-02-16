@@ -26,7 +26,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import sylenthuntress.thermia.access.temperature.LivingEntityAccess;
+import sylenthuntress.thermia.access.LivingEntityAccess;
 import sylenthuntress.thermia.registry.ThermiaAttributes;
 import sylenthuntress.thermia.registry.ThermiaComponents;
 import sylenthuntress.thermia.registry.ThermiaStatusEffects;

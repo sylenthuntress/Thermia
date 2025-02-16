@@ -1,4 +1,4 @@
-package sylenthuntress.thermia.access.temperature;
+package sylenthuntress.thermia.access;
 
 import sylenthuntress.thermia.temperature.TemperatureManager;
 

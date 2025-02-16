@@ -7,7 +7,7 @@ import net.minecraft.component.type.ConsumableComponent;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
-import sylenthuntress.thermia.access.temperature.LivingEntityAccess;
+import sylenthuntress.thermia.access.LivingEntityAccess;
 import sylenthuntress.thermia.temperature.TemperatureManager;
 
 import java.util.Random;

@@ -116,7 +116,7 @@ public class TemperatureCommand {
                             "commands.temperature.get.entity.success",
                             "Base",
                             target.getName(),
-                            TemperatureHelper.Conversions.convertForClient(
+                            TemperatureHelper.TemperatureScaleDisplay.convertForClient(
                                     source.getPlayer(),
                                     baseTemperature
                             )
@@ -137,7 +137,7 @@ public class TemperatureCommand {
                             "commands.temperature.get.entity.success",
                             "Current",
                             target.getName(),
-                            TemperatureHelper.Conversions.convertForClient(
+                            TemperatureHelper.TemperatureScaleDisplay.convertForClient(
                                     source.getPlayer(),
                                     temperatureManager.getModifiedTemperature()
                             )
@@ -158,7 +158,7 @@ public class TemperatureCommand {
                             "commands.temperature.get.position.success",
                             "Regional",
                             target.getName(),
-                            TemperatureHelper.Conversions.convertForClient(
+                            TemperatureHelper.TemperatureScaleDisplay.convertForClient(
                                     source.getPlayer(),
                                     regionalTemperature
                             )
@@ -180,7 +180,7 @@ public class TemperatureCommand {
                             "commands.temperature.get.entity.success",
                             "Target",
                             target.getName(),
-                            TemperatureHelper.Conversions.convertForClient(
+                            TemperatureHelper.TemperatureScaleDisplay.convertForClient(
                                     source.getPlayer(),
                                     targetTemperature
                             )
@@ -201,7 +201,7 @@ public class TemperatureCommand {
                             "commands.temperature.get.entity.success",
                             "Unmodified",
                             target.getName(),
-                            TemperatureHelper.Conversions.convertForClient(
+                            TemperatureHelper.TemperatureScaleDisplay.convertForClient(
                                     source.getPlayer(),
                                     temperatureManager.getTemperature()
                             )
@@ -228,11 +228,11 @@ public class TemperatureCommand {
                     () -> Text.translatable(
                             "commands.temperature.change.success",
                             target.getName(),
-                            TemperatureHelper.Conversions.convertForClient(
+                            TemperatureHelper.TemperatureScaleDisplay.convertForClient(
                                     source.getPlayer(),
                                     temperatureManager.getTemperature()
                             ),
-                            TemperatureHelper.Conversions.convertForClient(
+                            TemperatureHelper.TemperatureScaleDisplay.convertForClient(
                                     source.getPlayer(),
                                     value
                             )
@@ -260,11 +260,11 @@ public class TemperatureCommand {
                     () -> Text.translatable(
                             "commands.temperature.change.success",
                             target.getName(),
-                            TemperatureHelper.Conversions.convertForClient(
+                            TemperatureHelper.TemperatureScaleDisplay.convertForClient(
                                     source.getPlayer(),
                                     newTemperature - value
                             ),
-                            TemperatureHelper.Conversions.convertForClient(
+                            TemperatureHelper.TemperatureScaleDisplay.convertForClient(
                                     source.getPlayer(),
                                     newTemperature
                             )
@@ -391,7 +391,7 @@ public class TemperatureCommand {
                             "commands.temperature.modifier.get.success." + modifier.operation().ordinal(),
                             id.toString(),
                             target.getName(),
-                            TemperatureHelper.Conversions.convertForClient(
+                            TemperatureHelper.TemperatureScaleDisplay.convertForClient(
                                     source.getPlayer(),
                                     modifier.operation() == TemperatureModifier.Operation.ADD_VALUE
                                             ? modifier.amount()
@@ -474,7 +474,7 @@ public class TemperatureCommand {
                             "commands.temperature.get.position.success",
                             "Regional",
                             blockPos.toShortString(),
-                            TemperatureHelper.Conversions.convertForClient(
+                            TemperatureHelper.TemperatureScaleDisplay.convertForClient(
                                     source.getPlayer(),
                                     regionalTemperature
                             )
@@ -497,7 +497,7 @@ public class TemperatureCommand {
                             "commands.temperature.get.position.success",
                             "Ambient",
                             blockPos.toShortString(),
-                            TemperatureHelper.Conversions.convertForClient(
+                            TemperatureHelper.TemperatureScaleDisplay.convertForClient(
                                     source.getPlayer(),
                                     ambientTemperature
                             )
@@ -520,7 +520,7 @@ public class TemperatureCommand {
                             "commands.temperature.get.position.success",
                             "Block",
                             blockPos.toShortString(),
-                            TemperatureHelper.Conversions.convertForClient(
+                            TemperatureHelper.TemperatureScaleDisplay.convertForClient(
                                     source.getPlayer(),
                                     97 + blockTemperature
                             )
@@ -543,7 +543,7 @@ public class TemperatureCommand {
                             "commands.temperature.get.position.success",
                             "Fluid",
                             blockPos.toShortString(),
-                            TemperatureHelper.Conversions.convertForClient(
+                            TemperatureHelper.TemperatureScaleDisplay.convertForClient(
                                     source.getPlayer(),
                                     97 + fluidTemperature
                             )
@@ -568,7 +568,7 @@ public class TemperatureCommand {
                     () -> Text.translatable(
                             "commands.temperature.get.season.success",
                             season.getSeason().name().toLowerCase(),
-                            TemperatureHelper.Conversions.convertForClient(
+                            TemperatureHelper.TemperatureScaleDisplay.convertForClient(
                                     source.getPlayer(),
                                     97 + seasonTemperature
                             )

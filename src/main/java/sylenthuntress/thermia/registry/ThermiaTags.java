@@ -4,6 +4,7 @@ import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.TagKey;
 import sylenthuntress.thermia.Thermia;
 
+@SuppressWarnings("unused")
 public class ThermiaTags {
     public static class Block {
         public static final TagKey<net.minecraft.block.Block> COLD_BLOCKS = TagKey.of(
