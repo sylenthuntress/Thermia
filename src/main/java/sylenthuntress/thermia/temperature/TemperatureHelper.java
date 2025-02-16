@@ -1,6 +1,7 @@
 package sylenthuntress.thermia.temperature;
 
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBiomeTags;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
@@ -17,9 +18,12 @@ import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.dimension.DimensionType;
 import sylenthuntress.thermia.access.temperature.LivingEntityAccess;
+import sylenthuntress.thermia.compat.SereneSeasonsCompatBase;
 import sylenthuntress.thermia.registry.ThermiaComponents;
 import sylenthuntress.thermia.registry.ThermiaTags;
 import sylenthuntress.thermia.registry.data_components.SunBlockingComponent;
+
+import java.util.ServiceLoader;
 
 @SuppressWarnings("deprecation")
 public abstract class TemperatureHelper {
@@ -140,6 +144,20 @@ public abstract class TemperatureHelper {
     public static double getAmbientTemperature(World world, BlockPos blockPos) {
         double regionalTemperature = getRegionalTemperature(world, blockPos);
         double blockTemperature = getBlockTemperature(world, blockPos);
+
+        if (FabricLoader.getInstance().isModLoaded("sereneseasons")) {
+            ServiceLoader<SereneSeasonsCompatBase> loader = ServiceLoader.load(SereneSeasonsCompatBase.class);
+            if (loader.findFirst().isEmpty()) {
+                return regionalTemperature + blockTemperature;
+            }
+            var season = loader.findFirst().get().getSeasonState(world).getSeason();
+            switch (season) {
+                case AUTUMN -> regionalTemperature -= 2;
+                case WINTER -> regionalTemperature -= 7;
+                case SUMMER -> regionalTemperature += 5;
+            }
+        }
+
         return regionalTemperature + blockTemperature;
     }
 

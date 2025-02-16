@@ -5,19 +5,23 @@ import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sylenthuntress.thermia.compat.SereneSeasonsCompatBase;
 import sylenthuntress.thermia.event.BaseTemperatureAttributes;
 import sylenthuntress.thermia.registry.*;
 import sylenthuntress.thermia.registry.commands.TemperatureCommand;
+
+import java.util.ServiceLoader;
 
 public class Thermia implements ModInitializer {
     public static final String MOD_ID = "thermia";
     public static final String MOD_NAME = "Thermia";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_NAME);
-    public static boolean LOADED = false;
+    public static boolean SERVER_LOADED = false;
 
     public static Identifier modIdentifier(String path) {
         return Identifier.of(MOD_ID, path);
@@ -25,7 +29,7 @@ public class Thermia implements ModInitializer {
 
     public void onInitialize() {
         Thermia.LOGGER.info(MOD_NAME + " by SylentHuntress successfully loaded!");
-        ServerLifecycleEvents.SERVER_STARTED.register(minecraftServer -> LOADED = true);
+        ServerLifecycleEvents.SERVER_STARTED.register(minecraftServer -> SERVER_LOADED = true);
 
         ThermiaAttributes.registerAll();
         ThermiaStatusEffects.registerAll();
@@ -33,6 +37,13 @@ public class Thermia implements ModInitializer {
         ThermiaAttachmentTypes.init();
         ThermiaPotions.registerAll();
         ServerEntityEvents.ENTITY_LOAD.register(new BaseTemperatureAttributes());
+
+        if (FabricLoader.getInstance().isModLoaded("serene-seasons")) {
+            ServiceLoader<SereneSeasonsCompatBase> loader = ServiceLoader.load(SereneSeasonsCompatBase.class);
+            if (loader.findFirst().isPresent()) {
+                loader.findFirst().get();
+            }
+        }
 
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) ->
                 TemperatureCommand.register(dispatcher.getRoot())

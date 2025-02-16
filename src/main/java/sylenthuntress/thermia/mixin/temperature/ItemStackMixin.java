@@ -52,7 +52,7 @@ public abstract class ItemStackMixin implements ComponentHolder {
             at = @At("TAIL")
     )
     private void thermia$applyDefaultComponents(ItemConvertible item, int count, MergedComponentMap components, CallbackInfo ci) {
-        if (!Thermia.LOADED) {
+        if (!Thermia.SERVER_LOADED) {
             return;
         }
 
