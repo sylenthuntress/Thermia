@@ -45,7 +45,9 @@ publishMods {
         minecraftVersions.add(project.minecraft_version)
 
         requires("fabric-api")
+        requires("owo-lib")
         optional("modmenu")
+        optional("sereneseasons")
         incompatible("tough-as-nails")
 
         clientRequired = true
@@ -58,7 +60,9 @@ publishMods {
         minecraftVersions.add(project.minecraft_version)
 
         requires("fabric-api")
+        requires("owo-lib")
         optional("modmenu")
+        optional("sereneseasons")
         incompatible("tough-as-nails")
     }
 

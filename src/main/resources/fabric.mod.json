@@ -34,7 +34,7 @@
     "owo-lib": ">=${owo_version}"
   },
   "suggests": {
-    "another-mod": "*"
+    "sereneseasons": ">=10.4.0.2"
   },
   "conflicts": {
     "toughasnails": "*"
