@@ -463,7 +463,7 @@ public class TemperatureCommand {
         }
 
         private static int executeRegional(ServerCommandSource source, BlockPos blockPos, float multiplier) throws CommandSyntaxException {
-            if (!World.isValid(blockPos))
+            if (!World.isValid(blockPos) || source.getWorld().isInBuildLimit(blockPos))
                 throw INVALID_POSITION_EXCEPTION.create(blockPos.toShortString());
             if (!source.getWorld().isPosLoaded(blockPos))
                 throw UNLOADED_POSITION_EXCEPTION.create(blockPos.toShortString());
@@ -486,7 +486,7 @@ public class TemperatureCommand {
         }
 
         private static int executeAmbient(ServerCommandSource source, BlockPos blockPos, float multiplier) throws CommandSyntaxException {
-            if (!World.isValid(blockPos))
+            if (!World.isValid(blockPos) || source.getWorld().isInBuildLimit(blockPos))
                 throw INVALID_POSITION_EXCEPTION.create(blockPos.toShortString());
             if (!source.getWorld().isPosLoaded(blockPos))
                 throw UNLOADED_POSITION_EXCEPTION.create(blockPos.toShortString());
@@ -509,7 +509,7 @@ public class TemperatureCommand {
         }
 
         private static int executeBlock(ServerCommandSource source, BlockPos blockPos, float multiplier) throws CommandSyntaxException {
-            if (!World.isValid(blockPos))
+            if (!World.isValid(blockPos) || source.getWorld().isInBuildLimit(blockPos))
                 throw INVALID_POSITION_EXCEPTION.create(blockPos.toShortString());
             if (!source.getWorld().isPosLoaded(blockPos))
                 throw UNLOADED_POSITION_EXCEPTION.create(blockPos.toShortString());
@@ -532,7 +532,7 @@ public class TemperatureCommand {
         }
 
         private static int executeFluid(ServerCommandSource source, BlockPos blockPos, float multiplier) throws CommandSyntaxException {
-            if (!World.isValid(blockPos))
+            if (!World.isValid(blockPos) || source.getWorld().isInBuildLimit(blockPos))
                 throw INVALID_POSITION_EXCEPTION.create(blockPos.toShortString());
             if (!source.getWorld().isPosLoaded(blockPos))
                 throw UNLOADED_POSITION_EXCEPTION.create(blockPos.toShortString());
