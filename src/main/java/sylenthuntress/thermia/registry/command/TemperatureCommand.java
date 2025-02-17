@@ -147,28 +147,6 @@ public class TemperatureCommand {
             return (int) ((temperatureManager.getModifiedTemperature() * multiplier) * 1000);
         }
 
-        private static int executeRegional(ServerCommandSource source, Entity target, float multiplier) throws CommandSyntaxException {
-            if (TemperatureHelper.lacksTemperature(target)) {
-                throw ENTITY_FAILED_EXCEPTION.create(target.getName());
-            }
-
-            double regionalTemperature = TemperatureHelper.getRegionalTemperature(target.getWorld(), target.getBlockPos());
-            source.sendFeedback(
-                    () -> Text.translatable(
-                            "commands.temperature.get.position.success",
-                            "Regional",
-                            target.getName(),
-                            TemperatureHelper.TemperatureScaleDisplay.convertForClient(
-                                    source.getPlayer(),
-                                    regionalTemperature
-                            )
-                    ),
-                    false
-            );
-
-            return (int) ((regionalTemperature * multiplier) * 1000);
-        }
-
         private static int executeTarget(ServerCommandSource source, Entity target, float multiplier) throws CommandSyntaxException {
             if (TemperatureHelper.lacksTemperature(target)) {
                 throw ENTITY_FAILED_EXCEPTION.create(target.getName());
