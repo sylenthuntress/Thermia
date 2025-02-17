@@ -17,7 +17,7 @@ import sylenthuntress.thermia.Thermia;
 import sylenthuntress.thermia.data.ThermiaTags;
 import sylenthuntress.thermia.registry.ThermiaAttributes;
 import sylenthuntress.thermia.registry.ThermiaComponents;
-import sylenthuntress.thermia.registry.data_components.SunBlockingComponent;
+import sylenthuntress.thermia.registry.data_component.SunBlockingComponent;
 
 @Mixin(ComponentHolder.class)
 public interface ComponentHolderMixin {

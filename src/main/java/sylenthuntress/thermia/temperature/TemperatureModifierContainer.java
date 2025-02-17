@@ -4,6 +4,7 @@ import net.minecraft.util.Identifier;
 import sylenthuntress.thermia.Thermia;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 
 @SuppressWarnings({"UnusedReturnValue", "unused"})
 public class TemperatureModifierContainer {
@@ -76,6 +77,20 @@ public class TemperatureModifierContainer {
                 return modifier;
         }
         return null;
+    }
+
+    public double withModifiers(double temperature) {
+        var temperatureModifiers = modifiers;
+        temperatureModifiers.sort(Comparator.comparingInt(modifier -> modifier.operation().ordinal()));
+
+        for (TemperatureModifier modifier : temperatureModifiers) {
+            switch (modifier.operation()) {
+                case ADD_VALUE -> temperature += modifier.amount();
+                case ADD_MULTIPLIED_VALUE -> temperature += temperature * modifier.amount();
+                case SET_TOTAL -> temperature = modifier.amount();
+            }
+        }
+        return temperature;
     }
 
     public ArrayList<TemperatureModifier> getList() {

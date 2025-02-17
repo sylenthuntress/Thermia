@@ -31,7 +31,7 @@ import sylenthuntress.thermia.data.ThermiaTags;
 import sylenthuntress.thermia.registry.ThermiaAttributes;
 import sylenthuntress.thermia.registry.ThermiaComponents;
 import sylenthuntress.thermia.registry.ThermiaStatusEffects;
-import sylenthuntress.thermia.registry.data_components.TemperatureModifiersComponent;
+import sylenthuntress.thermia.registry.data_component.TemperatureModifiersComponent;
 import sylenthuntress.thermia.temperature.TemperatureHelper;
 import sylenthuntress.thermia.temperature.TemperatureManager;
 

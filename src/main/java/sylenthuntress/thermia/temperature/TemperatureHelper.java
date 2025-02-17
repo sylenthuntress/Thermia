@@ -26,7 +26,7 @@ import sylenthuntress.thermia.access.LivingEntityAccess;
 import sylenthuntress.thermia.compat.SereneSeasonsCompatBase;
 import sylenthuntress.thermia.data.ThermiaTags;
 import sylenthuntress.thermia.registry.ThermiaComponents;
-import sylenthuntress.thermia.registry.data_components.SunBlockingComponent;
+import sylenthuntress.thermia.registry.data_component.SunBlockingComponent;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;

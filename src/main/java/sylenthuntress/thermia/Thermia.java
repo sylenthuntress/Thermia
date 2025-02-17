@@ -10,11 +10,12 @@ import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sylenthuntress.thermia.config.ThermiaConfig;
 import sylenthuntress.thermia.compat.SereneSeasonsCompatBase;
+import sylenthuntress.thermia.config.ThermiaConfig;
 import sylenthuntress.thermia.event.BaseTemperatureAttributes;
 import sylenthuntress.thermia.registry.*;
-import sylenthuntress.thermia.registry.commands.TemperatureCommand;
+import sylenthuntress.thermia.registry.command.TemperatureCommand;
+import sylenthuntress.thermia.registry.loot_conditions.ThermiaLootConditionTypes;
 
 import java.util.ServiceLoader;
 
@@ -36,8 +37,10 @@ public class Thermia implements ModInitializer {
         ThermiaAttributes.registerAll();
         ThermiaStatusEffects.registerAll();
         ThermiaComponents.registerAll();
-        ThermiaAttachmentTypes.init();
+        ThermiaAttachmentTypes.registerAll();
         ThermiaPotions.registerAll();
+        ThermiaCriteria.registerAll();
+        ThermiaLootConditionTypes.registerAll();
         ServerEntityEvents.ENTITY_LOAD.register(new BaseTemperatureAttributes());
 
         if (FabricLoader.getInstance().isModLoaded("serene-seasons")) {

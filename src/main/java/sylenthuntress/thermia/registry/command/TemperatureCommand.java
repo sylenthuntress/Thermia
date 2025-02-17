@@ -1,4 +1,4 @@
-package sylenthuntress.thermia.registry.commands;
+package sylenthuntress.thermia.registry.command;
 
 import com.mojang.brigadier.arguments.DoubleArgumentType;
 import com.mojang.brigadier.arguments.FloatArgumentType;

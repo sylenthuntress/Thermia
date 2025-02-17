@@ -1,4 +1,4 @@
-package sylenthuntress.thermia.registry.data_components;
+package sylenthuntress.thermia.registry.data_component;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;

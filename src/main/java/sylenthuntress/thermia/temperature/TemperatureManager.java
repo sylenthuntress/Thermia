@@ -10,9 +10,8 @@ import sylenthuntress.thermia.Thermia;
 import sylenthuntress.thermia.data.ThermiaTags;
 import sylenthuntress.thermia.registry.ThermiaAttachmentTypes;
 import sylenthuntress.thermia.registry.ThermiaAttributes;
+import sylenthuntress.thermia.registry.ThermiaCriteria;
 import sylenthuntress.thermia.registry.ThermiaStatusEffects;
-
-import java.util.Comparator;
 
 @SuppressWarnings("UnstableApiUsage")
 public class TemperatureManager {
@@ -36,10 +35,12 @@ public class TemperatureManager {
                 Temperature.setValue(newTemperature)
         );
 
-        return entity.getAttachedOrCreate(
-                ThermiaAttachmentTypes.TEMPERATURE,
-                () -> new Temperature(entity)
-        ).value();
+        if (entity instanceof ServerPlayerEntity player) {
+            ThermiaCriteria.TEMPERATURE_CHANGED.trigger(player, newTemperature, false);
+            ThermiaCriteria.TEMPERATURE_CHANGED.trigger(player, getTemperatureModifiers().withModifiers(newTemperature), true);
+        }
+
+        return newTemperature;
     }
 
     public double modifyTemperature(double... inputTemperatures) {
@@ -129,6 +130,10 @@ public class TemperatureManager {
                         showIcon
                 ), null);
                 entity.getStatusEffect(effect).onApplied(entity);
+
+                if (entity instanceof ServerPlayerEntity player) {
+                    ThermiaCriteria.PLAYER_FROZEN.trigger(player, amplifier);
+                }
             }
         }
         else if ((amplifier = getHyperthermiaAmplifier()) >= 0) {
@@ -149,6 +154,10 @@ public class TemperatureManager {
                         showIcon
                 ), null);
                 entity.getStatusEffect(effect).onApplied(entity);
+
+                if (entity instanceof ServerPlayerEntity player) {
+                    ThermiaCriteria.PLAYER_OVERHEATING.trigger(player, amplifier);
+                }
             }
         }
         else {
@@ -182,18 +191,7 @@ public class TemperatureManager {
             return entity.getAttributeValue(ThermiaAttributes.BASE_TEMPERATURE);
         }
 
-        var temperatureModifiers = getTemperatureModifiers().getList();
-        temperatureModifiers.sort(Comparator.comparingInt(modifier -> modifier.operation().ordinal()));
-
-        double temperature = getTemperature();
-        for (TemperatureModifier modifier : temperatureModifiers) {
-            switch (modifier.operation()) {
-                case ADD_VALUE -> temperature += modifier.amount();
-                case ADD_MULTIPLIED_VALUE -> temperature += temperature * modifier.amount();
-                case SET_TOTAL -> temperature = modifier.amount();
-            }
-        }
-        return temperature;
+        return getTemperatureModifiers().withModifiers(getTemperature());
     }
 
     public float distanceFromTemperateBounds(double temperature) {

@@ -9,7 +9,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import sylenthuntress.thermia.Thermia;
 import sylenthuntress.thermia.registry.ThermiaComponents;
-import sylenthuntress.thermia.registry.data_components.TemperatureModifiersComponent;
+import sylenthuntress.thermia.registry.data_component.TemperatureModifiersComponent;
 
 import java.util.List;
 

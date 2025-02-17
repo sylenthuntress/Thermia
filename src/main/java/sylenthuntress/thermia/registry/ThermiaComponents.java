@@ -4,9 +4,9 @@ import net.minecraft.component.ComponentType;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import sylenthuntress.thermia.Thermia;
-import sylenthuntress.thermia.registry.data_components.ConsumableTemperatureComponent;
-import sylenthuntress.thermia.registry.data_components.SunBlockingComponent;
-import sylenthuntress.thermia.registry.data_components.TemperatureModifiersComponent;
+import sylenthuntress.thermia.registry.data_component.ConsumableTemperatureComponent;
+import sylenthuntress.thermia.registry.data_component.SunBlockingComponent;
+import sylenthuntress.thermia.registry.data_component.TemperatureModifiersComponent;
 
 public class ThermiaComponents {
     public static final ComponentType<ConsumableTemperatureComponent> CONSUMABLE_TEMPERATURE = Registry.register(

@@ -22,7 +22,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import sylenthuntress.thermia.Thermia;
 import sylenthuntress.thermia.registry.ThermiaAttributes;
 import sylenthuntress.thermia.registry.ThermiaComponents;
-import sylenthuntress.thermia.registry.data_components.TemperatureModifiersComponent;
+import sylenthuntress.thermia.registry.data_component.TemperatureModifiersComponent;
 import sylenthuntress.thermia.temperature.TemperatureModifier;
 
 import java.util.function.Consumer;
