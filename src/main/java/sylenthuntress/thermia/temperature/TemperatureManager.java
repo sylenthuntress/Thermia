@@ -263,7 +263,7 @@ public class TemperatureManager {
     public int getHypothermiaAmplifier() {
         if (entity.hasStatusEffect(ThermiaStatusEffects.FROST_RESISTANCE)
                 || !entity.canFreeze()
-                || Thermia.CONFIG.entityTemperature.CAN_FREEZE()) {
+                || !Thermia.CONFIG.entityTemperature.CAN_FREEZE()) {
             return -1;
         }
 
@@ -282,7 +282,7 @@ public class TemperatureManager {
     public int getHyperthermiaAmplifier() {
         if (entity.hasStatusEffect(StatusEffects.FIRE_RESISTANCE)
                 || entity.isFireImmune()
-                || Thermia.CONFIG.entityTemperature.CAN_OVERHEAT()) {
+                || !Thermia.CONFIG.entityTemperature.CAN_OVERHEAT()) {
             return -1;
         }
 
