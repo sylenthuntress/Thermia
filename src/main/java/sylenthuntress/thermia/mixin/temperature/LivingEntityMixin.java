@@ -8,7 +8,6 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.AttributeContainer;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttribute;
-import net.minecraft.entity.attribute.EntityAttributeInstance;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.projectile.thrown.SnowballEntity;
@@ -67,9 +66,6 @@ public abstract class LivingEntityMixin extends Entity implements LivingEntityAc
     }
 
     @Shadow
-    public abstract AttributeContainer getAttributes();
-
-    @Shadow
     public abstract boolean isInvulnerableTo(ServerWorld world, DamageSource source);
 
     @Shadow
@@ -86,13 +82,6 @@ public abstract class LivingEntityMixin extends Entity implements LivingEntityAc
 
     public TemperatureManager thermia$getTemperatureManager() {
         return thermia$temperatureManager;
-    }
-
-    @Unique
-    private void thermia$setAttributeBase(RegistryEntry<EntityAttribute> attribute, double newBase) {
-        EntityAttributeInstance entityAttributeInstance = this.getAttributes().getCustomInstance(attribute);
-        if (entityAttributeInstance != null)
-            entityAttributeInstance.setBaseValue(newBase);
     }
 
     @Inject(
