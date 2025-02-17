@@ -24,8 +24,8 @@ import net.minecraft.world.dimension.DimensionType;
 import sylenthuntress.thermia.Thermia;
 import sylenthuntress.thermia.access.LivingEntityAccess;
 import sylenthuntress.thermia.compat.SereneSeasonsCompatBase;
+import sylenthuntress.thermia.data.ThermiaTags;
 import sylenthuntress.thermia.registry.ThermiaComponents;
-import sylenthuntress.thermia.registry.ThermiaTags;
 import sylenthuntress.thermia.registry.data_components.SunBlockingComponent;
 
 import java.text.DecimalFormat;

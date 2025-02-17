@@ -1,4 +1,4 @@
-package sylenthuntress.thermia.registry;
+package sylenthuntress.thermia.data;
 
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.TagKey;

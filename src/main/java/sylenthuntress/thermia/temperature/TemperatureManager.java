@@ -7,10 +7,10 @@ import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.registry.tag.FluidTags;
 import net.minecraft.server.network.ServerPlayerEntity;
 import sylenthuntress.thermia.Thermia;
+import sylenthuntress.thermia.data.ThermiaTags;
 import sylenthuntress.thermia.registry.ThermiaAttachmentTypes;
 import sylenthuntress.thermia.registry.ThermiaAttributes;
 import sylenthuntress.thermia.registry.ThermiaStatusEffects;
-import sylenthuntress.thermia.registry.ThermiaTags;
 
 import java.util.Comparator;
 

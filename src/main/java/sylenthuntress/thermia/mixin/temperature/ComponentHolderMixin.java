@@ -14,9 +14,9 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import sylenthuntress.thermia.Thermia;
+import sylenthuntress.thermia.data.ThermiaTags;
 import sylenthuntress.thermia.registry.ThermiaAttributes;
 import sylenthuntress.thermia.registry.ThermiaComponents;
-import sylenthuntress.thermia.registry.ThermiaTags;
 import sylenthuntress.thermia.registry.data_components.SunBlockingComponent;
 
 @Mixin(ComponentHolder.class)

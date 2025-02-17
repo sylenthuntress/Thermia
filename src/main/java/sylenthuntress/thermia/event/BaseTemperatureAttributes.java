@@ -6,8 +6,8 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.world.biome.Biome;
+import sylenthuntress.thermia.data.ThermiaTags;
 import sylenthuntress.thermia.registry.ThermiaAttributes;
-import sylenthuntress.thermia.registry.ThermiaTags;
 import sylenthuntress.thermia.temperature.TemperatureHelper;
 
 public class BaseTemperatureAttributes implements ServerEntityEvents.Load {
