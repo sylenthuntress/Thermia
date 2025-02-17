@@ -15,6 +15,9 @@
   "icon": "${mod_id}.png",
   "environment": "*",
   "entrypoints": {
+    "fabric-datagen": [
+      "sylenthuntress.thermia.data.ThermiaDataGenerator"
+    ],
     "main": [
       "sylenthuntress.thermia.Thermia"
     ],

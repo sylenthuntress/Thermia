@@ -130,6 +130,13 @@ dependencies {
     compileOnly "net.jodah:typetools:0.6.3"
 }
 
+fabricApi {
+    configureDataGeneration() {
+        client = true
+
+    }
+}
+
 processResources {
     var expandProps = [
             'version'                      : version,
