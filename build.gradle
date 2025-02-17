@@ -30,7 +30,7 @@ publishMods {
 
     file = remapJar.archiveFile
 
-    displayName = project.mod_name + fullVersion
+    displayName = project.mod_name + " " + fullVersion
     version = fullVersion
     type = ReleaseType.valueOf(project.stability)
     changelog = "# Version " + fullVersion +
@@ -196,7 +196,7 @@ jar {
                 'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
                 'Timestamp'               : System.currentTimeMillis(),
                 'Built-On-Java'           : "${System.getProperty('java.vm.version')} (${System.getProperty('java.vm.vendor')})",
-                'Build-On-Minecraft'      : minecraft_version
+                'Built-On-Minecraft': minecraft_version
         ])
     }
 
