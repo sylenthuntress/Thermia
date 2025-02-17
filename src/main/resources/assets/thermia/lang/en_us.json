@@ -52,15 +52,6 @@
   "tag.entity_type.climate.is_undead": "Undead",
   "tag.entity_type.climate.temperature_immune": "Temperature Immune",
   "tag.entity_type.climate.unaffected": "Unaffected by Climate",
-  "temperature.modifier.cold.0": "-%s°F degrees ❄",
-  "temperature.modifier.cold.1": "-%s%% temperature ❄",
-  "temperature.modifier.hot.0": "+%s°F degrees \uD83D\uDD25",
-  "temperature.modifier.hot.1": "+%s%% temperature \uD83D\uDD25",
   "temperature.modifier.new": "-> %s°F degrees",
-  "temperature.modifier.random": " + %s...%s°F degrees",
-  "temperature.modifier.random.cold": "%s...%s°F degrees ❄",
-  "temperature.modifier.random.hot": "%s...%s°F degrees \uD83D\uDD25",
-  "temperature.modifier.random.neutral": "%s...%s°F degrees",
-  "temperature.modifiers.consumable": "When consumed:",
   "thermia.discord": "Discord"
 }
