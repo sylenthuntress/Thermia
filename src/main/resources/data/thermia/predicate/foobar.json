@@ -1,0 +1,9 @@
+{
+  "condition": "thermia:temperature",
+  "entity": "this",
+  "entity_predicate": {
+    "current_temperature": {
+      "max": 90
+    }
+  }
+}

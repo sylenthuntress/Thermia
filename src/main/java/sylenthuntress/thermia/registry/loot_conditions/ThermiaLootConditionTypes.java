@@ -7,10 +7,10 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
 import sylenthuntress.thermia.Thermia;
-import sylenthuntress.thermia.data.predicate.EntityTemperatureLootCondition;
+import sylenthuntress.thermia.data.predicate.TemperatureLootCondition;
 
 public class ThermiaLootConditionTypes {
-    public static final LootConditionType ENTITY_TEMPERATURE = register(Thermia.modIdentifier("entity_temperature"), EntityTemperatureLootCondition.CODEC);
+    public static final LootConditionType TEMPERATURE = register(Thermia.modIdentifier("temperature"), TemperatureLootCondition.CODEC);
 
     private static LootConditionType register(Identifier id, MapCodec<? extends LootCondition> codec) {
         return Registry.register(Registries.LOOT_CONDITION_TYPE, id, new LootConditionType(codec));

@@ -1,0 +1,26 @@
+{
+  "display": {
+    "icon": {
+      "id": "minecraft:acacia_button",
+      "count": 1
+    },
+    "title": "foo:bar",
+    "description": "foo:bar",
+    "background": "minecraft:dirt",
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "parent": "minecraft:adventure/root",
+  "criteria": {
+    "foo:bar": {
+      "trigger": "thermia:temperature_changed",
+      "conditions": {
+        "temperature": {
+          "max": 90
+        }
+      }
+    }
+  }
+}

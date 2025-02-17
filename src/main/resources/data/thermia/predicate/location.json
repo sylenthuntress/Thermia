@@ -1,0 +1,8 @@
+{
+  "condition": "thermia:temperature",
+  "location_predicate": {
+    "regional_temperature": {
+      "max": 90
+    }
+  }
+}
