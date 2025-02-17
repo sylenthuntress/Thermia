@@ -201,7 +201,7 @@ public class TemperatureManager {
                 getBaseTemperature() + entity.getAttributeValue(ThermiaAttributes.HEAT_OFFSET_THRESHOLD)
         );
 
-        return (float) Math.abs(temperature - clampedTemperature);
+        return (float) (temperature - clampedTemperature);
     }
 
     public float normalizeWithinTemperateBounds(double temperature) {
