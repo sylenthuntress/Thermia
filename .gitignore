@@ -23,3 +23,4 @@ eclipse
 run
 runs
 /secret.properties
+/src/main/generated/.cache/

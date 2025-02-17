@@ -41,6 +41,8 @@ public class Thermia implements ModInitializer {
         ThermiaPotions.registerAll();
         ThermiaCriteria.registerAll();
         ThermiaLootConditionTypes.registerAll();
+        ThermiaItems.registerAll();
+
         ServerEntityEvents.ENTITY_LOAD.register(new BaseTemperatureAttributes());
 
         if (FabricLoader.getInstance().isModLoaded("serene-seasons")) {

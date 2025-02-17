@@ -27,6 +27,7 @@
   "item.minecraft.lingering_potion.effect.frost_resistance": "Splash Potion of Frost Resistance",
   "item.minecraft.potion.effect.frost_resistance": "Potion of Frost Resistance",
   "item.minecraft.splash_potion.effect.frost_resistance": "Splash Potion of Frost Resistance",
+  "item.thermia.icon": "Thermia",
   "temperature.modifier.cold.0": "-%s",
   "temperature.modifier.cold.1": "-%s%% temperature",
   "temperature.modifier.hot.0": "+%s",
