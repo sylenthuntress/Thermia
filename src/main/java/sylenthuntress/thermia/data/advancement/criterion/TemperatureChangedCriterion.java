@@ -2,11 +2,13 @@ package sylenthuntress.thermia.data.advancement.criterion;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.advancement.AdvancementCriterion;
 import net.minecraft.advancement.criterion.AbstractCriterion;
 import net.minecraft.predicate.NumberRange;
 import net.minecraft.predicate.entity.EntityPredicate;
 import net.minecraft.predicate.entity.LootContextPredicate;
 import net.minecraft.server.network.ServerPlayerEntity;
+import sylenthuntress.thermia.registry.ThermiaCriteria;
 
 import java.util.Optional;
 
@@ -30,6 +32,16 @@ public class TemperatureChangedCriterion extends AbstractCriterion<TemperatureCh
                         )
                         .apply(instance, TemperatureChangedCriterion.Conditions::new)
         );
+
+        public static AdvancementCriterion<TemperatureChangedCriterion.Conditions> create(NumberRange.DoubleRange temperature, boolean modified) {
+            return ThermiaCriteria.TEMPERATURE_CHANGED.create(
+                    new TemperatureChangedCriterion.Conditions(
+                            Optional.empty(),
+                            temperature,
+                            modified
+                    )
+            );
+        }
 
         public boolean matches(double temperature, boolean modified) {
             return temperature().test(temperature) && modified == modified();

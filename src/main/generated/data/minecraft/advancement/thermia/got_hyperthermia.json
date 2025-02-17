@@ -1,0 +1,26 @@
+{
+  "parent": "minecraft:thermia/root",
+  "criteria": {
+    "got_hyperthermia": {
+      "trigger": "thermia:player_overheating"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.thermia.got_hyperthermia.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "minecraft:magma_block"
+    },
+    "title": {
+      "translate": "advancements.thermia.got_hyperthermia.title"
+    }
+  },
+  "requirements": [
+    [
+      "got_hyperthermia"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

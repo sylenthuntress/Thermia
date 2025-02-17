@@ -1,4 +1,10 @@
 {
+  "advancements.thermia.root.title": "Thermia",
+  "advancements.thermia.root.description": "Both freeze and overheat. This world's climate can be very dangerous!",
+  "advancements.thermia.got_hypothermia.title": "Bundle up!",
+  "advancements.thermia.got_hypothermia.description": "Go below 95°F degrees and get deadly hypothermia. New temps just dropped!",
+  "advancements.thermia.got_hyperthermia.title": "Wear Sunscreen!",
+  "advancements.thermia.got_hyperthermia.description": "Go above 100°F degrees and get deadly hyperthermia. Actual heatstroke!",
   "attribute.name.generic.base_temperature": "Body Temperature",
   "attribute.name.generic.cold_offset_threshold": "Freeze Protection",
   "attribute.name.generic.heat_offset_threshold": "Overheat Protection",

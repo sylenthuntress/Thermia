@@ -1,0 +1,32 @@
+{
+  "criteria": {
+    "got_hyperthermia": {
+      "trigger": "thermia:player_overheating"
+    },
+    "got_hypothermia": {
+      "trigger": "thermia:player_frozen"
+    }
+  },
+  "display": {
+    "background": "minecraft:textures/block/powder_snow.png",
+    "description": {
+      "translate": "advancements.thermia.root.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "thermia:icon"
+    },
+    "title": {
+      "translate": "advancements.thermia.root.title"
+    }
+  },
+  "requirements": [
+    [
+      "got_hypothermia"
+    ],
+    [
+      "got_hyperthermia"
+    ]
+  ],
+  "sends_telemetry_event": true
+}
