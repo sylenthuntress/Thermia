@@ -63,7 +63,7 @@ public class AdvancementsProvider extends FabricAdvancementProvider {
         Advancement.Builder.create()
                 .parent(rootAdvancement)
                 .display(
-                        Items.MAGMA_BLOCK,
+                        Items.LAVA_BUCKET,
                         Text.translatable("advancements.thermia.got_hyperthermia.title"),
                         Text.translatable("advancements.thermia.got_hyperthermia.description"),
                         null,
