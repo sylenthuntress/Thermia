@@ -30,7 +30,7 @@ public class AdvancementTabMixin {
                     target = "Lnet/minecraft/client/gui/DrawContext;drawTexture(Ljava/util/function/Function;Lnet/minecraft/util/Identifier;IIFFIIII)V"
             )
     )
-    private void thermia$s(
+    private void thermia$stitchAdvancementTab(
             DrawContext instance,
             Function<Identifier, RenderLayer> renderLayers,
             Identifier sprite,
