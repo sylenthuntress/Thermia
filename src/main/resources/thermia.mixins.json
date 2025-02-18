@@ -1,5 +1,6 @@
 {
   "client": [
+    "client.temperature.AdvancementTabMixin",
     "client.temperature.ClientPlayerEntityMixin",
     "client.temperature.GameRendererMixin",
     "client.temperature.InGameHudHeartTypeMixin",
