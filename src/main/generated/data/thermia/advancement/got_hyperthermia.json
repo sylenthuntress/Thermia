@@ -1,5 +1,5 @@
 {
-  "parent": "minecraft:thermia/root",
+  "parent": "thermia:root",
   "criteria": {
     "got_hyperthermia": {
       "trigger": "thermia:player_overheating"

@@ -37,7 +37,7 @@ public class AdvancementsProvider extends FabricAdvancementProvider {
                 )
                 .criterion("got_hypothermia", FreezeCriterion.Conditions.create())
                 .criterion("got_hyperthermia", OverheatCriterion.Conditions.create())
-                .build(consumer, Thermia.MOD_ID + "/root");
+                .build(consumer, Thermia.MOD_ID + ":root");
         generateColdAdvancements(consumer, rootAdvancement);
         generateHotAdvancements(consumer, rootAdvancement);
     }
@@ -56,7 +56,7 @@ public class AdvancementsProvider extends FabricAdvancementProvider {
                         false
                 )
                 .criterion("got_hypothermia", FreezeCriterion.Conditions.create())
-                .build(consumer, Thermia.MOD_ID + "/got_hypothermia");
+                .build(consumer, Thermia.MOD_ID + ":got_hypothermia");
     }
 
     protected void generateHotAdvancements(Consumer<AdvancementEntry> consumer, AdvancementEntry rootAdvancement) {
@@ -73,6 +73,6 @@ public class AdvancementsProvider extends FabricAdvancementProvider {
                         false
                 )
                 .criterion("got_hyperthermia", OverheatCriterion.Conditions.create())
-                .build(consumer, Thermia.MOD_ID + "/got_hyperthermia");
+                .build(consumer, Thermia.MOD_ID + ":got_hyperthermia");
     }
 }
