@@ -7,6 +7,7 @@
     "client.temperature.InGameHudMixin",
     "client.temperature.ItemStackMixin",
     "client.temperature.LivingEntityRendererMixin",
+    "client.temperature.PlacedAdvancementMixin",
     "client.temperature.StatusEffectsDisplayMixin"
   ],
   "compatibilityLevel": "JAVA_18",
